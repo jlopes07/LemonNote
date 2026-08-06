@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LemonNote - Detalhes da Receita</title>
+  <!-- Google Fonts: Outfit & Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/detail.css">
+</head>
+<body class="dark-theme">
+  <div class="app-container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="logo-area">
+        <a href="index.html" class="logo-link">
+          <div class="logo-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M7.21 15 2.66 9.14a2 2 0 0 1 .4-2.83 2 2 0 0 1 2.83.4L9 12.21" />
+              <path d="M12.21 9 9.14 2.66a2 2 0 0 1 .4-2.83 2 2 0 0 1 .4 2.83L15 7.21" />
+              <path d="M18.8 9.5a6.5 6.5 0 1 1-9.3 9.3c.7-.7 1.8-.7 2.5 0l.7.7c.7.7 1.8.7 2.5 0l1.4-1.4c.7-.7.7-1.8 0-2.5l-.7-.7c-.7-.7-.7-1.8 0-2.5l1.4-1.4c.7-.7.7-1.8 0-2.5a2 2 0 0 0-1.5-.5Z" />
+              <path d="M11.5 11.5c1-1 2.5-1.5 4-1.5" />
+              <path d="M12.5 12.5c.5.5.5 1.5 0 2" />
+            </svg>
+          </div>
+          <div class="logo-text">
+            <h1>Lemon<span>Note</span></h1>
+            <p>Receitas Inteligentes</p>
+          </div>
+        </a>
+      </div>
+      
+      <div class="header-stats" style="display: flex; gap: 12px; align-items: center;">
+        <!-- Navigation Dropdown Menu -->
+        <div class="nav-dropdown">
+          <button class="nav-dropdown-btn" type="button">
+            <span>Navegação</span>
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+          <div class="nav-dropdown-menu">
+            <a href="index.html" class="nav-dropdown-item">
+              <span>🛒</span> Minha Despensa
+            </a>
+            <a href="recipes.html" class="nav-dropdown-item">
+              <span>🍳</span> Receitas Sugeridas
+            </a>
+            <a href="register.html" class="nav-dropdown-item">
+              <span>➕</span> Painel de Cadastro
+            </a>
+          </div>
+        </div>
+
+        <div class="stat-badge">
+          <span class="stat-icon">🛒</span>
+          <span class="stat-text"><strong id="selected-count">0</strong> na despensa</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Workspace -->
+    <main class="detail-layout">
+      <!-- Back Action and Filter Row -->
+      <div class="detail-header-actions">
+        <a href="recipes.html" class="btn-secondary" style="padding: 8px 16px;">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+          <span>Voltar para Receitas</span>
+        </a>
+      </div>
+
+      <!-- Detail Container (dynamic layout) -->
+      <div id="detail-container">
+        <div class="loading-spinner">Carregando detalhes da receita...</div>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+      <p>&copy; 2026 LemonNote. Desenvolvido para facilitar sua alimentação saudável.</p>
+    </footer>
+  </div>
+
+  <script src="js/shared.js"></script>
+  <script src="js/detail.js"></script>
+</body>
+</html>

@@ -1,0 +1,158 @@
+/* Registration Forms Specific Styles */
+
+.register-layout {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 32px;
+  align-items: start;
+}
+
+@media (max-width: 900px) {
+  .register-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.register-card {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.register-card h2 {
+  font-family: var(--font-title);
+  font-size: 22px;
+  font-weight: 700;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 12px;
+}
+
+/* Form Styles */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+@media (max-width: 500px) {
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+}
+
+.form-group label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 12px 16px;
+  background: var(--bg-element);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  color: var(--text-main);
+  font-family: var(--font-body);
+  font-size: 14px;
+  transition: var(--transition-fast);
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(132, 204, 22, 0.15);
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+/* Add row style (dropdown + quantity + button) */
+.inline-add-row {
+  display: flex;
+  gap: 10px;
+  align-items: flex-end;
+}
+
+.inline-add-row .form-group {
+  margin-bottom: 0;
+  flex-grow: 1;
+}
+
+.inline-add-row .qty-col {
+  width: 90px;
+  flex-shrink: 0;
+}
+
+.inline-add-row .unit-col {
+  width: 90px;
+  flex-shrink: 0;
+}
+
+/* Added list items tags */
+.added-list {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 12px;
+  min-height: 80px;
+  max-height: 180px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.added-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--bg-element);
+  border: 1px solid var(--border-color);
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+}
+
+.added-item span.text {
+  color: var(--text-secondary);
+}
+
+.added-item button.remove {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 16px;
+  transition: var(--transition-fast);
+  padding: 0 4px;
+}
+
+.added-item button.remove:hover {
+  color: var(--danger);
+}
+
+/* Form Action Buttons */
+.form-actions {
+  margin-top: 10px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.form-actions button {
+  width: 100%;
+}
