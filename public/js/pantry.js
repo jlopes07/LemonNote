@@ -105,6 +105,8 @@ function renderPantry() {
 
     items.forEach(ing => {
       const isChecked = selectedIngredients.has(ing.id);
+      const currentUid = getCurrentUserScope();
+      const isCreator = ing.userId && ing.userId === currentUid;
       
       const label = document.createElement('label');
       label.className = 'checkbox-item';
@@ -113,7 +115,8 @@ function renderPantry() {
       label.innerHTML = `
         <input type="checkbox" data-id="${ing.id}" ${isChecked ? 'checked' : ''}>
         <span class="checkbox-custom"></span>
-        <span class="ingredient-name-text">${ing.name}</span>
+        <span class="ingredient-name-text" style="flex:1;">${ing.name}</span>
+        ${isCreator ? `<button type="button" class="btn-delete-item" title="Excluir ingrediente" style="background:none; border:none; color:var(--danger); cursor:pointer; font-size:14px; padding:2px 6px; opacity:0.75; transition:opacity 0.2s;">🗑️</button>` : ''}
       `;
 
       const checkbox = label.querySelector('input');
@@ -129,6 +132,20 @@ function renderPantry() {
         updateCategoryStatus(categoryGroup, items);
         updateSelectionPanel();
       });
+
+      const deleteBtn = label.querySelector('.btn-delete-item');
+      if (deleteBtn) {
+        deleteBtn.addEventListener('click', async (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          if (confirm(`Deseja realmente excluir o ingrediente "${ing.name}"?`)) {
+            selectedIngredients.delete(ing.id);
+            savePantry(selectedIngredients);
+            await deleteIngredient(ing);
+            await init();
+          }
+        });
+      }
 
       contentDiv.appendChild(label);
     });

@@ -2,77 +2,275 @@
 <html lang="pt-BR">
 
 <head>
-  <script src="js/head-component.js" data-title="LemonNote - Minha Despensa"></script>
-  <link rel="stylesheet" href="css/style.css">
-  <link rel="stylesheet" href="css/pantry.css">
+  <script src="js/head-component.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LemonNote - Início | Gerenciador Inteligente de Despensa e Receitas</title>
+  <meta name="description" content="Descubra receitas incríveis com os ingredientes que você já tem em casa. O LemonNote gerencia sua despensa e calcula macronutrientes automaticamente." />
+
+  <!-- Fonts & Styles -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/pantry.css" />
+
+  <style>
+    /* Premium Landing Home Styles */
+    .home-hero {
+      background: radial-gradient(circle at 10% 20%, rgba(245, 158, 11, 0.12) 0%, rgba(249, 115, 22, 0.05) 50%, transparent 100%),
+                  linear-gradient(135deg, var(--card-bg) 0%, var(--bg-main) 100%);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 48px 36px;
+      text-align: center;
+      margin-bottom: 32px;
+      box-shadow: var(--shadow-lg);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .home-hero::before {
+      content: '';
+      position: absolute;
+      top: -50px;
+      right: -50px;
+      width: 200px;
+      height: 200px;
+      background: var(--accent);
+      filter: blur(90px);
+      opacity: 0.15;
+      border-radius: 50%;
+    }
+
+    .home-hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(245, 158, 11, 0.15);
+      color: var(--accent-light);
+      padding: 6px 16px;
+      border-radius: var(--radius-full);
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 20px;
+      border: 1px solid rgba(245, 158, 11, 0.25);
+    }
+
+    .home-hero h1 {
+      font-size: 2.6rem;
+      font-weight: 700;
+      color: var(--text-heading);
+      line-height: 1.25;
+      margin-bottom: 16px;
+    }
+
+    .home-hero h1 span {
+      background: linear-gradient(135deg, var(--accent-yellow), var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .home-hero p {
+      font-size: 1.15rem;
+      color: var(--text-muted);
+      max-width: 680px;
+      margin: 0 auto 32px auto;
+      line-height: 1.6;
+    }
+
+    .home-hero-actions {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .home-hero-actions .btn-lg {
+      padding: 14px 28px;
+      font-size: 1rem;
+      font-weight: 600;
+      border-radius: var(--radius-md);
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      transition: all 0.25s ease;
+      cursor: pointer;
+    }
+
+    .btn-hero-primary {
+      background: linear-gradient(135deg, var(--accent-yellow), var(--accent));
+      color: #1c1917;
+      box-shadow: 0 4px 14px rgba(245, 158, 11, 0.35);
+    }
+
+    .btn-hero-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(245, 158, 11, 0.5);
+    }
+
+    .btn-hero-secondary {
+      background: var(--card-bg);
+      color: var(--text-heading);
+      border: 1px solid var(--border-color);
+    }
+
+    .btn-hero-secondary:hover {
+      background: var(--bg-hover);
+      transform: translateY(-2px);
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+      margin-bottom: 36px;
+    }
+
+    .feature-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 28px 24px;
+      transition: all 0.25s ease;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .feature-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--accent);
+      box-shadow: var(--shadow-md);
+    }
+
+    .feature-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: var(--radius-md);
+      background: rgba(245, 158, 11, 0.12);
+      color: var(--accent-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.6rem;
+      margin-bottom: 20px;
+    }
+
+    .feature-card h3 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-heading);
+      margin-bottom: 10px;
+    }
+
+    .feature-card p {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      line-height: 1.55;
+    }
+
+    .cta-banner {
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.15) 0%, rgba(249, 115, 22, 0.08) 100%);
+      border: 1px solid rgba(245, 158, 11, 0.25);
+      border-radius: var(--radius-lg);
+      padding: 32px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    .cta-banner-text h3 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--text-heading);
+      margin-bottom: 6px;
+    }
+
+    .cta-banner-text p {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+    }
+  </style>
 </head>
 
-<body class="dark-theme">
+<body>
   <div class="app-container">
     <!-- Componentized Header -->
     <header class="app-header" id="app-header-container"></header>
 
-    <!-- Main Workspace Grid -->
-    <main class="pantry-layout">
+    <!-- Main Content: Home Page -->
+    <main class="main-content">
+      
+      <!-- Hero Banner -->
+      <section class="home-hero">
+        <div class="home-hero-badge">
+          ✨ Culinária Prática & Nutrição Inteligente
+        </div>
+        <h1>Cozinhe com o que você <span>já tem em casa</span></h1>
+        <p>
+          O LemonNote analisa os ingredientes disponíveis na sua despensa, calcula o rendimento e macronutrientes automaticamente e recomenda as melhores receitas para sua rotina.
+        </p>
 
-      <!-- Left Column: Pantry (Despensa Accordion) -->
-      <section class="pantry-sidebar">
-        <div class="section-card">
-          <div class="section-header">
-            <div class="title-with-icon">
-              <svg class="header-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                stroke-linecap="round" stroke-linejoin="round">
-                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
-              </svg>
-              <h2 style="font-family:var(--font-title);">Minha Despensa</h2>
-            </div>
-            <button id="btn-clear-pantry" class="btn-text">Limpar tudo</button>
-          </div>
-
-          <!-- Search Box -->
-          <div class="search-box">
-            <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-              stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="11" cy="11" r="8"></circle>
-              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-            </svg>
-            <input type="text" id="pantry-search" placeholder="Buscar ingrediente...">
-          </div>
-
-          <!-- Ingredients List -->
-          <div class="ingredients-accordion" id="ingredients-container">
-            <div class="loading-spinner">Carregando despensa...</div>
-          </div>
+        <div class="home-hero-actions">
+          <a href="pantry.html" class="btn-lg btn-hero-primary">
+            🧺 Ir para Minha Despensa
+          </a>
+          <a href="recipes.html" class="btn-lg btn-hero-secondary">
+            📖 Explorar Receitas
+          </a>
+          <a href="register.html" class="btn-lg btn-hero-secondary">
+            ➕ Cadastrar Nova Receita
+          </a>
         </div>
       </section>
 
-      <!-- Right Column: Current Selection Panel -->
-      <section class="section-card selection-panel">
-        <div class="panel-header">
-          <h2>Itens Selecionados</h2>
+      <!-- Key Features Grid -->
+      <section class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">🧺</div>
+          <h3>Despensa em Tempo Real</h3>
+          <p>
+            Selecione facilmente os alimentos que possui na geladeira e no armário. O sistema calcula a quantidade de itens automaticamente.
+          </p>
         </div>
 
-        <!-- Selected Tags Container -->
-        <div class="selected-tags-container" id="selected-tags-container" style="display: none;">
-          <!-- Injected dynamically by pantry.js -->
+        <div class="feature-card">
+          <div class="feature-icon">⚡</div>
+          <h3>Combinação Inteligente</h3>
+          <p>
+            Descubra a porcentagem exata de compatibilidade de cada receita com base nos ingredientes selecionados na sua despensa.
+          </p>
         </div>
 
-        <!-- Empty Selection State -->
-        <div class="empty-selection" id="empty-selection">
-          <div class="empty-selection-icon">🥫</div>
-          <h3>Nenhum ingrediente selecionado</h3>
-          <p>Navegue pelas categorias à esquerda e marque os ingredientes que você possui em casa.</p>
+        <div class="feature-card">
+          <div class="feature-icon">📊</div>
+          <h3>Macros Automáticos</h3>
+          <p>
+            Acompanhe calorias, proteínas, carboidratos e gorduras de cada porção calculados dinamicamente com base nas tabelas nutricionais.
+          </p>
         </div>
 
-        <!-- Submit Button CTA -->
-        <div class="cta-area">
-          <a href="recipes.html" id="btn-submit" class="btn-primary" style="opacity: 0.5; pointer-events: none;">
-            <span>Buscar Receitas</span>
-            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5"
-              stroke-linecap="round" stroke-linejoin="round">
-              <line x1="5" y1="12" x2="19" y2="12"></line>
-              <polyline points="12 5 19 12 12 19"></polyline>
-            </svg>
+        <div class="feature-card">
+          <div class="feature-icon">🌐</div>
+          <h3>Catálogo em Nuvem</h3>
+          <p>
+            Acesse dezenas de receitas públicas ou cadastre suas próprias receitas privadas e públicas sincronizadas com o Firebase.
+          </p>
+        </div>
+      </section>
+
+      <!-- Bottom CTA Banner -->
+      <section class="cta-banner">
+        <div class="cta-banner-text">
+          <h3>Pronto para montar sua refeição perfeita?</h3>
+          <p>Selecione seus ingredientes agora e veja quais receitas você pode preparar em minutos!</p>
+        </div>
+        <div>
+          <a href="pantry.html" class="btn-primary" style="padding: 12px 24px; font-size: 1rem; text-decoration: none; display: inline-block;">
+            Começar Agora
           </a>
         </div>
       </section>
@@ -83,8 +281,8 @@
     <footer class="app-footer" id="app-footer-container"></footer>
   </div>
 
+  <!-- Scripts -->
   <script src="js/shared.js"></script>
-  <script src="js/pantry.js"></script>
   <script type="module" src="js/components.js"></script>
   <script type="module" src="js/firebase.js"></script>
   <script type="module" src="js/auth-ui.js"></script>

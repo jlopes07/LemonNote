@@ -9,6 +9,7 @@ const dom = {
   selectedCount: document.getElementById('selected-count'),
   recipesSubCount: document.getElementById('recipes-sub-count'),
   recipesContainer: document.getElementById('recipes-container'),
+  recipeSearch: document.getElementById('recipe-search'),
   filterTabs: document.querySelectorAll('.filter-tab')
 };
 
@@ -43,6 +44,12 @@ function setupEventListeners() {
       updateRecipes();
     });
   });
+
+  if (dom.recipeSearch) {
+    dom.recipeSearch.addEventListener('input', () => {
+      updateRecipes();
+    });
+  }
 }
 
 function updateHeaderBadge() {
@@ -107,6 +114,18 @@ function updateRecipes() {
     filtered = matchedRecipes.filter(r => r.missingCount > 0 && r.missingCount <= 2);
   }
 
+  // Filter according to search query if typed
+  const searchQuery = dom.recipeSearch ? dom.recipeSearch.value.trim().toLowerCase() : '';
+  if (searchQuery) {
+    filtered = filtered.filter(r => {
+      const matchName = r.name && r.name.toLowerCase().includes(searchQuery);
+      const matchDesc = r.description && r.description.toLowerCase().includes(searchQuery);
+      const matchIng = (r.have && r.have.some(n => n.toLowerCase().includes(searchQuery))) ||
+                       (r.missing && r.missing.some(n => n.toLowerCase().includes(searchQuery)));
+      return matchName || matchDesc || matchIng;
+    });
+  }
+
   // Sort: highest match percentage first, then least missing items, then alphabetically
   filtered.sort((a, b) => {
     if (b.matchPercentage !== a.matchPercentage) {
@@ -152,6 +171,9 @@ function renderRecipesList(recipesList) {
   dom.recipesContainer.innerHTML = '';
 
   recipesList.forEach(recipe => {
+    const currentUid = getCurrentUserScope();
+    const isCreator = recipe.userId && recipe.userId === currentUid;
+
     const cardLink = document.createElement('a');
     cardLink.className = 'recipe-card-link';
     cardLink.href = `recipe-detail.html?id=${recipe.id}`;
@@ -166,11 +188,12 @@ function renderRecipesList(recipesList) {
     }
 
     cardLink.innerHTML = `
-      <div class="recipe-card">
+      <div class="recipe-card" style="position:relative;">
         <div class="recipe-card-image">
           <div class="recipe-card-badges">
             ${badgeHTML}
             <span class="badge-tag">⏱️ ${recipe.prepTime} min</span>
+            ${isCreator ? `<button type="button" class="btn-delete-recipe" title="Excluir receita" style="background:rgba(239,68,68,0.9); color:white; border:none; padding:4px 10px; border-radius:12px; font-size:12px; font-weight:600; cursor:pointer; margin-left:auto; display:inline-flex; align-items:center; gap:4px; z-index:10;">🗑️ Excluir</button>` : ''}
           </div>
           <img src="${recipe.image}" alt="${recipe.name}" onerror="this.src='https://images.unsplash.com/photo-1495521821757-a1efb6729352?w=600&auto=format&fit=crop&q=80'">
         </div>
@@ -208,6 +231,18 @@ function renderRecipesList(recipesList) {
         </div>
       </div>
     `;
+
+    const deleteBtn = cardLink.querySelector('.btn-delete-recipe');
+    if (deleteBtn) {
+      deleteBtn.addEventListener('click', async (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (confirm(`Deseja realmente excluir a receita "${recipe.name}"?`)) {
+          await deleteRecipe(recipe);
+          await init();
+        }
+      });
+    }
 
     dom.recipesContainer.appendChild(cardLink);
   });

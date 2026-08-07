@@ -1,9 +1,32 @@
 // Shared utility functions and state persistence
 
-// LocalStorage keys
-const PANTRY_KEY = 'lemonNote_pantry';
-const CUSTOM_ING_KEY = 'lemonNote_custom_ingredients';
-const CUSTOM_REC_KEY = 'lemonNote_custom_recipes';
+// Global Constants & State
+const PANTRY_KEY = 'lemonNote_pantry_v1';
+const CUSTOM_ING_KEY = 'lemonNote_custom_ingredients_v1';
+const CUSTOM_REC_KEY = 'lemonNote_custom_recipes_v1';
+
+// String normalization helper (removes accents, special characters, and extra spaces)
+function normalizeString(str) {
+  if (!str) return '';
+  return str
+    .toString()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, ' ');
+}
+
+function generateSlug(name, prefix = 'rec') {
+  const norm = normalizeString(name)
+    .replace(/[^a-z0-9]/g, '_')
+    .replace(/_+/g, '_')
+    .replace(/^_+|_+$/g, '');
+  return norm ? `${prefix}_${norm}` : `${prefix}_${Date.now()}`;
+}
+
+window.normalizeString = normalizeString;
+window.generateSlug = generateSlug;
 const THEME_KEY = 'lemonNote_theme';
 
 // Global Theme Controller (Dark Green vs Light Green)
@@ -114,18 +137,21 @@ function getCustomIngredients() {
   return saved ? JSON.parse(saved) : [];
 }
 
-async function saveCustomIngredient(ing) {
+async function saveCustomIngredient(ing, isPublic = false) {
   const uid = getCurrentUserScope();
   ing.userId = uid;
-  ing.isCustom = true;
+  ing.isCustom = !isPublic;
+  ing.isPublic = isPublic;
 
   // Local storage backup
   const custom = getCustomIngredients();
   custom.push(ing);
   localStorage.setItem(getCustomIngredientsKey(), JSON.stringify(custom));
 
-  // Sync with Firebase Firestore
-  if (uid && typeof window.saveUserCustomIngredient === 'function') {
+  // Sync with Firebase Firestore (Public catalog or User collection)
+  if (isPublic && typeof window.savePublicIngredient === 'function') {
+    await window.savePublicIngredient(ing);
+  } else if (uid && typeof window.saveUserCustomIngredient === 'function') {
     await window.saveUserCustomIngredient(uid, ing);
   }
 }
@@ -135,21 +161,59 @@ function getCustomRecipes() {
   return saved ? JSON.parse(saved) : [];
 }
 
-async function saveCustomRecipe(rec) {
+async function saveCustomRecipe(rec, isPublic = false) {
   const uid = getCurrentUserScope();
   rec.userId = uid;
-  rec.isCustom = true;
+  rec.isCustom = !isPublic;
+  rec.isPublic = isPublic;
 
   // Local storage backup
   const custom = getCustomRecipes();
   custom.push(rec);
   localStorage.setItem(getCustomRecipesKey(), JSON.stringify(custom));
 
-  // Sync with Firebase Firestore
-  if (uid && typeof window.saveUserCustomRecipe === 'function') {
+  // Sync with Firebase Firestore (Public catalog or User collection)
+  if (isPublic && typeof window.savePublicRecipe === 'function') {
+    await window.savePublicRecipe(rec);
+  } else if (uid && typeof window.saveUserCustomRecipe === 'function') {
     await window.saveUserCustomRecipe(uid, rec);
   }
 }
+
+async function deleteIngredient(ing) {
+  if (!ing || !ing.id) return;
+  const uid = getCurrentUserScope();
+
+  // Remove from localStorage
+  const localCustom = getCustomIngredients().filter(i => i.id !== ing.id);
+  localStorage.setItem(getCustomIngredientsKey(), JSON.stringify(localCustom));
+
+  // Remove from Firestore
+  if (ing.isPublic && typeof window.deletePublicIngredient === 'function') {
+    await window.deletePublicIngredient(ing.id);
+  } else if (uid && typeof window.deleteUserCustomIngredient === 'function') {
+    await window.deleteUserCustomIngredient(uid, ing.id);
+  }
+}
+
+async function deleteRecipe(rec) {
+  if (!rec || !rec.id) return;
+  const uid = getCurrentUserScope();
+
+  // Remove from localStorage
+  const localCustom = getCustomRecipes().filter(r => r.id !== rec.id);
+  localStorage.setItem(getCustomRecipesKey(), JSON.stringify(localCustom));
+
+  // Remove from Firestore
+  if (rec.isPublic && typeof window.deletePublicRecipe === 'function') {
+    await window.deletePublicRecipe(rec.id);
+  } else if (uid && typeof window.deleteUserCustomRecipe === 'function') {
+    await window.deleteUserCustomRecipe(uid, rec.id);
+  }
+}
+
+window.deleteIngredient = deleteIngredient;
+window.deleteRecipe = deleteRecipe;
 
 // Fetch public catalog directly from Firebase Firestore and merge with user custom items
 async function loadAppData() {

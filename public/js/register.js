@@ -17,6 +17,7 @@ const dom = {
   ingProtein: document.getElementById('ing-protein'),
   ingCarbs: document.getElementById('ing-carbs'),
   ingFat: document.getElementById('ing-fat'),
+  ingIsPublic: document.getElementById('ing-is-public'),
   
   // Recipe Form
   recForm: document.getElementById('rec-form'),
@@ -25,6 +26,7 @@ const dom = {
   recTime: document.getElementById('rec-time'),
   recServings: document.getElementById('rec-servings'),
   recImage: document.getElementById('rec-image'),
+  recIsPublic: document.getElementById('rec-is-public'),
   
   // Dynamic ingredients selector in Recipe Form
   recIngSelect: document.getElementById('rec-ing-select'),
@@ -106,15 +108,21 @@ function setupEventListeners() {
       return;
     }
 
-    // Check if ingredient already exists (case-insensitive)
-    const normalizedName = name.toLowerCase();
-    const alreadyExists = ingredients.some(ing => ing.name.trim().toLowerCase() === normalizedName);
+    // Fetch live catalog data to ensure we compare against current Firestore state
+    const currentAppData = await loadAppData();
+    const liveIngredients = (currentAppData && currentAppData.ingredients) ? currentAppData.ingredients : ingredients;
+
+    // Check if ingredient already exists (accent, casing, and whitespace insensitive)
+    const normTarget = normalizeString(name);
+    const alreadyExists = liveIngredients.some(ing => ing && ing.name && normalizeString(ing.name) === normTarget);
     if (alreadyExists) {
-      alert(`O ingrediente "${name}" já está cadastrado no sistema!`);
+      alert(`⚠️ O ingrediente "${name}" já está cadastrado no sistema! Não é permitido cadastrar ingredientes duplicados.`);
       return;
     }
 
-    const newIngId = `custom_ing_${Date.now()}`;
+    const isPublic = dom.ingIsPublic ? dom.ingIsPublic.checked : false;
+    const newIngId = generateSlug(name, isPublic ? 'ing' : 'custom_ing');
+
     const newIng = {
       id: newIngId,
       name,
@@ -128,10 +136,12 @@ function setupEventListeners() {
       }
     };
 
-    await saveCustomIngredient(newIng);
+    const isPublic = dom.ingIsPublic ? dom.ingIsPublic.checked : false;
+
+    await saveCustomIngredient(newIng, isPublic);
     
     // Alert and update state
-    alert(`Ingrediente "${name}" cadastrado com sucesso!`);
+    alert(`Ingrediente "${name}" cadastrado com sucesso${isPublic ? ' no catálogo PÚBLICO para todos os usuários!' : '!'}`);
     ingredients.push(newIng);
     
     // Reset form and dropdown
@@ -140,7 +150,8 @@ function setupEventListeners() {
   });
 
   // 2. Add Ingredient to Recipe List
-  dom.btnAddIng.addEventListener('click', () => {
+  dom.btnAddIng.addEventListener('click', (e) => {
+    if (e) { e.preventDefault(); e.stopPropagation(); }
     const ingId = dom.recIngSelect.value;
     const qty = parseFloat(dom.recIngQty.value);
     const unit = dom.recIngUnit.value.trim();
@@ -180,8 +191,22 @@ function setupEventListeners() {
     renderAddedIngredientsList();
   });
 
+  // Enter key in ingredient qty or unit triggers add ingredient
+  [dom.recIngQty, dom.recIngUnit].forEach(inputEl => {
+    if (inputEl) {
+      inputEl.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          e.stopPropagation();
+          dom.btnAddIng.click();
+        }
+      });
+    }
+  });
+
   // 3. Add Instruction Step to Recipe List
-  dom.btnAddStep.addEventListener('click', () => {
+  dom.btnAddStep.addEventListener('click', (e) => {
+    if (e) { e.preventDefault(); e.stopPropagation(); }
     const text = dom.recStepText.value.trim();
     if (!text) {
       alert('Digite o modo de preparo para o passo.');
@@ -194,13 +219,16 @@ function setupEventListeners() {
     renderAddedStepsList();
   });
 
-  // Enter key in step input triggers add
-  dom.recStepText.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      dom.btnAddStep.click();
-    }
-  });
+  // Enter key in step input triggers add step without submitting main form
+  if (dom.recStepText) {
+    dom.recStepText.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        e.stopPropagation();
+        dom.btnAddStep.click();
+      }
+    });
+  }
 
   // 4. Submit Custom Recipe
   dom.recForm.addEventListener('submit', async (e) => {
@@ -217,11 +245,15 @@ function setupEventListeners() {
       return;
     }
 
-    // Check if recipe already exists (case-insensitive)
-    const normalizedName = name.toLowerCase();
-    const recipeAlreadyExists = recipes.some(r => r && r.name && r.name.trim().toLowerCase() === normalizedName);
+    // Fetch live catalog data to ensure we compare against current Firestore state
+    const currentAppData = await loadAppData();
+    const liveRecipes = (currentAppData && currentAppData.recipes) ? currentAppData.recipes : recipes;
+
+    // Check if recipe already exists (accent, casing, and whitespace insensitive)
+    const normTarget = normalizeString(name);
+    const recipeAlreadyExists = liveRecipes.some(r => r && r.name && normalizeString(r.name) === normTarget);
     if (recipeAlreadyExists) {
-      alert(`A receita "${name}" já está cadastrada no sistema!`);
+      alert(`⚠️ A receita "${name}" já está cadastrada no sistema! Não é permitido cadastrar receitas duplicadas.`);
       return;
     }
 
@@ -240,7 +272,9 @@ function setupEventListeners() {
       image = 'https://images.unsplash.com/photo-1495521821757-a1efb6729352?w=600&auto=format&fit=crop&q=80';
     }
 
-    const newRecId = `custom_recipe_${Date.now()}`;
+    const isPublic = dom.recIsPublic ? dom.recIsPublic.checked : false;
+    const newRecId = generateSlug(name, isPublic ? 'rec' : 'custom_recipe');
+
     const newRecipe = {
       id: newRecId,
       name,
@@ -256,9 +290,11 @@ function setupEventListeners() {
       instructions: [...recipeInstructions]
     };
 
-    await saveCustomRecipe(newRecipe);
+    const isPublic = dom.recIsPublic ? dom.recIsPublic.checked : false;
 
-    alert(`Receita "${name}" cadastrada com sucesso!`);
+    await saveCustomRecipe(newRecipe, isPublic);
+
+    alert(`Receita "${name}" cadastrada com sucesso${isPublic ? ' no catálogo PÚBLICO para todos os usuários!' : '!'}`);
 
     // Reset forms and state lists
     dom.recForm.reset();

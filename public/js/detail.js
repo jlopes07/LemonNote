@@ -62,13 +62,18 @@ function renderError(message) {
 function renderRecipeDetails() {
   const baseMacros = calculateRecipeMacros(recipe, ingredients);
   const factor = currentServings / baseServings;
+  const currentUid = getCurrentUserScope();
+  const isCreator = recipe && recipe.userId && recipe.userId === currentUid;
 
   dom.detailContainer.innerHTML = `
     <div class="detail-card">
       <div class="detail-grid">
         <!-- Header Info -->
         <div class="detail-header-info">
-          <span class="badge-tag" style="align-self: flex-start; background: var(--bg-element); color: var(--accent);">⏱️ ${recipe.prepTime} minutos de preparo</span>
+          <div style="display:flex; justify-content:space-between; align-items:center; width:100%;">
+            <span class="badge-tag" style="background: var(--bg-element); color: var(--accent);">⏱️ ${recipe.prepTime} minutos de preparo</span>
+            ${isCreator ? `<button type="button" id="btn-delete-recipe-detail" style="background:rgba(239,68,68,0.9); color:white; border:none; padding:6px 14px; border-radius:12px; font-size:13px; font-weight:600; cursor:pointer; display:inline-flex; align-items:center; gap:6px;">🗑️ Excluir Receita</button>` : ''}
+          </div>
           <h2 class="recipe-title">${recipe.name}</h2>
           <p class="recipe-desc">${recipe.description}</p>
         </div>
@@ -215,14 +220,24 @@ function renderRecipeDetails() {
     document.getElementById('macro-fat').textContent = `${fatVal}g`;
 
     document.getElementById('fill-calories').style.width = `${Math.min(100, (caloriesVal / 1000) * 100)}%`;
-    document.getElementById('fill-protein').style.width = `${Math.min(100, (proteinVal / 75) * 100)}%`;
-    document.getElementById('fill-carbs').style.width = `${Math.min(100, (carbsVal / 150) * 100)}%`;
-    document.getElementById('fill-fat').style.width = `${Math.min(100, (fatVal / 75) * 100)}%`;
+    document.getElementById('macro-protein-fill').style.width = `${Math.min(100, (proteinVal / 80) * 100)}%`;
+    document.getElementById('macro-carbs-fill').style.width = `${Math.min(100, (carbsVal / 100) * 100)}%`;
+    document.getElementById('macro-fat-fill').style.width = `${Math.min(100, (fatVal / 50) * 100)}%`;
   };
 
   slider.addEventListener('input', (e) => updatePortions(parseInt(e.target.value)));
   btnDec.addEventListener('click', () => updatePortions(currentServings - 1));
   btnInc.addEventListener('click', () => updatePortions(currentServings + 1));
+
+  const deleteBtn = document.getElementById('btn-delete-recipe-detail');
+  if (deleteBtn) {
+    deleteBtn.addEventListener('click', async () => {
+      if (confirm(`Deseja realmente excluir a receita "${recipe.name}"?`)) {
+        await deleteRecipe(recipe);
+        window.location.href = 'recipes.html';
+      }
+    });
+  }
 
   // Interactive instructions checkboxes
   const stepItems = dom.detailContainer.querySelectorAll('.step-item');

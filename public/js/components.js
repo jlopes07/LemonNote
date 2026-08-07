@@ -2,11 +2,12 @@
 
 function getActivePageKey() {
   const path = window.location.pathname.toLowerCase();
+  if (path.includes('pantry.html')) return 'pantry';
   if (path.includes('recipes.html')) return 'recipes';
   if (path.includes('recipe-detail.html')) return 'recipes';
   if (path.includes('register.html')) return 'register';
   if (path.includes('settings.html')) return 'settings';
-  return 'pantry'; // default index.html
+  return 'home';
 }
 
 function renderHeaderComponent() {
@@ -55,17 +56,20 @@ function renderHeaderComponent() {
           </svg>
         </button>
         <div class="nav-dropdown-menu">
-          <a href="index.html" class="nav-dropdown-item ${activePage === 'pantry' ? 'active' : ''}">
-            Minha Despensa
+          <a href="index.html" class="nav-dropdown-item ${activePage === 'home' ? 'active' : ''}">
+            🏠 Início / Home
+          </a>
+          <a href="pantry.html" class="nav-dropdown-item ${activePage === 'pantry' ? 'active' : ''}">
+            🧺 Minha Despensa
           </a>
           <a href="recipes.html" class="nav-dropdown-item ${activePage === 'recipes' ? 'active' : ''}">
-            Receitas Sugeridas
+            📖 Receitas Sugeridas
           </a>
           <a href="register.html" class="nav-dropdown-item ${activePage === 'register' ? 'active' : ''}">
-            Painel de Cadastro
+            ➕ Painel de Cadastro
           </a>
           <a href="settings.html" class="nav-dropdown-item ${activePage === 'settings' ? 'active' : ''}">
-            Configurações
+            ⚙️ Configurações
           </a>
         </div>
       </div>

@@ -17,13 +17,13 @@
       <!-- Back Action and Filter Row -->
       <div class="recipes-header-row">
         <div class="recipes-title">
-          <a href="index.html" class="btn-secondary" style="margin-bottom: 12px; padding: 8px 16px;">
+          <a href="pantry.html" class="btn-secondary" style="margin-bottom: 12px; padding: 8px 16px; display: inline-flex; align-items: center; gap: 8px;">
             <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"
               stroke-linecap="round" stroke-linejoin="round">
               <line x1="19" y1="12" x2="5" y2="12"></line>
               <polyline points="12 19 5 12 12 5"></polyline>
             </svg>
-            <span>Voltar para Despensa</span>
+            <span>Voltar para a Despensa</span>
           </a>
           <h2>Receitas Sugeridas</h2>
           <p id="recipes-sub-count">Analisando sua despensa...</p>
@@ -35,6 +35,11 @@
           <button class="filter-tab" data-filter="ready">Prontas para Fazer</button>
           <button class="filter-tab" data-filter="missing-few">Quase Prontas</button>
         </div>
+      </div>
+
+      <!-- Recipe Search Bar Bar -->
+      <div class="recipe-search-box" style="margin-bottom: 24px;">
+        <input type="text" id="recipe-search" placeholder="🔍 Buscar receita por nome, ingrediente ou categoria..." style="width: 100%; padding: 14px 18px; border-radius: var(--radius-md); border: 1px solid var(--border-color); background: var(--card-bg); color: var(--text-heading); font-size: 0.95rem; outline: none; transition: all 0.2s ease;" />
       </div>
 
       <!-- Recipes Grid -->

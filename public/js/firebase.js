@@ -15,6 +15,7 @@ import {
   doc,
   setDoc,
   getDoc,
+  deleteDoc,
   collection,
   getDocs
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -114,6 +115,48 @@ async function getPublicRecipesFromFirestore() {
   }
 }
 
+async function savePublicIngredient(ingredient) {
+  try {
+    const firestore = await getDbInstance();
+    if (!firestore) return;
+    const ingRef = doc(firestore, `public_ingredients/${ingredient.id}`);
+    await setDoc(ingRef, ingredient);
+  } catch (e) {
+    console.warn('Aviso salvamento ingrediente público Firestore:', e);
+  }
+}
+
+async function savePublicRecipe(recipe) {
+  try {
+    const firestore = await getDbInstance();
+    if (!firestore) return;
+    const recRef = doc(firestore, `public_recipes/${recipe.id}`);
+    await setDoc(recRef, recipe);
+  } catch (e) {
+    console.warn('Aviso salvamento receita pública Firestore:', e);
+  }
+}
+
+async function deletePublicIngredient(ingredientId) {
+  try {
+    const firestore = await getDbInstance();
+    if (!firestore || !ingredientId) return;
+    await deleteDoc(doc(firestore, `public_ingredients/${ingredientId}`));
+  } catch (e) {
+    console.warn('Aviso exclusão ingrediente público:', e);
+  }
+}
+
+async function deletePublicRecipe(recipeId) {
+  try {
+    const firestore = await getDbInstance();
+    if (!firestore || !recipeId) return;
+    await deleteDoc(doc(firestore, `public_recipes/${recipeId}`));
+  } catch (e) {
+    console.warn('Aviso exclusão receita pública:', e);
+  }
+}
+
 // Firestore User-Scoped Data Helpers
 async function saveUserCustomIngredient(userId, ingredient) {
   try {
@@ -141,6 +184,16 @@ async function getUserCustomIngredients(userId) {
   }
 }
 
+async function deleteUserCustomIngredient(userId, ingredientId) {
+  try {
+    const firestore = await getDbInstance();
+    if (!firestore || !userId || !ingredientId) return;
+    await deleteDoc(doc(firestore, `users/${userId}/custom_ingredients/${ingredientId}`));
+  } catch (e) {
+    console.warn('Aviso exclusão ingrediente privado:', e);
+  }
+}
+
 async function saveUserCustomRecipe(userId, recipe) {
   try {
     const firestore = await getDbInstance();
@@ -164,6 +217,16 @@ async function getUserCustomRecipes(userId) {
   } catch (e) {
     console.warn('Aviso leitura receita Firestore:', e);
     return [];
+  }
+}
+
+async function deleteUserCustomRecipe(userId, recipeId) {
+  try {
+    const firestore = await getDbInstance();
+    if (!firestore || !userId || !recipeId) return;
+    await deleteDoc(doc(firestore, `users/${userId}/custom_recipes/${recipeId}`));
+  } catch (e) {
+    console.warn('Aviso exclusão receita privada:', e);
   }
 }
 
@@ -197,10 +260,16 @@ async function getUserPantry(userId) {
 if (typeof window !== 'undefined') {
   window.getPublicIngredientsFromFirestore = getPublicIngredientsFromFirestore;
   window.getPublicRecipesFromFirestore = getPublicRecipesFromFirestore;
+  window.savePublicIngredient = savePublicIngredient;
+  window.savePublicRecipe = savePublicRecipe;
+  window.deletePublicIngredient = deletePublicIngredient;
+  window.deletePublicRecipe = deletePublicRecipe;
   window.saveUserCustomIngredient = saveUserCustomIngredient;
   window.getUserCustomIngredients = getUserCustomIngredients;
+  window.deleteUserCustomIngredient = deleteUserCustomIngredient;
   window.saveUserCustomRecipe = saveUserCustomRecipe;
   window.getUserCustomRecipes = getUserCustomRecipes;
+  window.deleteUserCustomRecipe = deleteUserCustomRecipe;
   window.saveUserPantry = saveUserPantry;
   window.getUserPantry = getUserPantry;
 }
@@ -218,10 +287,16 @@ export {
   onAuthChange,
   getPublicIngredientsFromFirestore,
   getPublicRecipesFromFirestore,
+  savePublicIngredient,
+  savePublicRecipe,
+  deletePublicIngredient,
+  deletePublicRecipe,
   saveUserCustomIngredient,
   getUserCustomIngredients,
+  deleteUserCustomIngredient,
   saveUserCustomRecipe,
   getUserCustomRecipes,
+  deleteUserCustomRecipe,
   saveUserPantry,
   getUserPantry
 };
