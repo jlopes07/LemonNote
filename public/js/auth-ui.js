@@ -3,10 +3,12 @@ import {
   registerWithEmail,
   loginWithGoogle,
   logoutUser,
-  onAuthChange
+  onAuthChange,
+  auth
 } from './firebase.js';
 
 let activeTab = 'login'; // 'login' | 'register'
+let isAuthMandatory = false;
 
 function injectAuthModal() {
   if (document.getElementById('auth-modal-overlay')) return;
@@ -68,117 +70,7 @@ function setupModalEventListeners() {
   const form = document.getElementById('auth-form');
   const submitBtn = document.getElementById('auth-submit-btn');
   const googleBtn = document.getElementById('btn-auth-google');
-  const errorMsg = document.getElementById('auth-error-msg');
 
-  // Open & Close
-  closeBtn.addEventListener('click', closeAuthModal);
-  overlay.addEventListener('click', (e) => {
-    if (e.target === overlay) closeAuthModal();
-  });
-
-  // Switch tabs
-  tabLogin.addEventListener('click', () => {
-    activeTab = 'login';
-    tabLogin.classList.add('active');
-    tabRegister.classList.remove('active');
-    submitBtn.textContent = 'Entrar na Conta';
-    clearError();
-  });
-
-  tabRegister.addEventListener('click', () => {
-    activeTab = 'register';
-    tabRegister.classList.add('active');
-    tabLogin.classList.remove('active');
-    submitBtn.textContent = 'Criar Nova Conta';
-    clearError();
-  });
-
-  // Form submit
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    clearError();
-
-    const email = document.getElementById('auth-email').value.trim();
-    const password = document.getElementById('auth-password').value;
-
-    if (!email || !password) return;
-
-    submitBtn.disabled = true;
-    submitBtn.textContent = 'Aguarde...';
-
-    try {
-      if (activeTab === 'login') {
-        await loginWithEmail(email, password);
-      } else {
-        await registerWithEmail(email, password);
-      }
-      closeAuthModal();
-      form.reset();
-    } catch (err) {
-      console.error('Erro Auth:', err);
-      showError(translateAuthError(err.code || err.message));
-    } finally {
-      submitBtn.disabled = false;
-      submitBtn.textContent = activeTab === 'login' ? 'Entrar na Conta' : 'Criar Nova Conta';
-    }
-  });
-
-  // Google Login
-  googleBtn.addEventListener('click', async () => {
-    clearError();
-    try {
-      await loginWithGoogle();
-      closeAuthModal();
-    } catch (err) {
-      console.error('Erro Google Auth:', err);
-      if (err.code !== 'auth/popup-closed-by-user') {
-        showError(translateAuthError(err.code || err.message));
-      }
-    }
-  });
-}
-
-let isAuthMandatory = false;
-
-function openAuthModal(mandatory = false) {
-  injectAuthModal();
-  isAuthMandatory = mandatory;
-
-  const overlay = document.getElementById('auth-modal-overlay');
-  const closeBtn = document.getElementById('auth-modal-close');
-
-  if (overlay) {
-    overlay.classList.add('open');
-  }
-
-  if (mandatory) {
-    document.body.classList.add('auth-locked');
-  }
-
-  if (closeBtn) {
-    closeBtn.style.display = mandatory ? 'none' : 'block';
-  }
-}
-
-function closeAuthModal() {
-  if (isAuthMandatory && !auth?.currentUser) return; // Block closing if mandatory login is active
-
-  const overlay = document.getElementById('auth-modal-overlay');
-  if (overlay) overlay.classList.remove('open');
-  document.body.classList.remove('auth-locked');
-  clearError();
-}
-
-function setupModalEventListeners() {
-  const overlay = document.getElementById('auth-modal-overlay');
-  const closeBtn = document.getElementById('auth-modal-close');
-  const tabLogin = document.getElementById('tab-btn-login');
-  const tabRegister = document.getElementById('tab-btn-register');
-  const form = document.getElementById('auth-form');
-  const submitBtn = document.getElementById('auth-submit-btn');
-  const googleBtn = document.getElementById('btn-auth-google');
-
-  // Open & Close
   if (closeBtn) {
     closeBtn.addEventListener('click', () => {
       if (!isAuthMandatory) closeAuthModal();
@@ -193,7 +85,6 @@ function setupModalEventListeners() {
     });
   }
 
-  // Switch tabs
   tabLogin.addEventListener('click', () => {
     activeTab = 'login';
     tabLogin.classList.add('active');
@@ -210,7 +101,6 @@ function setupModalEventListeners() {
     clearError();
   });
 
-  // Form submit
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     clearError();
@@ -241,7 +131,6 @@ function setupModalEventListeners() {
     }
   });
 
-  // Google Login
   googleBtn.addEventListener('click', async () => {
     clearError();
     try {
@@ -255,6 +144,30 @@ function setupModalEventListeners() {
       }
     }
   });
+}
+
+function openAuthModal(mandatory = false) {
+  injectAuthModal();
+  isAuthMandatory = mandatory;
+
+  const overlay = document.getElementById('auth-modal-overlay');
+  const closeBtn = document.getElementById('auth-modal-close');
+
+  if (overlay) {
+    overlay.classList.add('open');
+  }
+
+  if (closeBtn) {
+    closeBtn.style.display = mandatory ? 'none' : 'block';
+  }
+}
+
+function closeAuthModal() {
+  if (isAuthMandatory && !auth?.currentUser) return;
+
+  const overlay = document.getElementById('auth-modal-overlay');
+  if (overlay) overlay.classList.remove('open');
+  clearError();
 }
 
 function showError(msg) {
@@ -292,19 +205,17 @@ function translateAuthError(code) {
   }
 }
 
-// Update Header User UI & Dropdown Footer
 function renderHeaderUserArea(user) {
   const headerStats = document.querySelector('.header-stats');
   const dropdownMenu = document.querySelector('.nav-dropdown-menu');
 
-  // 1. Update Header Badge
   if (headerStats) {
     let userArea = document.getElementById('user-auth-area');
     if (!userArea) {
       userArea = document.createElement('div');
       userArea.id = 'user-auth-area';
       userArea.className = 'user-auth-area';
-      headerStats.appendChild(userArea);
+      headerStats.insertBefore(userArea, headerStats.firstChild);
     }
 
     if (user) {
@@ -325,7 +236,6 @@ function renderHeaderUserArea(user) {
     }
   }
 
-  // 2. Update Dropdown Menu Footer (Logoff at the end of dropdown)
   if (dropdownMenu) {
     let dropdownAuthFooter = document.getElementById('dropdown-auth-footer');
     if (!dropdownAuthFooter) {
@@ -383,27 +293,23 @@ function renderHeaderUserArea(user) {
   }
 }
 
-// Expose renderHeaderUserArea for components re-rendering
 window.renderHeaderUserArea = renderHeaderUserArea;
 
-// Subscribe to auth state changes and enforce login route guard
 document.addEventListener('DOMContentLoaded', () => {
   injectAuthModal();
 
   onAuthChange((user) => {
     window._currentUser = user;
     renderHeaderUserArea(user);
-    
+
     if (typeof window.populateProfileData === 'function') {
       window.populateProfileData(user);
     }
 
     if (!user) {
-      // Unauthenticated: Hide app container and open login modal
       document.body.classList.remove('authenticated');
       openAuthModal(true);
     } else {
-      // Authenticated: Reveal app container and close modal
       document.body.classList.add('authenticated');
       isAuthMandatory = false;
       closeAuthModal();
