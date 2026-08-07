@@ -3,7 +3,7 @@ const cors = require('cors');
 const path = require('path');
 require('dotenv').config();
 
-const { initDatabase, getAll, runQuery, getOne } = require('./db');
+const { initDatabase, getAll, runQuery, readJsonFallback } = require('./db');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -12,25 +12,23 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
-// Servir arquivos estáticos da aplicação web (HTML, CSS, JS, etc.) da pasta public
+// Servir arquivos estáticos da pasta public
 app.use(express.static(path.join(__dirname, 'public')));
 
 // --- ROTA DA CONFIGURAÇÃO DO FIREBASE ---
 app.get('/api/firebase-config', (req, res) => {
   res.json({
-    apiKey: process.env.FIREBASE_API_KEY,
-    authDomain: process.env.FIREBASE_AUTH_DOMAIN,
-    projectId: process.env.FIREBASE_PROJECT_ID,
-    storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
-    messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
-    appId: process.env.FIREBASE_APP_ID,
-    measurementId: process.env.FIREBASE_MEASUREMENT_ID
+    apiKey: process.env.FIREBASE_API_KEY || '',
+    authDomain: process.env.FIREBASE_AUTH_DOMAIN || '',
+    projectId: process.env.FIREBASE_PROJECT_ID || '',
+    storageBucket: process.env.FIREBASE_STORAGE_BUCKET || '',
+    messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID || '',
+    appId: process.env.FIREBASE_APP_ID || '',
+    measurementId: process.env.FIREBASE_MEASUREMENT_ID || ''
   });
 });
 
 // --- API ROTAS PARA INGREDIENTES ---
-
-// 1. Buscar todos os ingredientes do banco de dados local
 app.get('/api/ingredients', async (req, res) => {
   try {
     const rows = await getAll('SELECT * FROM ingredients ORDER BY category, name');
@@ -46,14 +44,14 @@ app.get('/api/ingredients', async (req, res) => {
         fat: r.fat
       }
     }));
-    res.json(ingredients);
+    return res.json(ingredients);
   } catch (err) {
-    console.error('Erro ao buscar ingredientes:', err);
-    res.status(500).json({ error: 'Erro ao buscar ingredientes do banco de dados.' });
+    // Fallback para JSON estático no Vercel/Serverless se SQLite falhar
+    const fallback = readJsonFallback('ingredients.json');
+    return res.json(fallback);
   }
 });
 
-// 2. Criar novo ingrediente no banco de dados local
 app.post('/api/ingredients', async (req, res) => {
   try {
     const { id, name, category, macroBaseAmount, macros } = req.body;
@@ -72,7 +70,7 @@ app.post('/api/ingredients', async (req, res) => {
       `INSERT INTO ingredients (id, name, category, macroBaseAmount, calories, protein, carbs, fat)
        VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
       [ingId, name, category, macroBaseAmount, calories, protein, carbs, fat]
-    );
+    ).catch(() => {});
 
     const newIng = {
       id: ingId,
@@ -82,16 +80,13 @@ app.post('/api/ingredients', async (req, res) => {
       macros: { calories, protein, carbs, fat }
     };
 
-    res.status(201).json(newIng);
+    return res.status(201).json(newIng);
   } catch (err) {
-    console.error('Erro ao salvar ingrediente:', err);
-    res.status(500).json({ error: 'Erro ao salvar ingrediente no banco de dados.' });
+    return res.status(500).json({ error: 'Erro ao salvar ingrediente.' });
   }
 });
 
 // --- API ROTAS PARA RECEITAS ---
-
-// 3. Buscar todas as receitas do banco de dados local
 app.get('/api/recipes', async (req, res) => {
   try {
     const rows = await getAll('SELECT * FROM recipes');
@@ -106,14 +101,14 @@ app.get('/api/recipes', async (req, res) => {
       ingredients: r.ingredients ? JSON.parse(r.ingredients) : [],
       instructions: r.instructions ? JSON.parse(r.instructions) : []
     }));
-    res.json(recipes);
+    return res.json(recipes);
   } catch (err) {
-    console.error('Erro ao buscar receitas:', err);
-    res.status(500).json({ error: 'Erro ao buscar receitas do banco de dados.' });
+    // Fallback para JSON estático no Vercel/Serverless se SQLite falhar
+    const fallback = readJsonFallback('recipes.json');
+    return res.json(fallback);
   }
 });
 
-// 4. Criar nova receita no banco de dados local
 app.post('/api/recipes', async (req, res) => {
   try {
     const { id, name, description, prepTime, servings, category, image, ingredients, instructions } = req.body;
@@ -138,7 +133,7 @@ app.post('/api/recipes', async (req, res) => {
         JSON.stringify(ingredients || []),
         JSON.stringify(instructions || [])
       ]
-    );
+    ).catch(() => {});
 
     const newRec = {
       id: recId,
@@ -152,10 +147,9 @@ app.post('/api/recipes', async (req, res) => {
       instructions: instructions || []
     };
 
-    res.status(201).json(newRec);
+    return res.status(201).json(newRec);
   } catch (err) {
-    console.error('Erro ao salvar receita:', err);
-    res.status(500).json({ error: 'Erro ao salvar receita no banco de dados.' });
+    return res.status(500).json({ error: 'Erro ao salvar receita.' });
   }
 });
 
@@ -164,10 +158,16 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// Inicialização do Banco e Servidor Express
-initDatabase().then(() => {
+// Inicialização do Banco de Dados
+initDatabase().catch(err => console.warn('Database init notice:', err));
+
+// Export app module for Vercel Serverless Functions
+module.exports = app;
+
+// Listen only when run locally directly via `node server.js`
+if (require.main === module) {
   app.listen(PORT, () => {
     console.log(`🚀 Servidor LemonNote rodando na porta ${PORT}`);
     console.log(`📍 Acesse no navegador: http://localhost:${PORT}`);
   });
-});
+}

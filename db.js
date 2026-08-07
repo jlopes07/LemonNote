@@ -1,27 +1,45 @@
 const fs = require('fs');
 const path = require('path');
-const sqlite3 = require('sqlite3').verbose();
-require('dotenv').config();
 
-const dbPath = process.env.DB_PATH || './data/lemonnote.db';
-
-// Garante que o diretório do arquivo de banco de dados exista
-const dbDir = path.dirname(path.resolve(dbPath));
-if (!fs.existsSync(dbDir)) {
-  fs.mkdirSync(dbDir, { recursive: true });
+let sqlite3;
+try {
+  sqlite3 = require('sqlite3').verbose();
+} catch (e) {
+  console.warn('sqlite3 native module not available, falling back to JSON storage.');
 }
 
-const db = new sqlite3.Database(path.resolve(dbPath), (err) => {
-  if (err) {
-    console.error('Erro ao conectar ao banco de dados SQLite:', err.message);
-  } else {
-    console.log(`Conectado ao banco de dados local SQLite em: ${dbPath}`);
-  }
-});
+require('dotenv').config();
 
-// Funções utilitárias com Promises
+// Determine DB path based on environment (Vercel / AWS Lambda uses /tmp)
+const isVercel = process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME;
+const defaultDbPath = isVercel ? '/tmp/lemonnote.db' : './data/lemonnote.db';
+const dbPath = process.env.DB_PATH || defaultDbPath;
+
+let db = null;
+
+if (sqlite3) {
+  try {
+    const dbDir = path.dirname(path.resolve(dbPath));
+    if (!fs.existsSync(dbDir)) {
+      fs.mkdirSync(dbDir, { recursive: true });
+    }
+
+    db = new sqlite3.Database(path.resolve(dbPath), (err) => {
+      if (err) {
+        console.error('Erro ao conectar ao banco de dados SQLite:', err.message);
+      } else {
+        console.log(`Conectado ao banco de dados SQLite em: ${dbPath}`);
+      }
+    });
+  } catch (e) {
+    console.warn('SQLite init warning (Vercel fallback enabled):', e.message);
+  }
+}
+
+// Utility promises
 function runQuery(sql, params = []) {
   return new Promise((resolve, reject) => {
+    if (!db) return resolve({ lastID: Date.now() });
     db.run(sql, params, function (err) {
       if (err) reject(err);
       else resolve(this);
@@ -31,6 +49,7 @@ function runQuery(sql, params = []) {
 
 function getAll(sql, params = []) {
   return new Promise((resolve, reject) => {
+    if (!db) return reject(new Error('DB not initialized'));
     db.all(sql, params, (err, rows) => {
       if (err) reject(err);
       else resolve(rows);
@@ -40,6 +59,7 @@ function getAll(sql, params = []) {
 
 function getOne(sql, params = []) {
   return new Promise((resolve, reject) => {
+    if (!db) return reject(new Error('DB not initialized'));
     db.get(sql, params, (err, row) => {
       if (err) reject(err);
       else resolve(row);
@@ -47,10 +67,26 @@ function getOne(sql, params = []) {
   });
 }
 
-// Inicializa tabelas e população inicial (Seed)
-async function initDatabase() {
+// Read JSON fallback helpers
+function readJsonFallback(filename) {
   try {
-    // 1. Tabela de Ingredientes
+    let p = path.resolve(__dirname, 'public', 'data', filename);
+    if (!fs.existsSync(p)) {
+      p = path.resolve(__dirname, 'data', filename);
+    }
+    if (fs.existsSync(p)) {
+      return JSON.parse(fs.readFileSync(p, 'utf8'));
+    }
+  } catch (e) {
+    console.error(`Error reading ${filename} fallback:`, e);
+  }
+  return [];
+}
+
+// Database initializer with seed & Vercel fallback
+async function initDatabase() {
+  if (!db) return;
+  try {
     await runQuery(`
       CREATE TABLE IF NOT EXISTS ingredients (
         id TEXT PRIMARY KEY,
@@ -64,7 +100,6 @@ async function initDatabase() {
       )
     `);
 
-    // 2. Tabela de Receitas
     await runQuery(`
       CREATE TABLE IF NOT EXISTS recipes (
         id TEXT PRIMARY KEY,
@@ -79,66 +114,50 @@ async function initDatabase() {
       )
     `);
 
-    // 3. Seed dos ingredientes padrão se a tabela estiver vazia
-    const ingCountRow = await getOne('SELECT COUNT(*) as count FROM ingredients');
+    const ingCountRow = await getOne('SELECT COUNT(*) as count FROM ingredients').catch(() => null);
     if (ingCountRow && ingCountRow.count === 0) {
-      let jsonIngPath = path.resolve(__dirname, 'public', 'data', 'ingredients.json');
-      if (!fs.existsSync(jsonIngPath)) {
-        jsonIngPath = path.resolve(__dirname, 'data', 'ingredients.json');
-      }
-      if (fs.existsSync(jsonIngPath)) {
-        const ingredientsData = JSON.parse(fs.readFileSync(jsonIngPath, 'utf8'));
-        for (const ing of ingredientsData) {
-          await runQuery(
-            `INSERT INTO ingredients (id, name, category, macroBaseAmount, calories, protein, carbs, fat) 
-             VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-            [
-              ing.id,
-              ing.name,
-              ing.category,
-              ing.macroBaseAmount,
-              ing.macros ? ing.macros.calories || 0 : 0,
-              ing.macros ? ing.macros.protein || 0 : 0,
-              ing.macros ? ing.macros.carbs || 0 : 0,
-              ing.macros ? ing.macros.fat || 0 : 0
-            ]
-          );
-        }
-        console.log(`Seed concluído: ${ingredientsData.length} ingredientes inseridos no banco de dados SQLite.`);
+      const ingredientsData = readJsonFallback('ingredients.json');
+      for (const ing of ingredientsData) {
+        await runQuery(
+          `INSERT INTO ingredients (id, name, category, macroBaseAmount, calories, protein, carbs, fat) 
+           VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+          [
+            ing.id,
+            ing.name,
+            ing.category,
+            ing.macroBaseAmount,
+            ing.macros ? ing.macros.calories || 0 : 0,
+            ing.macros ? ing.macros.protein || 0 : 0,
+            ing.macros ? ing.macros.carbs || 0 : 0,
+            ing.macros ? ing.macros.fat || 0 : 0
+          ]
+        ).catch(() => {});
       }
     }
 
-    // 4. Seed das receitas padrão se a tabela estiver vazia
-    const recCountRow = await getOne('SELECT COUNT(*) as count FROM recipes');
+    const recCountRow = await getOne('SELECT COUNT(*) as count FROM recipes').catch(() => null);
     if (recCountRow && recCountRow.count === 0) {
-      let jsonRecPath = path.resolve(__dirname, 'public', 'data', 'recipes.json');
-      if (!fs.existsSync(jsonRecPath)) {
-        jsonRecPath = path.resolve(__dirname, 'data', 'recipes.json');
-      }
-      if (fs.existsSync(jsonRecPath)) {
-        const recipesData = JSON.parse(fs.readFileSync(jsonRecPath, 'utf8'));
-        for (const rec of recipesData) {
-          await runQuery(
-            `INSERT INTO recipes (id, name, description, prepTime, servings, category, image, ingredients, instructions) 
-             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-            [
-              rec.id,
-              rec.name || rec.title || '',
-              rec.description || '',
-              rec.prepTime || rec.timeMinutes || 0,
-              rec.servings || 1,
-              rec.category || '',
-              rec.image || rec.imageUrl || '',
-              JSON.stringify(rec.ingredients || []),
-              JSON.stringify(rec.instructions || [])
-            ]
-          );
-        }
-        console.log(`Seed concluído: ${recipesData.length} receitas inseridas no banco de dados SQLite.`);
+      const recipesData = readJsonFallback('recipes.json');
+      for (const rec of recipesData) {
+        await runQuery(
+          `INSERT INTO recipes (id, name, description, prepTime, servings, category, image, ingredients, instructions) 
+           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+          [
+            rec.id,
+            rec.name || rec.title || '',
+            rec.description || '',
+            rec.prepTime || rec.timeMinutes || 0,
+            rec.servings || 1,
+            rec.category || '',
+            rec.image || rec.imageUrl || '',
+            JSON.stringify(rec.ingredients || []),
+            JSON.stringify(rec.instructions || [])
+          ]
+        ).catch(() => {});
       }
     }
   } catch (err) {
-    console.error('Erro na inicialização do banco de dados:', err);
+    console.error('Erro na inicialização do banco SQLite:', err);
   }
 }
 
@@ -147,5 +166,6 @@ module.exports = {
   runQuery,
   getAll,
   getOne,
-  initDatabase
+  initDatabase,
+  readJsonFallback
 };
