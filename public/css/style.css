@@ -657,6 +657,7 @@ body {
   display: none !important;
 }
 
+html.authenticated .app-container,
 body.authenticated .app-container {
   display: flex !important;
 }
@@ -679,10 +680,11 @@ body.authenticated .app-container {
   transition: opacity 0.25s ease, visibility 0.25s ease;
 }
 
+html.authenticated .auth-modal-overlay:not(.open),
 body.authenticated .auth-modal-overlay:not(.open) {
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
 }
 
 /* Modal Container */

@@ -17,6 +17,17 @@
     document.body ? document.body.classList.add('dark-theme') : document.addEventListener('DOMContentLoaded', () => document.body.classList.add('dark-theme'));
   }
 
+  // 3. Pre-apply auth state early to eliminate login modal flash on page transitions
+  const isAuthKnown = localStorage.getItem('lemonNote_is_authenticated') === 'true';
+  if (isAuthKnown) {
+    document.documentElement.classList.add('authenticated');
+    if (document.body) {
+      document.body.classList.add('authenticated');
+    } else {
+      document.addEventListener('DOMContentLoaded', () => document.body.classList.add('authenticated'));
+    }
+  }
+
   // 3. Inject Componentized Head Elements (Favicon, Fonts & Shared style.css)
   const headElementsHTML = `
     <meta charset="UTF-8">

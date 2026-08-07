@@ -307,9 +307,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if (!user) {
+      localStorage.setItem('lemonNote_is_authenticated', 'false');
+      document.documentElement.classList.remove('authenticated');
       document.body.classList.remove('authenticated');
       openAuthModal(true);
     } else {
+      localStorage.setItem('lemonNote_is_authenticated', 'true');
+      document.documentElement.classList.add('authenticated');
       document.body.classList.add('authenticated');
       isAuthMandatory = false;
       closeAuthModal();
