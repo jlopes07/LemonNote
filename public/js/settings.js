@@ -42,22 +42,24 @@ function setupSidebarNavigation() {
 function setupThemeSelection() {
   const darkBtn = document.getElementById('btn-theme-dark');
   const lightBtn = document.getElementById('btn-theme-light');
+  const systemBtn = document.getElementById('btn-theme-system');
 
   if (!darkBtn || !lightBtn) return;
 
-  function updateThemeCardUI(currentTheme) {
-    if (currentTheme === 'light') {
+  function updateThemeCardUI(currentSetting) {
+    [darkBtn, lightBtn, systemBtn].forEach(btn => { if (btn) btn.classList.remove('selected'); });
+    if (currentSetting === 'light' && lightBtn) {
       lightBtn.classList.add('selected');
-      darkBtn.classList.remove('selected');
-    } else {
+    } else if (currentSetting === 'dark' && darkBtn) {
       darkBtn.classList.add('selected');
-      lightBtn.classList.remove('selected');
+    } else if (systemBtn) {
+      systemBtn.classList.add('selected');
     }
   }
 
   // Initial state from shared theme manager
-  const initialTheme = typeof getTheme === 'function' ? getTheme() : 'dark';
-  updateThemeCardUI(initialTheme);
+  const initialSetting = typeof getThemeSetting === 'function' ? getThemeSetting() : 'system';
+  updateThemeCardUI(initialSetting);
 
   darkBtn.addEventListener('click', () => {
     if (typeof setTheme === 'function') setTheme('dark');
@@ -67,6 +69,19 @@ function setupThemeSelection() {
   lightBtn.addEventListener('click', () => {
     if (typeof setTheme === 'function') setTheme('light');
     updateThemeCardUI('light');
+  });
+
+  if (systemBtn) {
+    systemBtn.addEventListener('click', () => {
+      if (typeof setTheme === 'function') setTheme('system');
+      updateThemeCardUI('system');
+    });
+  }
+
+  window.addEventListener('themeChanged', (e) => {
+    if (e.detail && e.detail.setting) {
+      updateThemeCardUI(e.detail.setting);
+    }
   });
 }
 

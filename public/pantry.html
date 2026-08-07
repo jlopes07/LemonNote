@@ -82,20 +82,20 @@
 
     <!-- Modal for Creating New Ingredient inside Pantry -->
     <div id="modal-ing-overlay" class="modal-overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.75); z-index:9999; justify-content:center; align-items:center;">
-      <div class="modal-card" style="background:var(--card-bg); border:1px solid var(--border-color); border-radius:var(--radius-lg); width:92%; max-width:500px; padding:24px; box-shadow:var(--shadow-lg); position:relative;">
+      <div class="modal-card" style="background:var(--bg-card); border:1px solid var(--border-color); border-radius:var(--radius-lg); width:92%; max-width:500px; padding:24px; box-shadow:var(--shadow-lg); position:relative;">
         <button id="btn-close-ing-modal" style="position:absolute; top:16px; right:16px; background:none; border:none; color:var(--text-muted); font-size:22px; cursor:pointer;">&times;</button>
-        <h3 style="font-size:1.2rem; font-weight:700; color:var(--text-heading); margin-bottom:16px;">Novo Ingrediente</h3>
+        <h3 style="font-size:1.2rem; font-weight:700; color:var(--text-main); margin-bottom:16px;">Novo Ingrediente</h3>
         
         <form id="modal-ing-form">
           <div class="form-group" style="margin-bottom:12px;">
-            <label style="display:block; font-size:13px; margin-bottom:4px; color:var(--text-heading); font-weight:500;">Nome do Ingrediente *</label>
-            <input type="text" id="modal-ing-name" placeholder="Ex: Queijo Cottage" required style="width:100%; padding:10px 14px; border-radius:var(--radius-md); border:1px solid var(--border-color); background:var(--bg-main); color:var(--text-heading); font-size:14px;">
+            <label style="display:block; font-size:13px; margin-bottom:4px; color:var(--text-main); font-weight:500;">Nome do Ingrediente *</label>
+            <input type="text" id="modal-ing-name" placeholder="Ex: Queijo Cottage" required style="width:100%; padding:10px 14px; border-radius:var(--radius-md); border:1px solid var(--border-color); background:var(--bg-element); color:var(--text-main); font-size:14px;">
           </div>
 
           <div style="display:flex; gap:12px; margin-bottom:12px;">
             <div style="flex:1;">
-              <label style="display:block; font-size:13px; margin-bottom:4px; color:var(--text-heading); font-weight:500;">Categoria *</label>
-              <select id="modal-ing-category" required style="width:100%; padding:10px 14px; border-radius:var(--radius-md); border:1px solid var(--border-color); background:var(--bg-main); color:var(--text-heading); font-size:14px;">
+              <label style="display:block; font-size:13px; margin-bottom:4px; color:var(--text-main); font-weight:500;">Categoria *</label>
+              <select id="modal-ing-category" required style="width:100%; padding:10px 14px; border-radius:var(--radius-md); border:1px solid var(--border-color); background:var(--bg-element); color:var(--text-main); font-size:14px;">
                 <option value="Proteínas & Carnes">Proteínas & Carnes</option>
                 <option value="Vegetais & Legumes">Vegetais & Legumes</option>
                 <option value="Grãos & Cereais">Grãos & Cereais</option>
@@ -105,32 +105,32 @@
               </select>
             </div>
             <div style="flex:1;">
-              <label style="display:block; font-size:13px; margin-bottom:4px; color:var(--text-heading); font-weight:500;">Qtd. Base (g/ml) *</label>
-              <input type="number" id="modal-ing-base" placeholder="Ex: 100" min="0.1" step="any" required style="width:100%; padding:10px 14px; border-radius:var(--radius-md); border:1px solid var(--border-color); background:var(--bg-main); color:var(--text-heading); font-size:14px;">
+              <label style="display:block; font-size:13px; margin-bottom:4px; color:var(--text-main); font-weight:500;">Qtd. Base (g/ml) *</label>
+              <input type="number" id="modal-ing-base" placeholder="Ex: 100" min="0.1" step="any" required style="width:100%; padding:10px 14px; border-radius:var(--radius-md); border:1px solid var(--border-color); background:var(--bg-element); color:var(--text-main); font-size:14px;">
             </div>
           </div>
 
           <div style="display:flex; gap:8px; margin-bottom:12px;">
             <div style="flex:1;">
               <label style="display:block; font-size:11px; color:var(--text-muted);">Kcal</label>
-              <input type="number" id="modal-ing-cal" placeholder="0" min="0" step="any" style="width:100%; padding:8px; border-radius:var(--radius-md); border:1px solid var(--border-color); background:var(--bg-main); color:var(--text-heading); font-size:13px;">
+              <input type="number" id="modal-ing-cal" placeholder="0" min="0" step="any" style="width:100%; padding:8px; border-radius:var(--radius-md); border:1px solid var(--border-color); background:var(--bg-element); color:var(--text-main); font-size:13px;">
             </div>
             <div style="flex:1;">
               <label style="display:block; font-size:11px; color:var(--text-muted);">Prot (g)</label>
-              <input type="number" id="modal-ing-prot" placeholder="0" min="0" step="any" style="width:100%; padding:8px; border-radius:var(--radius-md); border:1px solid var(--border-color); background:var(--bg-main); color:var(--text-heading); font-size:13px;">
+              <input type="number" id="modal-ing-prot" placeholder="0" min="0" step="any" style="width:100%; padding:8px; border-radius:var(--radius-md); border:1px solid var(--border-color); background:var(--bg-element); color:var(--text-main); font-size:13px;">
             </div>
             <div style="flex:1;">
               <label style="display:block; font-size:11px; color:var(--text-muted);">Carb (g)</label>
-              <input type="number" id="modal-ing-carb" placeholder="0" min="0" step="any" style="width:100%; padding:8px; border-radius:var(--radius-md); border:1px solid var(--border-color); background:var(--bg-main); color:var(--text-heading); font-size:13px;">
+              <input type="number" id="modal-ing-carb" placeholder="0" min="0" step="any" style="width:100%; padding:8px; border-radius:var(--radius-md); border:1px solid var(--border-color); background:var(--bg-element); color:var(--text-main); font-size:13px;">
             </div>
             <div style="flex:1;">
               <label style="display:block; font-size:11px; color:var(--text-muted);">Gord (g)</label>
-              <input type="number" id="modal-ing-fat" placeholder="0" min="0" step="any" style="width:100%; padding:8px; border-radius:var(--radius-md); border:1px solid var(--border-color); background:var(--bg-main); color:var(--text-heading); font-size:13px;">
+              <input type="number" id="modal-ing-fat" placeholder="0" min="0" step="any" style="width:100%; padding:8px; border-radius:var(--radius-md); border:1px solid var(--border-color); background:var(--bg-element); color:var(--text-main); font-size:13px;">
             </div>
           </div>
 
           <div style="margin-bottom:16px;">
-            <label style="display:flex; align-items:center; gap:8px; font-size:13px; color:var(--text-heading); cursor:pointer;">
+            <label style="display:flex; align-items:center; gap:8px; font-size:13px; color:var(--text-main); cursor:pointer;">
               <input type="checkbox" id="modal-ing-public" style="accent-color:var(--accent); width:16px; height:16px;">
               <span>Tornar este ingrediente público para todos os usuários</span>
             </label>
@@ -149,6 +149,7 @@
   </div>
 
   <!-- Scripts -->
+  <script src="js/unit-converter.js"></script>
   <script src="js/shared.js"></script>
   <script src="js/pantry.js"></script>
   <script type="module" src="js/components.js"></script>

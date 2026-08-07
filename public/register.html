@@ -16,7 +16,7 @@
     <main style="display:flex; flex-direction:column; gap:20px;">
       <!-- Back button and Navigation -->
       <div style="display:flex; justify-content:space-between; align-items:center;">
-        <a href="index.html" class="btn-secondary">
+        <a href="pantry.html" class="btn-secondary">
           <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"
             stroke-linecap="round" stroke-linejoin="round">
             <line x1="19" y1="12" x2="5" y2="12"></line>
@@ -53,8 +53,39 @@
                 </select>
               </div>
               <div class="form-group">
-                <label for="ing-base-amount">Qtd. Base Referência (g/unidades) *</label>
-                <input type="number" id="ing-base-amount" placeholder="Ex: 100 ou 1" min="0.1" step="any" required>
+                <label for="ing-base-unit">Unidade Base *</label>
+                <select id="ing-base-unit" required
+                  style="width:100%; padding:10px 14px; border-radius:var(--radius-md); border:1px solid var(--border-color); background:var(--bg-element); color:var(--text-main); font-size:14px;">
+                  <option value="g" selected>Grama (g) - Sólido</option>
+                  <option value="ml">Mililitro (ml) - Líquido</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="ing-base-amount">Qtd. Base Referência *</label>
+                <input type="number" id="ing-base-amount" value="100" placeholder="Ex: 100" min="0.1" step="any"
+                  required>
+              </div>
+            </div>
+
+            <!-- Custom Per-Food Unit Conversions Table -->
+            <div
+              style="margin-top: 14px; margin-bottom: 8px; padding: 12px; background: var(--bg-element); border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+              <span
+                style="font-size: 13px; font-weight: 600; color: var(--accent-light); display: block; margin-bottom: 8px;">Conversão
+                de Unidades Medida para este Alimento (Opcional)</span>
+              <div class="form-row" style="gap: 8px; font-size: 12px;">
+                <div class="form-group" style="flex:1;">
+                  <label for="conv-colher-sopa" style="font-size:12px;">1 Colher de Sopa =</label>
+                  <input type="number" id="conv-colher-sopa" placeholder="15" min="0.1" step="any">
+                </div>
+                <div class="form-group" style="flex:1;">
+                  <label for="conv-xicara" style="font-size:12px;">1 Xícara =</label>
+                  <input type="number" id="conv-xicara" placeholder="150" min="0.1" step="any">
+                </div>
+                <div class="form-group" style="flex:1;">
+                  <label for="conv-unidade" style="font-size:12px;">1 Unidade =</label>
+                  <input type="number" id="conv-unidade" placeholder="50" min="0.1" step="any">
+                </div>
               </div>
             </div>
 
@@ -86,8 +117,10 @@
             </div>
 
             <div class="form-group checkbox-group" style="margin-top: 14px;">
-              <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 13.5px; color: var(--text-heading); font-weight: 500;">
-                <input type="checkbox" id="ing-is-public" style="width: 18px; height: 18px; accent-color: var(--accent); cursor: pointer;">
+              <label
+                style="display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 13.5px; color: var(--text-heading); font-weight: 500;">
+                <input type="checkbox" id="ing-is-public"
+                  style="width: 18px; height: 18px; accent-color: var(--accent); cursor: pointer;">
                 <span>Deseja tornar este ingrediente público para todos os usuários?</span>
               </label>
             </div>
@@ -134,20 +167,38 @@
             <div class="inline-add-row" style="margin-top:10px; align-items:flex-start;">
               <div class="form-group" style="flex:2;">
                 <label for="rec-ing-input">Ingredientes Necessários (digite para buscar) *</label>
-                <input type="text" id="rec-ing-input" list="ingredients-datalist" placeholder="Digite o nome (ex: Ovo, Frango, Leite)..." autocomplete="off" style="width:100%; padding:10px 14px; border-radius:var(--radius-md); border:1px solid var(--border-color); background:var(--bg-main); color:var(--text-heading); font-size:14px;">
+                <input type="text" id="rec-ing-input" list="ingredients-datalist"
+                  placeholder="Digite o nome (ex: Ovo, Frango, Leite)..." autocomplete="off"
+                  style="width:100%; padding:10px 14px; border-radius:var(--radius-md); border:1px solid var(--border-color); background:var(--bg-element); color:var(--text-main); font-size:14px;">
                 <datalist id="ingredients-datalist">
                   <!-- Populated dynamically by register.js -->
                 </datalist>
               </div>
               <div class="form-group qty-col" style="flex:1;">
                 <label for="rec-ing-qty">Qtd. *</label>
-                <input type="number" id="rec-ing-qty" placeholder="Ex: 150" min="0.1" step="any" style="width:100%; padding:10px 14px; border-radius:var(--radius-md); border:1px solid var(--border-color); background:var(--bg-main); color:var(--text-heading); font-size:14px;">
+                <input type="number" id="rec-ing-qty" placeholder="Ex: 150" min="0.1" step="any"
+                  style="width:100%; padding:10px 14px; border-radius:var(--radius-md); border:1px solid var(--border-color); background:var(--bg-element); color:var(--text-main); font-size:14px;">
               </div>
               <div class="form-group unit-col" style="flex:1;">
                 <label for="rec-ing-unit">Unidade *</label>
-                <input type="text" id="rec-ing-unit" placeholder="g, ml..." value="g" style="width:100%; padding:10px 14px; border-radius:var(--radius-md); border:1px solid var(--border-color); background:var(--bg-main); color:var(--text-heading); font-size:14px;">
+                <select id="rec-ing-unit"
+                  style="width:100%; padding:10px 14px; border-radius:var(--radius-md); border:1px solid var(--border-color); background:var(--bg-element); color:var(--text-main); font-size:14px;">
+                  <option value="g" selected>Grama (g)</option>
+                  <option value="ml">Mililitro (ml)</option>
+                  <option value="colher_sopa">Colher de Sopa</option>
+                  <option value="colher_cha">Colher de Chá</option>
+                  <option value="xicara">Xícara</option>
+                  <option value="copo">Copo (200 ml)</option>
+                  <option value="unidade">Unidade</option>
+                  <option value="fatia">Fatia</option>
+                  <option value="dente">Dente</option>
+                  <option value="pitada">Pitada</option>
+                  <option value="kg">Quilograma (kg)</option>
+                  <option value="l">Litro (L)</option>
+                </select>
               </div>
-              <button type="button" id="btn-add-ing" class="btn-secondary" style="height:42px; padding:0 18px; margin-top:24px; font-weight:700;"
+              <button type="button" id="btn-add-ing" class="btn-secondary"
+                style="height:42px; padding:0 18px; margin-top:24px; font-weight:700;"
                 title="Adicionar ingrediente à lista">+</button>
             </div>
 
@@ -163,10 +214,12 @@
             <div class="inline-add-row" style="margin-top:14px; align-items:flex-start;">
               <div class="form-group" style="flex:1;">
                 <label for="rec-step-text">Modo de Preparo (Passo a Passo) *</label>
-                <textarea id="rec-step-text" rows="3" placeholder="Digite ou cole os passos (pode colar múltiplos passos de uma vez, um por linha)..." style="width:100%; padding:10px 14px; border-radius:var(--radius-md); border:1px solid var(--border-color); background:var(--bg-main); color:var(--text-heading); font-family:inherit; font-size:14px; resize:vertical;"></textarea>
+                <textarea id="rec-step-text" rows="3"
+                  placeholder="Digite ou cole os passos (pode colar múltiplos passos de uma vez, um por linha)..."
+                  style="width:100%; padding:10px 14px; border-radius:var(--radius-md); border:1px solid var(--border-color); background:var(--bg-element); color:var(--text-main); font-family:inherit; font-size:14px; resize:vertical;"></textarea>
               </div>
-              <button type="button" id="btn-add-step" class="btn-secondary" style="height:45px; padding:0 16px; margin-top:24px;"
-                title="Adicionar passos à lista">+</button>
+              <button type="button" id="btn-add-step" class="btn-secondary"
+                style="height:45px; padding:0 16px; margin-top:24px;" title="Adicionar passos à lista">+</button>
             </div>
 
             <!-- List of added steps -->
@@ -178,8 +231,10 @@
             </div>
 
             <div class="form-group checkbox-group" style="margin-top: 14px;">
-              <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 13.5px; color: var(--text-heading); font-weight: 500;">
-                <input type="checkbox" id="rec-is-public" style="width: 18px; height: 18px; accent-color: var(--accent); cursor: pointer;">
+              <label
+                style="display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 13.5px; color: var(--text-heading); font-weight: 500;">
+                <input type="checkbox" id="rec-is-public"
+                  style="width: 18px; height: 18px; accent-color: var(--accent); cursor: pointer;">
                 <span>Deseja tornar esta receita pública para todos os usuários?</span>
               </label>
             </div>
@@ -199,6 +254,7 @@
     <footer class="app-footer" id="app-footer-container"></footer>
   </div>
 
+  <script src="js/unit-converter.js"></script>
   <script src="js/shared.js"></script>
   <script src="js/register.js"></script>
   <script type="module" src="js/components.js"></script>

@@ -110,11 +110,26 @@ function setupEventListeners() {
     const isPublic = dom.ingIsPublic ? dom.ingIsPublic.checked : false;
     const newIngId = generateSlug(name, isPublic ? 'ing' : 'custom_ing');
 
+    const baseUnitEl = document.getElementById('ing-base-unit');
+    const baseUnit = baseUnitEl ? baseUnitEl.value : 'g';
+
+    const conversions = {};
+    const colherSopaVal = parseFloat(document.getElementById('conv-colher-sopa')?.value);
+    if (!isNaN(colherSopaVal) && colherSopaVal > 0) conversions['colher_sopa'] = colherSopaVal;
+
+    const xicaraVal = parseFloat(document.getElementById('conv-xicara')?.value);
+    if (!isNaN(xicaraVal) && xicaraVal > 0) conversions['xicara'] = xicaraVal;
+
+    const unidadeVal = parseFloat(document.getElementById('conv-unidade')?.value);
+    if (!isNaN(unidadeVal) && unidadeVal > 0) conversions['unidade'] = unidadeVal;
+
     const newIng = {
       id: newIngId,
       name,
       category,
+      baseUnit,
       macroBaseAmount: baseAmount,
+      conversions,
       macros: {
         calories,
         protein,
@@ -166,13 +181,24 @@ function setupEventListeners() {
       return;
     }
 
+    // Convert amount to base unit ('g' or 'ml') using UnitConverter
+    let conv = { baseAmount: qty, baseUnit: 'g', factor: 1 };
+    if (typeof UnitConverter !== 'undefined') {
+      conv = UnitConverter.convertIngAmountToBase(ingObj, qty, unit);
+    }
+
     recipeIngredients.push({
       ingredientId: ingId,
       name: ingName,
-      amount: qty,
-      unit,
+      originalAmount: qty,
+      originalUnit: unit,
+      amount: conv.baseAmount,
+      unit: conv.baseUnit,
+      baseAmount: conv.baseAmount,
+      baseUnit: conv.baseUnit,
       macros: ingObj ? ingObj.macros : null,
-      macroBaseAmount: ingObj ? ingObj.macroBaseAmount : null
+      macroBaseAmount: ingObj ? ingObj.macroBaseAmount : null,
+      conversions: ingObj ? ingObj.conversions : null
     });
 
     // Reset select inputs
@@ -290,10 +316,15 @@ function setupEventListeners() {
       ingredients: recipeIngredients.map(item => ({
         ingredientId: item.ingredientId,
         name: item.name,
-        amount: item.amount,
-        unit: item.unit,
+        originalAmount: item.originalAmount !== undefined ? item.originalAmount : item.amount,
+        originalUnit: item.originalUnit || item.unit,
+        amount: item.baseAmount !== undefined ? item.baseAmount : item.amount,
+        unit: item.baseUnit || item.unit,
+        baseAmount: item.baseAmount !== undefined ? item.baseAmount : item.amount,
+        baseUnit: item.baseUnit || item.unit,
         macros: item.macros || null,
-        macroBaseAmount: item.macroBaseAmount || null
+        macroBaseAmount: item.macroBaseAmount || null,
+        conversions: item.conversions || null
       })),
       instructions: [...recipeInstructions]
     };
@@ -323,8 +354,12 @@ function renderAddedIngredientsList() {
   recipeIngredients.forEach((item, idx) => {
     const div = document.createElement('div');
     div.className = 'added-item';
+    const origAmount = item.originalAmount !== undefined ? item.originalAmount : item.amount;
+    const origUnit = item.originalUnit || item.unit;
+    const baseText = item.baseAmount ? ` (${item.baseAmount} ${item.baseUnit})` : '';
+
     div.innerHTML = `
-      <span class="text">✓ ${item.name} (${item.amount} ${item.unit})</span>
+      <span class="text">✓ ${item.name} - ${origAmount} ${origUnit} <small style="opacity:0.75; font-size:12px; font-weight:normal;">${baseText}</small></span>
       <button type="button" class="remove">&times;</button>
     `;
 

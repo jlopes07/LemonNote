@@ -120,11 +120,17 @@ function renderRecipeDetails() {
             <h3>Ingredientes Necessários</h3>
             <div class="ingredients-list" id="detail-ingredients-list">
               ${recipe.ingredients.map(ing => {
-    const scaledQty = ing.amount * factor;
+    const displayQty = ing.originalAmount !== undefined ? ing.originalAmount : (ing.amount || 0);
+    const displayUnit = ing.originalUnit || ing.unit || 'g';
+    const scaledQty = displayQty * factor;
     const hasIt = selectedIngredients.has(ing.ingredientId);
     const ingObj = ingredients.find(i => i.id === ing.ingredientId);
     const name = ingObj ? ingObj.name : (ing.name || ing.ingredientId);
     const formattedQty = Number(scaledQty.toFixed(1)).toString().replace('.', ',');
+    const baseAmt = ing.baseAmount !== undefined ? ing.baseAmount : ing.amount;
+    const baseUnit = ing.baseUnit || 'g';
+    const scaledBaseAmt = baseAmt ? Number((baseAmt * factor).toFixed(1)).toString().replace('.', ',') : null;
+    const baseText = (baseAmt && (displayUnit !== baseUnit || displayQty !== baseAmt)) ? `<small style="opacity:0.7; font-weight:normal; margin-left:4px;">(${scaledBaseAmt} ${baseUnit})</small>` : '';
 
     return `
                   <div class="ing-item ${hasIt ? 'have-ing' : 'missing-ing'}">
@@ -132,7 +138,7 @@ function renderRecipeDetails() {
                       <span class="ing-status-icon">${hasIt ? '✓' : '✕'}</span>
                       <span>${name}</span>
                     </div>
-                    <span class="ing-qty">${formattedQty} ${ing.unit}</span>
+                    <span class="ing-qty">${formattedQty} ${displayUnit} ${baseText}</span>
                   </div>
                 `;
   }).join('')}
@@ -216,9 +222,16 @@ function renderRecipeDetails() {
     recipe.ingredients.forEach((ing, idx) => {
       const targetEl = ingQtyElements[idx];
       if (targetEl) {
-        const scaledQty = ing.amount * currentFactor;
+        const displayQty = ing.originalAmount !== undefined ? ing.originalAmount : (ing.amount || 0);
+        const displayUnit = ing.originalUnit || ing.unit || 'g';
+        const scaledQty = displayQty * currentFactor;
         const formattedQty = Number(scaledQty.toFixed(1)).toString().replace('.', ',');
-        targetEl.textContent = `${formattedQty} ${ing.unit}`;
+        const baseAmt = ing.baseAmount !== undefined ? ing.baseAmount : ing.amount;
+        const baseUnit = ing.baseUnit || 'g';
+        const scaledBaseAmt = baseAmt ? Number((baseAmt * currentFactor).toFixed(1)).toString().replace('.', ',') : null;
+        const baseText = (baseAmt && (displayUnit !== baseUnit || displayQty !== baseAmt)) ? `<small style="opacity:0.7; font-weight:normal; margin-left:4px;">(${scaledBaseAmt} ${baseUnit})</small>` : '';
+
+        targetEl.innerHTML = `${formattedQty} ${displayUnit} ${baseText}`;
       }
     });
 

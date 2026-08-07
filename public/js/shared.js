@@ -73,29 +73,80 @@ window.normalizeString = normalizeString;
 window.generateSlug = generateSlug;
 const THEME_KEY = 'lemonNote_theme';
 
-// Global Theme Controller (Dark Green vs Light Green)
-function getTheme() {
-  return localStorage.getItem(THEME_KEY) || 'dark';
+// Global Theme Controller (Claro, Escuro, Sistema)
+function getThemeSetting() {
+  const saved = localStorage.getItem(THEME_KEY);
+  if (saved === 'light' || saved === 'dark' || saved === 'system') {
+    return saved;
+  }
+  return 'system'; // Default for new users
 }
 
-function setTheme(themeName) {
-  const theme = themeName === 'light' ? 'light' : 'dark';
-  localStorage.setItem(THEME_KEY, theme);
+function getEffectiveTheme(settingMode) {
+  const mode = settingMode || getThemeSetting();
+  if (mode === 'system') {
+    if (typeof window !== 'undefined' && window.matchMedia) {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    }
+    return 'dark';
+  }
+  return mode === 'light' ? 'light' : 'dark';
+}
 
-  document.documentElement.setAttribute('data-theme', theme);
-  if (theme === 'light') {
-    document.body.classList.remove('dark-theme');
-    document.body.classList.add('light-theme');
-  } else {
-    document.body.classList.remove('light-theme');
-    document.body.classList.add('dark-theme');
+function setTheme(themeMode) {
+  const validMode = (themeMode === 'light' || themeMode === 'dark' || themeMode === 'system') ? themeMode : 'system';
+  localStorage.setItem(THEME_KEY, validMode);
+
+  const effectiveTheme = getEffectiveTheme(validMode);
+
+  if (typeof document !== 'undefined') {
+    document.documentElement.setAttribute('data-theme', effectiveTheme);
+    document.documentElement.setAttribute('data-theme-setting', validMode);
+    
+    if (effectiveTheme === 'light') {
+      document.body.classList.remove('dark-theme');
+      document.body.classList.add('light-theme');
+    } else {
+      document.body.classList.remove('light-theme');
+      document.body.classList.add('dark-theme');
+    }
+  }
+
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new CustomEvent('themeChanged', { detail: { setting: validMode, effectiveTheme } }));
   }
 }
 
-function initTheme() {
-  const currentTheme = getTheme();
-  setTheme(currentTheme);
+// Backward compatibility helper
+function getTheme() {
+  return getThemeSetting();
 }
+
+function initTheme() {
+  const currentSetting = getThemeSetting();
+  setTheme(currentSetting);
+
+  // Listen to system color scheme preference changes
+  if (typeof window !== 'undefined' && window.matchMedia) {
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    const handleSystemThemeChange = () => {
+      if (getThemeSetting() === 'system') {
+        setTheme('system');
+      }
+    };
+    if (mediaQuery.addEventListener) {
+      mediaQuery.addEventListener('change', handleSystemThemeChange);
+    } else if (mediaQuery.addListener) {
+      mediaQuery.addListener(handleSystemThemeChange);
+    }
+  }
+}
+
+window.getThemeSetting = getThemeSetting;
+window.getEffectiveTheme = getEffectiveTheme;
+window.getTheme = getTheme;
+window.setTheme = setTheme;
+window.initTheme = initTheme;
 
 // Auto-run theme initialization
 if (typeof document !== 'undefined') {
@@ -340,26 +391,32 @@ async function loadAppData() {
   };
 }
 
-// Calculate total recipe macros based on ingredient macros dynamically
+// Calculate total recipe macros based on ingredient macros dynamically using UnitConverter
 function calculateRecipeMacros(recipe, ingredientsList) {
+  if (!recipe || !Array.isArray(recipe.ingredients)) {
+    return { calories: 0, protein: 0, carbs: 0, fat: 0 };
+  }
+
+  if (typeof UnitConverter !== 'undefined' && typeof UnitConverter.calculateRecipeTotals === 'function') {
+    return UnitConverter.calculateRecipeTotals(recipe.ingredients, ingredientsList || []);
+  }
+
   let calories = 0;
   let protein = 0;
   let carbs = 0;
   let fat = 0;
 
-  if (!recipe || !Array.isArray(recipe.ingredients) || !Array.isArray(ingredientsList)) {
-    return { calories: 0, protein: 0, carbs: 0, fat: 0 };
-  }
-
   recipe.ingredients.forEach(reqIng => {
     if (!reqIng || (!reqIng.ingredientId && !reqIng.id)) return;
     const targetId = reqIng.ingredientId || reqIng.id;
-    let ingInfo = ingredientsList.find(i => i && i.id === targetId);
+    let ingInfo = (ingredientsList || []).find(i => i && i.id === targetId);
     if (!ingInfo && reqIng.macros) {
       ingInfo = reqIng;
     }
     if (ingInfo && ingInfo.macros) {
-      const ratio = ingInfo.macroBaseAmount ? (reqIng.amount / ingInfo.macroBaseAmount) : 1;
+      const refAmount = ingInfo.macroBaseAmount || 100;
+      const ingAmt = reqIng.baseAmount !== undefined ? reqIng.baseAmount : (reqIng.amount || 0);
+      const ratio = ingAmt / refAmount;
       
       calories += (ingInfo.macros.calories || 0) * ratio;
       protein += (ingInfo.macros.protein || 0) * ratio;
@@ -370,9 +427,9 @@ function calculateRecipeMacros(recipe, ingredientsList) {
 
   return {
     calories: Math.round(calories),
-    protein: Math.round(protein),
-    carbs: Math.round(carbs),
-    fat: Math.round(fat)
+    protein: Math.round(protein * 10) / 10,
+    carbs: Math.round(carbs * 10) / 10,
+    fat: Math.round(fat * 10) / 10
   };
 }
 

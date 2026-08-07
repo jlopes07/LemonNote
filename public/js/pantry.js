@@ -111,7 +111,9 @@ function setupIngredientModal() {
       id: newIngId,
       name,
       category,
+      baseUnit: 'g',
       macroBaseAmount: baseAmount,
+      conversions: {},
       macros: { calories, protein, carbs, fat }
     };
 

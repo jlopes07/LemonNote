@@ -57,7 +57,7 @@ function renderHeaderComponent() {
         </button>
         <div class="nav-dropdown-menu">
           <a href="index.html" class="nav-dropdown-item ${activePage === 'home' ? 'active' : ''}">
-            Início / Home
+            Início
           </a>
           <a href="pantry.html" class="nav-dropdown-item ${activePage === 'pantry' ? 'active' : ''}">
             Minha Despensa
