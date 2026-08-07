@@ -151,43 +151,24 @@ async function saveCustomRecipe(rec) {
   }
 }
 
-// Fetch public catalog from Firebase Firestore (with static JSON fallback) and merge with user custom items
+// Fetch public catalog directly from Firebase Firestore and merge with user custom items
 async function loadAppData() {
   let defaultIngredients = [];
   let defaultRecipes = [];
 
-  // Always load static JSON catalog as solid baseline fallback
-  try {
-    const [ingRes, recRes] = await Promise.all([
-      fetch('/data/ingredients.json'),
-      fetch('/data/recipes.json')
-    ]);
-
-    if (ingRes.ok && recRes.ok) {
-      defaultIngredients = await ingRes.json();
-      defaultRecipes = await recRes.json();
-    }
-  } catch (error) {
-    console.error('Static data loading error:', error);
-  }
-
-  // Try reading public catalog from Firebase Firestore (if API is enabled & online)
+  // 1. Read public catalog directly from Firebase Firestore (with in-memory fallback if connecting)
   try {
     if (typeof window.getPublicIngredientsFromFirestore === 'function') {
-      const fsIngs = await window.getPublicIngredientsFromFirestore().catch(() => []);
-      if (Array.isArray(fsIngs) && fsIngs.length > 0) {
-        defaultIngredients = fsIngs;
-      }
+      defaultIngredients = await window.getPublicIngredientsFromFirestore().catch(() => []);
     }
     if (typeof window.getPublicRecipesFromFirestore === 'function') {
-      const fsRecs = await window.getPublicRecipesFromFirestore().catch(() => []);
-      if (Array.isArray(fsRecs) && fsRecs.length > 0) {
-        defaultRecipes = fsRecs;
-      }
+      defaultRecipes = await window.getPublicRecipesFromFirestore().catch(() => []);
     }
   } catch (e) {
-    console.warn('Firestore public catalog read fallback to static JSON:', e);
+    console.warn('Firestore public catalog read fallback:', e);
   }
+
+
 
   // Load custom ingredients & recipes for the logged-in user from localStorage and Firestore
   const uid = getCurrentUserScope();

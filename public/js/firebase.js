@@ -39,10 +39,6 @@ async function initFirebase() {
     db = getFirestore(app);
 
     console.log('✅ Firebase Auth e Firestore inicializados com sucesso!');
-
-    // Trigger seeding of public catalog data to Firestore asynchronously
-    seedPublicCatalogToFirestore().catch(err => console.warn('Seed notice:', err));
-
     return { app, analytics, auth, db };
   } catch (error) {
     console.error('❌ Erro ao inicializar o Firebase:', error);
@@ -115,45 +111,6 @@ async function getPublicRecipesFromFirestore() {
   } catch (e) {
     console.warn('Aviso leitura public_recipes Firestore:', e);
     return [];
-  }
-}
-
-async function seedPublicCatalogToFirestore() {
-  try {
-    const firestore = await getDbInstance();
-    if (!firestore) return;
-
-    // Check if public_ingredients needs seeding
-    const ingColRef = collection(firestore, 'public_ingredients');
-    const ingSnap = await getDocs(ingColRef);
-    if (ingSnap.empty) {
-      console.log('🌱 Populando catálogo público de ingredientes no Firestore...');
-      const res = await fetch('/data/ingredients.json');
-      if (res.ok) {
-        const items = await res.json();
-        for (const item of items) {
-          await setDoc(doc(firestore, `public_ingredients/${item.id}`), item);
-        }
-        console.log(`✅ ${items.length} ingredientes salvos no Firestore público!`);
-      }
-    }
-
-    // Check if public_recipes needs seeding
-    const recColRef = collection(firestore, 'public_recipes');
-    const recSnap = await getDocs(recColRef);
-    if (recSnap.empty) {
-      console.log('🌱 Populando catálogo público de receitas no Firestore...');
-      const res = await fetch('/data/recipes.json');
-      if (res.ok) {
-        const items = await res.json();
-        for (const item of items) {
-          await setDoc(doc(firestore, `public_recipes/${item.id}`), item);
-        }
-        console.log(`✅ ${items.length} receitas salvas no Firestore público!`);
-      }
-    }
-  } catch (e) {
-    console.warn('Aviso ao popular catálogo público no Firestore:', e);
   }
 }
 
@@ -240,7 +197,6 @@ async function getUserPantry(userId) {
 if (typeof window !== 'undefined') {
   window.getPublicIngredientsFromFirestore = getPublicIngredientsFromFirestore;
   window.getPublicRecipesFromFirestore = getPublicRecipesFromFirestore;
-  window.seedPublicCatalogToFirestore = seedPublicCatalogToFirestore;
   window.saveUserCustomIngredient = saveUserCustomIngredient;
   window.getUserCustomIngredients = getUserCustomIngredients;
   window.saveUserCustomRecipe = saveUserCustomRecipe;
@@ -262,7 +218,6 @@ export {
   onAuthChange,
   getPublicIngredientsFromFirestore,
   getPublicRecipesFromFirestore,
-  seedPublicCatalogToFirestore,
   saveUserCustomIngredient,
   getUserCustomIngredients,
   saveUserCustomRecipe,

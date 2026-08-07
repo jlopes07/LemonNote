@@ -1,7 +1,6 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
-const fs = require('fs');
 require('dotenv').config();
 
 const app = express();
@@ -14,20 +13,7 @@ app.use(express.json());
 // Servir arquivos estáticos da pasta public
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Helper para ler arquivos JSON estáticos da pasta public/data
-function readStaticJson(filename) {
-  try {
-    const filePath = path.join(__dirname, 'public', 'data', filename);
-    if (fs.existsSync(filePath)) {
-      return JSON.parse(fs.readFileSync(filePath, 'utf8'));
-    }
-  } catch (e) {
-    console.error(`Erro ao ler ${filename}:`, e);
-  }
-  return [];
-}
-
-// --- ROTA DA CONFIGURAÇÃO DO FIREBASE ---
+// Rota da configuração do Firebase para o frontend
 app.get('/api/firebase-config', (req, res) => {
   res.json({
     apiKey: process.env.FIREBASE_API_KEY || '',
@@ -38,18 +24,6 @@ app.get('/api/firebase-config', (req, res) => {
     appId: process.env.FIREBASE_APP_ID || '',
     measurementId: process.env.FIREBASE_MEASUREMENT_ID || ''
   });
-});
-
-// --- API ROTAS PARA INGREDIENTES PÚBLICOS ---
-app.get('/api/ingredients', (req, res) => {
-  const ingredients = readStaticJson('ingredients.json');
-  return res.json(ingredients);
-});
-
-// --- API ROTAS PARA RECEITAS PÚBLICAS ---
-app.get('/api/recipes', (req, res) => {
-  const recipes = readStaticJson('recipes.json');
-  return res.json(recipes);
 });
 
 // Rota raiz enviando index.html por padrão

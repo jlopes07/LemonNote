@@ -1,6 +1,7 @@
 // Registration screens logic (register.html)
 
 let ingredients = [];
+let recipes = [];
 let recipeIngredients = []; // ingredients added to the currently building recipe
 let recipeInstructions = []; // instructions added to the currently building recipe
 
@@ -42,6 +43,7 @@ async function init() {
   try {
     const data = await loadAppData();
     ingredients = data.ingredients;
+    recipes = data.recipes;
 
     updateHeaderBadge();
     populateIngredientsDropdown();
@@ -212,6 +214,14 @@ function setupEventListeners() {
 
     if (!name || !desc || isNaN(time) || isNaN(servings)) {
       alert('Preencha os campos obrigatórios da receita.');
+      return;
+    }
+
+    // Check if recipe already exists (case-insensitive)
+    const normalizedName = name.toLowerCase();
+    const recipeAlreadyExists = recipes.some(r => r && r.name && r.name.trim().toLowerCase() === normalizedName);
+    if (recipeAlreadyExists) {
+      alert(`A receita "${name}" já está cadastrada no sistema!`);
       return;
     }
 
