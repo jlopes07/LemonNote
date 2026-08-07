@@ -29,6 +29,7 @@ function renderHeaderComponent() {
     </div>
     
     <div class="header-stats" style="display: flex; gap: 12px; align-items: center;">
+      <div id="user-auth-area" class="user-auth-area"></div>
 
       <div class="stat-badge" id="header-stat-badge">
         <span class="stat-text"><strong id="selected-count">0</strong> na despensa</span>
@@ -75,6 +76,9 @@ function renderHeaderComponent() {
   setupDropdownListener();
   if (typeof window.updateGlobalPantryBadge === 'function') {
     window.updateGlobalPantryBadge();
+  }
+  if (typeof window.renderHeaderUserArea === 'function') {
+    window.renderHeaderUserArea(window._currentUser || null);
   }
 }
 

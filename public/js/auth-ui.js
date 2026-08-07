@@ -383,14 +383,19 @@ function renderHeaderUserArea(user) {
   }
 }
 
+// Expose renderHeaderUserArea for components re-rendering
+window.renderHeaderUserArea = renderHeaderUserArea;
+
 // Subscribe to auth state changes and enforce login route guard
 document.addEventListener('DOMContentLoaded', () => {
   injectAuthModal();
   
-  // Lock app body by default until auth state is confirmed
+  // Immediately lock app body and show mandatory login modal by default
   document.body.classList.add('auth-locked');
+  openAuthModal(true);
 
   onAuthChange((user) => {
+    window._currentUser = user;
     renderHeaderUserArea(user);
     
     if (typeof window.populateProfileData === 'function') {
@@ -399,6 +404,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (!user) {
       // Require authentication to access the app
+      document.body.classList.add('auth-locked');
       openAuthModal(true);
     } else {
       isAuthMandatory = false;
