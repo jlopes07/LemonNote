@@ -652,41 +652,37 @@ body {
   box-shadow: 0 6px 16px rgba(132, 204, 22, 0.35);
 }
 
-/* Body Auth Lock */
-body.auth-locked {
-  overflow: hidden !important;
+/* App Protection Gate: Hidden by default until authenticated */
+.app-container {
+  display: none !important;
 }
 
-body.auth-locked .app-container {
-  pointer-events: none !important;
-  user-select: none !important;
-  filter: blur(14px);
-  opacity: 0.15;
-  transition: opacity 0.3s ease, filter 0.3s ease;
+body.authenticated .app-container {
+  display: flex !important;
 }
 
-/* Modal Overlay */
+/* Modal Overlay: Visible by default until authenticated */
 .auth-modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(9, 22, 17, 0.92);
-  backdrop-filter: blur(16px);
+  background: #091611;
   z-index: 999999;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 20px;
-  opacity: 0;
-  visibility: hidden;
+  opacity: 1;
+  visibility: visible;
   transition: opacity 0.25s ease, visibility 0.25s ease;
 }
 
-.auth-modal-overlay.open {
-  opacity: 1;
-  visibility: visible;
+body.authenticated .auth-modal-overlay:not(.open) {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
 }
 
 /* Modal Container */

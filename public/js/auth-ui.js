@@ -389,10 +389,6 @@ window.renderHeaderUserArea = renderHeaderUserArea;
 // Subscribe to auth state changes and enforce login route guard
 document.addEventListener('DOMContentLoaded', () => {
   injectAuthModal();
-  
-  // Immediately lock app body and show mandatory login modal by default
-  document.body.classList.add('auth-locked');
-  openAuthModal(true);
 
   onAuthChange((user) => {
     window._currentUser = user;
@@ -403,12 +399,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if (!user) {
-      // Require authentication to access the app
-      document.body.classList.add('auth-locked');
+      // Unauthenticated: Hide app container and open login modal
+      document.body.classList.remove('authenticated');
       openAuthModal(true);
     } else {
+      // Authenticated: Reveal app container and close modal
+      document.body.classList.add('authenticated');
       isAuthMandatory = false;
-      document.body.classList.remove('auth-locked');
       closeAuthModal();
     }
   });
