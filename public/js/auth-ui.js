@@ -318,5 +318,8 @@ document.addEventListener('DOMContentLoaded', () => {
       isAuthMandatory = false;
       closeAuthModal();
     }
+
+    // Notify active pages to re-initialize data with resolved user scope
+    window.dispatchEvent(new CustomEvent('userAuthReady', { detail: { user } }));
   });
 });

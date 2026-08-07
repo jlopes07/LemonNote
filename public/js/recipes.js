@@ -64,10 +64,12 @@ function updateRecipes() {
     let matchedCount = 0;
     const have = [];
     const missing = [];
+    const reqIngredients = (recipe && Array.isArray(recipe.ingredients)) ? recipe.ingredients : [];
 
-    recipe.ingredients.forEach(reqIng => {
+    reqIngredients.forEach(reqIng => {
+      if (!reqIng || !reqIng.ingredientId) return;
       const userHasIt = selectedIngredients.has(reqIng.ingredientId);
-      const ingredientObj = ingredients.find(i => i.id === reqIng.ingredientId);
+      const ingredientObj = ingredients.find(i => i && i.id === reqIng.ingredientId);
       const ingName = ingredientObj ? ingredientObj.name : reqIng.ingredientId;
 
       if (userHasIt) {
@@ -78,7 +80,7 @@ function updateRecipes() {
       }
     });
 
-    const totalCount = recipe.ingredients.length;
+    const totalCount = reqIngredients.length;
     const matchPercentage = totalCount > 0 ? (matchedCount / totalCount) * 100 : 0;
     const missingCount = totalCount - matchedCount;
 
@@ -211,4 +213,10 @@ function renderRecipesList(recipesList) {
   });
 }
 
-window.addEventListener('DOMContentLoaded', init);
+window.addEventListener('userAuthReady', init);
+
+if (document.readyState === 'loading') {
+  window.addEventListener('DOMContentLoaded', init);
+} else {
+  init();
+}

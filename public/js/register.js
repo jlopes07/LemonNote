@@ -311,4 +311,10 @@ function renderAddedStepsList() {
   });
 }
 
-window.addEventListener('DOMContentLoaded', init);
+window.addEventListener('userAuthReady', init);
+
+if (document.readyState === 'loading') {
+  window.addEventListener('DOMContentLoaded', init);
+} else {
+  init();
+}

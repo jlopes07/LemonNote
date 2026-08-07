@@ -1,44 +1,1478 @@
 [
-  { "id": "chicken", "name": "Peito de Frango", "category": "Proteínas", "macroBaseAmount": 100, "macros": { "calories": 165, "protein": 31, "carbs": 0, "fat": 3.6 } },
-  { "id": "beef", "name": "Carne Moída", "category": "Proteínas", "macroBaseAmount": 100, "macros": { "calories": 250, "protein": 26, "carbs": 0, "fat": 15 } },
-  { "id": "eggs", "name": "Ovos", "category": "Proteínas", "macroBaseAmount": 1, "macros": { "calories": 70, "protein": 6, "carbs": 0.6, "fat": 5 } },
-  { "id": "bacon", "name": "Bacon", "category": "Proteínas", "macroBaseAmount": 100, "macros": { "calories": 540, "protein": 37, "carbs": 1.4, "fat": 42 } },
-  { "id": "tofu", "name": "Tofu", "category": "Proteínas", "macroBaseAmount": 100, "macros": { "calories": 76, "protein": 8, "carbs": 1.9, "fat": 4.8 } },
-  { "id": "tuna", "name": "Atum em Lata", "category": "Proteínas", "macroBaseAmount": 100, "macros": { "calories": 116, "protein": 26, "carbs": 0, "fat": 1 } },
-  
-  { "id": "rice", "name": "Arroz", "category": "Carboidratos", "macroBaseAmount": 100, "macros": { "calories": 130, "protein": 2.7, "carbs": 28, "fat": 0.3 } },
-  { "id": "pasta", "name": "Macarrão", "category": "Carboidratos", "macroBaseAmount": 100, "macros": { "calories": 350, "protein": 12, "carbs": 73, "fat": 1.5 } },
-  { "id": "bread", "name": "Pão de Forma", "category": "Carboidratos", "macroBaseAmount": 1, "macros": { "calories": 70, "protein": 2.5, "carbs": 13, "fat": 0.9 } },
-  { "id": "potatoes", "name": "Batatas", "category": "Carboidratos", "macroBaseAmount": 100, "macros": { "calories": 87, "protein": 2, "carbs": 20, "fat": 0.1 } },
-  { "id": "oats", "name": "Aveia", "category": "Carboidratos", "macroBaseAmount": 1, "macros": { "calories": 38, "protein": 1.4, "carbs": 6.7, "fat": 0.7 } },
-  
-  { "id": "tomato", "name": "Tomate", "category": "Vegetais & Legumes", "macroBaseAmount": 1, "macros": { "calories": 22, "protein": 1.1, "carbs": 4.8, "fat": 0.2 } },
-  { "id": "onion", "name": "Cebola", "category": "Vegetais & Legumes", "macroBaseAmount": 1, "macros": { "calories": 44, "protein": 1.2, "carbs": 10, "fat": 0.1 } },
-  { "id": "garlic", "name": "Alho", "category": "Vegetais & Legumes", "macroBaseAmount": 1, "macros": { "calories": 4, "protein": 0.2, "carbs": 1, "fat": 0 } },
-  { "id": "lettuce", "name": "Alface", "category": "Vegetais & Legumes", "macroBaseAmount": 1, "macros": { "calories": 1, "protein": 0.1, "carbs": 0.2, "fat": 0 } },
-  { "id": "broccoli", "name": "Brócolis", "category": "Vegetais & Legumes", "macroBaseAmount": 100, "macros": { "calories": 34, "protein": 2.8, "carbs": 7, "fat": 0.4 } },
-  { "id": "carrot", "name": "Cenoura", "category": "Vegetais & Legumes", "macroBaseAmount": 100, "macros": { "calories": 41, "protein": 0.9, "carbs": 10, "fat": 0.2 } },
-  { "id": "bell_pepper", "name": "Pimentão", "category": "Vegetais & Legumes", "macroBaseAmount": 100, "macros": { "calories": 20, "protein": 0.9, "carbs": 4.6, "fat": 0.2 } },
-  { "id": "spinach", "name": "Espinafre", "category": "Vegetais & Legumes", "macroBaseAmount": 100, "macros": { "calories": 23, "protein": 2.9, "carbs": 3.6, "fat": 0.4 } },
-  
-  { "id": "milk", "name": "Leite", "category": "Laticínios & Derivados", "macroBaseAmount": 100, "macros": { "calories": 50, "protein": 3, "carbs": 5, "fat": 2 } },
-  { "id": "cheese", "name": "Queijo Muçarela", "category": "Laticínios & Derivados", "macroBaseAmount": 100, "macros": { "calories": 300, "protein": 22, "carbs": 2.2, "fat": 22 } },
-  { "id": "parmesan", "name": "Queijo Parmesão", "category": "Laticínios & Derivados", "macroBaseAmount": 100, "macros": { "calories": 400, "protein": 38, "carbs": 4, "fat": 25 } },
-  { "id": "butter", "name": "Manteiga", "category": "Laticínios & Derivados", "macroBaseAmount": 1, "macros": { "calories": 36, "protein": 0, "carbs": 0, "fat": 4 } },
-  { "id": "cream", "name": "Creme de Leite", "category": "Laticínios & Derivados", "macroBaseAmount": 100, "macros": { "calories": 200, "protein": 2, "carbs": 4, "fat": 20 } },
-  { "id": "yogurt", "name": "Iogurte Natural", "category": "Laticínios & Derivados", "macroBaseAmount": 1, "macros": { "calories": 15, "protein": 1, "carbs": 1.2, "fat": 0.8 } },
-  
-  { "id": "olive_oil", "name": "Azeite de Oliva", "category": "Despensa & Temperos", "macroBaseAmount": 1, "macros": { "calories": 120, "protein": 0, "carbs": 0, "fat": 14 } },
-  { "id": "salt", "name": "Sal", "category": "Despensa & Temperos", "macroBaseAmount": 1, "macros": { "calories": 0, "protein": 0, "carbs": 0, "fat": 0 } },
-  { "id": "black_pepper", "name": "Pimenta do Reino", "category": "Despensa & Temperos", "macroBaseAmount": 1, "macros": { "calories": 0, "protein": 0, "carbs": 0, "fat": 0 } },
-  { "id": "oregano", "name": "Orégano", "category": "Despensa & Temperos", "macroBaseAmount": 1, "macros": { "calories": 0, "protein": 0, "carbs": 0, "fat": 0 } },
-  { "id": "tomato_sauce", "name": "Molho de Tomate", "category": "Despensa & Temperos", "macroBaseAmount": 100, "macros": { "calories": 40, "protein": 1.5, "carbs": 8, "fat": 0.2 } },
-  { "id": "flour", "name": "Farinha de Trigo", "category": "Despensa & Temperos", "macroBaseAmount": 100, "macros": { "calories": 360, "protein": 10, "carbs": 76, "fat": 1.5 } },
-  { "id": "honey", "name": "Mel", "category": "Despensa & Temperos", "macroBaseAmount": 1, "macros": { "calories": 64, "protein": 0.1, "carbs": 17, "fat": 0 } },
-  { "id": "soy_sauce", "name": "Molho de Soja", "category": "Despensa & Temperos", "macroBaseAmount": 1, "macros": { "calories": 10, "protein": 1, "carbs": 1, "fat": 0 } },
-  
-  { "id": "lemon", "name": "Limão", "category": "Frutas", "macroBaseAmount": 1, "macros": { "calories": 20, "protein": 0.6, "carbs": 6, "fat": 0.2 } },
-  { "id": "banana", "name": "Banana", "category": "Frutas", "macroBaseAmount": 1, "macros": { "calories": 105, "protein": 1.3, "carbs": 27, "fat": 0.4 } },
-  { "id": "apple", "name": "Maçã", "category": "Frutas", "macroBaseAmount": 1, "macros": { "calories": 95, "protein": 0.5, "carbs": 25, "fat": 0.3 } },
-  { "id": "strawberry", "name": "Morango", "category": "Frutas", "macroBaseAmount": 100, "macros": { "calories": 32, "protein": 0.7, "carbs": 7.7, "fat": 0.3 } }
+  {
+    "id": "chicken",
+    "name": "Peito de Frango",
+    "category": "Proteínas",
+    "macroBaseAmount": 100,
+    "macros": {
+      "calories": 165,
+      "protein": 31,
+      "carbs": 0,
+      "fat": 3.6
+    }
+  },
+  {
+    "id": "beef",
+    "name": "Carne Moída",
+    "category": "Proteínas",
+    "macroBaseAmount": 100,
+    "macros": {
+      "calories": 250,
+      "protein": 26,
+      "carbs": 0,
+      "fat": 15
+    }
+  },
+  {
+    "id": "eggs",
+    "name": "Ovos",
+    "category": "Proteínas",
+    "macroBaseAmount": 1,
+    "macros": {
+      "calories": 70,
+      "protein": 6,
+      "carbs": 0.6,
+      "fat": 5
+    }
+  },
+  {
+    "id": "bacon",
+    "name": "Bacon",
+    "category": "Proteínas",
+    "macroBaseAmount": 100,
+    "macros": {
+      "calories": 540,
+      "protein": 37,
+      "carbs": 1.4,
+      "fat": 42
+    }
+  },
+  {
+    "id": "tofu",
+    "name": "Tofu",
+    "category": "Proteínas",
+    "macroBaseAmount": 100,
+    "macros": {
+      "calories": 76,
+      "protein": 8,
+      "carbs": 1.9,
+      "fat": 4.8
+    }
+  },
+  {
+    "id": "tuna",
+    "name": "Atum em Lata",
+    "category": "Proteínas",
+    "macroBaseAmount": 100,
+    "macros": {
+      "calories": 116,
+      "protein": 26,
+      "carbs": 0,
+      "fat": 1
+    }
+  },
+  {
+    "id": "ground_beef",
+    "name": "Carne Moída Magra",
+    "category": "Proteínas",
+    "macroBaseAmount": 100,
+    "macros": {
+      "calories": 180,
+      "protein": 28,
+      "carbs": 0,
+      "fat": 7
+    }
+  },
+  {
+    "id": "beef_muscle",
+    "name": "Músculo Bovino",
+    "category": "Proteínas",
+    "macroBaseAmount": 100,
+    "macros": {
+      "calories": 200,
+      "protein": 30,
+      "carbs": 0,
+      "fat": 8
+    }
+  },
+  {
+    "id": "turkey_breast",
+    "name": "Peito de Peru",
+    "category": "Proteínas",
+    "macroBaseAmount": 100,
+    "macros": {
+      "calories": 135,
+      "protein": 30,
+      "carbs": 0,
+      "fat": 1.5
+    }
+  },
+  {
+    "id": "dried_beef",
+    "name": "Carne Seca",
+    "category": "Proteínas",
+    "macroBaseAmount": 100,
+    "macros": {
+      "calories": 290,
+      "protein": 35,
+      "carbs": 0,
+      "fat": 16
+    }
+  },
+  {
+    "id": "egg_white",
+    "name": "Clara de Ovo",
+    "category": "Proteínas",
+    "macroBaseAmount": 1,
+    "macros": {
+      "calories": 17,
+      "protein": 3.6,
+      "carbs": 0.2,
+      "fat": 0.1
+    }
+  },
+  {
+    "id": "whey_protein",
+    "name": "Whey Protein",
+    "category": "Proteínas",
+    "macroBaseAmount": 30,
+    "macros": {
+      "calories": 120,
+      "protein": 24,
+      "carbs": 3,
+      "fat": 1.5
+    }
+  },
+  {
+    "id": "whey_cookies",
+    "name": "Whey Protein Sabor Cookies",
+    "category": "Proteínas",
+    "macroBaseAmount": 30,
+    "macros": {
+      "calories": 120,
+      "protein": 24,
+      "carbs": 3,
+      "fat": 1.5
+    }
+  },
+  {
+    "id": "chocolate_whey",
+    "name": "Whey Protein de Chocolate",
+    "category": "Proteínas",
+    "macroBaseAmount": 20,
+    "macros": {
+      "calories": 80,
+      "protein": 16,
+      "carbs": 2,
+      "fat": 1
+    }
+  },
+  {
+    "id": "yopro_yogurt",
+    "name": "YoPRO Iogurte",
+    "category": "Proteínas",
+    "macroBaseAmount": 1,
+    "macros": {
+      "calories": 120,
+      "protein": 25,
+      "carbs": 5,
+      "fat": 0.5
+    }
+  },
+  {
+    "id": "rice",
+    "name": "Arroz",
+    "category": "Carboidratos",
+    "macroBaseAmount": 100,
+    "macros": {
+      "calories": 130,
+      "protein": 2.7,
+      "carbs": 28,
+      "fat": 0.3
+    }
+  },
+  {
+    "id": "pasta",
+    "name": "Macarrão",
+    "category": "Carboidratos",
+    "macroBaseAmount": 100,
+    "macros": {
+      "calories": 350,
+      "protein": 12,
+      "carbs": 73,
+      "fat": 1.5
+    }
+  },
+  {
+    "id": "bread",
+    "name": "Pão de Forma",
+    "category": "Carboidratos",
+    "macroBaseAmount": 1,
+    "macros": {
+      "calories": 70,
+      "protein": 2.5,
+      "carbs": 13,
+      "fat": 0.9
+    }
+  },
+  {
+    "id": "potatoes",
+    "name": "Batatas",
+    "category": "Carboidratos",
+    "macroBaseAmount": 100,
+    "macros": {
+      "calories": 87,
+      "protein": 2,
+      "carbs": 20,
+      "fat": 0.1
+    }
+  },
+  {
+    "id": "oats",
+    "name": "Aveia",
+    "category": "Carboidratos",
+    "macroBaseAmount": 1,
+    "macros": {
+      "calories": 38,
+      "protein": 1.4,
+      "carbs": 6.7,
+      "fat": 0.7
+    }
+  },
+  {
+    "id": "sweet_potato",
+    "name": "Batata Doce",
+    "category": "Carboidratos",
+    "macroBaseAmount": 100,
+    "macros": {
+      "calories": 86,
+      "protein": 1.6,
+      "carbs": 20,
+      "fat": 0.1
+    }
+  },
+  {
+    "id": "cassava",
+    "name": "Mandioca",
+    "category": "Carboidratos",
+    "macroBaseAmount": 100,
+    "macros": {
+      "calories": 160,
+      "protein": 1.4,
+      "carbs": 38,
+      "fat": 0.3
+    }
+  },
+  {
+    "id": "yam",
+    "name": "Inhame",
+    "category": "Carboidratos",
+    "macroBaseAmount": 100,
+    "macros": {
+      "calories": 118,
+      "protein": 1.5,
+      "carbs": 28,
+      "fat": 0.2
+    }
+  },
+  {
+    "id": "oat_flour",
+    "name": "Farinha de Aveia",
+    "category": "Carboidratos",
+    "macroBaseAmount": 30,
+    "macros": {
+      "calories": 120,
+      "protein": 4.8,
+      "carbs": 20,
+      "fat": 2.4
+    }
+  },
+  {
+    "id": "rice_flour",
+    "name": "Farinha de Arroz",
+    "category": "Carboidratos",
+    "macroBaseAmount": 10,
+    "macros": {
+      "calories": 36,
+      "protein": 0.8,
+      "carbs": 8,
+      "fat": 0.2
+    }
+  },
+  {
+    "id": "cornmeal",
+    "name": "Fubá de Milho",
+    "category": "Carboidratos",
+    "macroBaseAmount": 10,
+    "macros": {
+      "calories": 36,
+      "protein": 0.8,
+      "carbs": 7.6,
+      "fat": 0.2
+    }
+  },
+  {
+    "id": "tapioca_flour",
+    "name": "Tapioca de Goma",
+    "category": "Carboidratos",
+    "macroBaseAmount": 20,
+    "macros": {
+      "calories": 70,
+      "protein": 0.2,
+      "carbs": 17,
+      "fat": 0.1
+    }
+  },
+  {
+    "id": "maltodextrin",
+    "name": "Malto Dextrina",
+    "category": "Carboidratos",
+    "macroBaseAmount": 45,
+    "macros": {
+      "calories": 180,
+      "protein": 0,
+      "carbs": 45,
+      "fat": 0
+    }
+  },
+  {
+    "id": "rice_cracker",
+    "name": "Biscoito de Arroz",
+    "category": "Carboidratos",
+    "macroBaseAmount": 30,
+    "macros": {
+      "calories": 110,
+      "protein": 2.5,
+      "carbs": 23,
+      "fat": 1
+    }
+  },
+  {
+    "id": "corn",
+    "name": "Milho",
+    "category": "Carboidratos",
+    "macroBaseAmount": 70,
+    "macros": {
+      "calories": 63,
+      "protein": 2.3,
+      "carbs": 14,
+      "fat": 0.9
+    }
+  },
+  {
+    "id": "lentil",
+    "name": "Lentilha",
+    "category": "Carboidratos",
+    "macroBaseAmount": 100,
+    "macros": {
+      "calories": 116,
+      "protein": 9,
+      "carbs": 20,
+      "fat": 0.4
+    }
+  },
+  {
+    "id": "chickpeas",
+    "name": "Grão de Bico",
+    "category": "Carboidratos",
+    "macroBaseAmount": 100,
+    "macros": {
+      "calories": 139,
+      "protein": 8.9,
+      "carbs": 27,
+      "fat": 2.6
+    }
+  },
+  {
+    "id": "black_beans",
+    "name": "Feijão Preto",
+    "category": "Carboidratos",
+    "macroBaseAmount": 100,
+    "macros": {
+      "calories": 132,
+      "protein": 8.9,
+      "carbs": 24,
+      "fat": 0.5
+    }
+  },
+  {
+    "id": "flaxseed_flour",
+    "name": "Farinha de Linhaça",
+    "category": "Carboidratos",
+    "macroBaseAmount": 10,
+    "macros": {
+      "calories": 45,
+      "protein": 1.8,
+      "carbs": 2.5,
+      "fat": 3.5
+    }
+  },
+  {
+    "id": "bulgur_wheat",
+    "name": "Farinha de Trigo para Quibe",
+    "category": "Carboidratos",
+    "macroBaseAmount": 45,
+    "macros": {
+      "calories": 140,
+      "protein": 5.4,
+      "carbs": 28,
+      "fat": 0.9
+    }
+  },
+  {
+    "id": "tomato",
+    "name": "Tomate",
+    "category": "Vegetais & Legumes",
+    "macroBaseAmount": 1,
+    "macros": {
+      "calories": 22,
+      "protein": 1.1,
+      "carbs": 4.8,
+      "fat": 0.2
+    }
+  },
+  {
+    "id": "onion",
+    "name": "Cebola",
+    "category": "Vegetais & Legumes",
+    "macroBaseAmount": 1,
+    "macros": {
+      "calories": 44,
+      "protein": 1.2,
+      "carbs": 10,
+      "fat": 0.1
+    }
+  },
+  {
+    "id": "garlic",
+    "name": "Alho",
+    "category": "Vegetais & Legumes",
+    "macroBaseAmount": 1,
+    "macros": {
+      "calories": 4,
+      "protein": 0.2,
+      "carbs": 1,
+      "fat": 0
+    }
+  },
+  {
+    "id": "lettuce",
+    "name": "Alface",
+    "category": "Vegetais & Legumes",
+    "macroBaseAmount": 1,
+    "macros": {
+      "calories": 1,
+      "protein": 0.1,
+      "carbs": 0.2,
+      "fat": 0
+    }
+  },
+  {
+    "id": "broccoli",
+    "name": "Brócolis",
+    "category": "Vegetais & Legumes",
+    "macroBaseAmount": 100,
+    "macros": {
+      "calories": 34,
+      "protein": 2.8,
+      "carbs": 7,
+      "fat": 0.4
+    }
+  },
+  {
+    "id": "carrot",
+    "name": "Cenoura",
+    "category": "Vegetais & Legumes",
+    "macroBaseAmount": 100,
+    "macros": {
+      "calories": 41,
+      "protein": 0.9,
+      "carbs": 10,
+      "fat": 0.2
+    }
+  },
+  {
+    "id": "bell_pepper",
+    "name": "Pimentão",
+    "category": "Vegetais & Legumes",
+    "macroBaseAmount": 100,
+    "macros": {
+      "calories": 20,
+      "protein": 0.9,
+      "carbs": 4.6,
+      "fat": 0.2
+    }
+  },
+  {
+    "id": "spinach",
+    "name": "Espinafre",
+    "category": "Vegetais & Legumes",
+    "macroBaseAmount": 100,
+    "macros": {
+      "calories": 23,
+      "protein": 2.9,
+      "carbs": 3.6,
+      "fat": 0.4
+    }
+  },
+  {
+    "id": "kale",
+    "name": "Couve",
+    "category": "Vegetais & Legumes",
+    "macroBaseAmount": 1,
+    "macros": {
+      "calories": 5,
+      "protein": 0.5,
+      "carbs": 0.8,
+      "fat": 0.1
+    }
+  },
+  {
+    "id": "cabbage",
+    "name": "Repolho",
+    "category": "Vegetais & Legumes",
+    "macroBaseAmount": 100,
+    "macros": {
+      "calories": 25,
+      "protein": 1.3,
+      "carbs": 6,
+      "fat": 0.1
+    }
+  },
+  {
+    "id": "cauliflower",
+    "name": "Couve Flor",
+    "category": "Vegetais & Legumes",
+    "macroBaseAmount": 100,
+    "macros": {
+      "calories": 25,
+      "protein": 1.9,
+      "carbs": 5,
+      "fat": 0.3
+    }
+  },
+  {
+    "id": "green_beans",
+    "name": "Vagem",
+    "category": "Vegetais & Legumes",
+    "macroBaseAmount": 100,
+    "macros": {
+      "calories": 31,
+      "protein": 1.8,
+      "carbs": 7,
+      "fat": 0.1
+    }
+  },
+  {
+    "id": "pumpkin",
+    "name": "Abóbora",
+    "category": "Vegetais & Legumes",
+    "macroBaseAmount": 100,
+    "macros": {
+      "calories": 26,
+      "protein": 1,
+      "carbs": 6.5,
+      "fat": 0.1
+    }
+  },
+  {
+    "id": "celery",
+    "name": "Aipo",
+    "category": "Vegetais & Legumes",
+    "macroBaseAmount": 1,
+    "macros": {
+      "calories": 6,
+      "protein": 0.3,
+      "carbs": 1.2,
+      "fat": 0.1
+    }
+  },
+  {
+    "id": "mint",
+    "name": "Hortelã",
+    "category": "Vegetais & Legumes",
+    "macroBaseAmount": 1,
+    "macros": {
+      "calories": 4,
+      "protein": 0.2,
+      "carbs": 0.8,
+      "fat": 0.1
+    }
+  },
+  {
+    "id": "parsley",
+    "name": "Salsinha",
+    "category": "Vegetais & Legumes",
+    "macroBaseAmount": 1,
+    "macros": {
+      "calories": 1,
+      "protein": 0.1,
+      "carbs": 0.3,
+      "fat": 0
+    }
+  },
+  {
+    "id": "green_onion",
+    "name": "Cebolinha Verde",
+    "category": "Vegetais & Legumes",
+    "macroBaseAmount": 1,
+    "macros": {
+      "calories": 3,
+      "protein": 0.2,
+      "carbs": 0.7,
+      "fat": 0
+    }
+  },
+  {
+    "id": "leek",
+    "name": "Alho Poró",
+    "category": "Vegetais & Legumes",
+    "macroBaseAmount": 1,
+    "macros": {
+      "calories": 8,
+      "protein": 0.3,
+      "carbs": 1.8,
+      "fat": 0
+    }
+  },
+  {
+    "id": "sausage",
+    "name": "Linguiça Calabresa",
+    "category": "Vegetais & Legumes",
+    "macroBaseAmount": 20,
+    "macros": {
+      "calories": 55,
+      "protein": 3,
+      "carbs": 0.5,
+      "fat": 4.5
+    }
+  },
+  {
+    "id": "milk",
+    "name": "Leite",
+    "category": "Laticínios & Derivados",
+    "macroBaseAmount": 100,
+    "macros": {
+      "calories": 50,
+      "protein": 3,
+      "carbs": 5,
+      "fat": 2
+    }
+  },
+  {
+    "id": "whole_milk",
+    "name": "Leite Integral",
+    "category": "Laticínios & Derivados",
+    "macroBaseAmount": 100,
+    "macros": {
+      "calories": 64,
+      "protein": 3.2,
+      "carbs": 4.8,
+      "fat": 3.6
+    }
+  },
+  {
+    "id": "skim_milk",
+    "name": "Leite Desnatado",
+    "category": "Laticínios & Derivados",
+    "macroBaseAmount": 100,
+    "macros": {
+      "calories": 35,
+      "protein": 3.4,
+      "carbs": 4.8,
+      "fat": 0.1
+    }
+  },
+  {
+    "id": "milk_powder",
+    "name": "Leite em Pó",
+    "category": "Laticínios & Derivados",
+    "macroBaseAmount": 20,
+    "macros": {
+      "calories": 98,
+      "protein": 6.5,
+      "carbs": 7.5,
+      "fat": 5
+    }
+  },
+  {
+    "id": "cheese",
+    "name": "Queijo Muçarela",
+    "category": "Laticínios & Derivados",
+    "macroBaseAmount": 100,
+    "macros": {
+      "calories": 300,
+      "protein": 22,
+      "carbs": 2.2,
+      "fat": 22
+    }
+  },
+  {
+    "id": "mozzarella_light",
+    "name": "Muçarela Light",
+    "category": "Laticínios & Derivados",
+    "macroBaseAmount": 1,
+    "macros": {
+      "calories": 50,
+      "protein": 5,
+      "carbs": 0.5,
+      "fat": 3
+    }
+  },
+  {
+    "id": "parmesan",
+    "name": "Queijo Parmesão",
+    "category": "Laticínios & Derivados",
+    "macroBaseAmount": 100,
+    "macros": {
+      "calories": 400,
+      "protein": 38,
+      "carbs": 4,
+      "fat": 25
+    }
+  },
+  {
+    "id": "grated_cheese",
+    "name": "Queijo Ralado",
+    "category": "Laticínios & Derivados",
+    "macroBaseAmount": 20,
+    "macros": {
+      "calories": 70,
+      "protein": 6,
+      "carbs": 0.5,
+      "fat": 5
+    }
+  },
+  {
+    "id": "butter",
+    "name": "Manteiga",
+    "category": "Laticínios & Derivados",
+    "macroBaseAmount": 1,
+    "macros": {
+      "calories": 36,
+      "protein": 0,
+      "carbs": 0,
+      "fat": 4
+    }
+  },
+  {
+    "id": "cream",
+    "name": "Creme de Leite",
+    "category": "Laticínios & Derivados",
+    "macroBaseAmount": 100,
+    "macros": {
+      "calories": 200,
+      "protein": 2,
+      "carbs": 4,
+      "fat": 20
+    }
+  },
+  {
+    "id": "plain_yogurt",
+    "name": "Iogurte Natural",
+    "category": "Laticínios & Derivados",
+    "macroBaseAmount": 1,
+    "macros": {
+      "calories": 15,
+      "protein": 1,
+      "carbs": 1.2,
+      "fat": 0.8
+    }
+  },
+  {
+    "id": "greek_yogurt",
+    "name": "Iogurte Grego",
+    "category": "Laticínios & Derivados",
+    "macroBaseAmount": 50,
+    "macros": {
+      "calories": 40,
+      "protein": 5,
+      "carbs": 1.5,
+      "fat": 2
+    }
+  },
+  {
+    "id": "condensed_milk",
+    "name": "Leite Condensado",
+    "category": "Laticínios & Derivados",
+    "macroBaseAmount": 40,
+    "macros": {
+      "calories": 130,
+      "protein": 3.5,
+      "carbs": 22,
+      "fat": 3.5
+    }
+  },
+  {
+    "id": "cottage_cheese",
+    "name": "Queijo Cottage",
+    "category": "Laticínios & Derivados",
+    "macroBaseAmount": 80,
+    "macros": {
+      "calories": 75,
+      "protein": 10,
+      "carbs": 2.5,
+      "fat": 2.5
+    }
+  },
+  {
+    "id": "cream_cheese_light",
+    "name": "Cream Cheese Light",
+    "category": "Laticínios & Derivados",
+    "macroBaseAmount": 10,
+    "macros": {
+      "calories": 20,
+      "protein": 1.5,
+      "carbs": 0.5,
+      "fat": 1.5
+    }
+  },
+  {
+    "id": "light_margarine",
+    "name": "Margarina Light",
+    "category": "Laticínios & Derivados",
+    "macroBaseAmount": 1,
+    "macros": {
+      "calories": 20,
+      "protein": 0,
+      "carbs": 0,
+      "fat": 2.2
+    }
+  },
+  {
+    "id": "ricotta_cream",
+    "name": "Creme de Ricota",
+    "category": "Laticínios & Derivados",
+    "macroBaseAmount": 150,
+    "macros": {
+      "calories": 150,
+      "protein": 15,
+      "carbs": 5,
+      "fat": 8
+    }
+  },
+  {
+    "id": "olive_oil",
+    "name": "Azeite de Oliva",
+    "category": "Despensa & Temperos",
+    "macroBaseAmount": 1,
+    "macros": {
+      "calories": 120,
+      "protein": 0,
+      "carbs": 0,
+      "fat": 14
+    }
+  },
+  {
+    "id": "salt",
+    "name": "Sal",
+    "category": "Despensa & Temperos",
+    "macroBaseAmount": 1,
+    "macros": {
+      "calories": 0,
+      "protein": 0,
+      "carbs": 0,
+      "fat": 0
+    }
+  },
+  {
+    "id": "black_pepper",
+    "name": "Pimenta do Reino",
+    "category": "Despensa & Temperos",
+    "macroBaseAmount": 1,
+    "macros": {
+      "calories": 0,
+      "protein": 0,
+      "carbs": 0,
+      "fat": 0
+    }
+  },
+  {
+    "id": "oregano",
+    "name": "Orégano",
+    "category": "Despensa & Temperos",
+    "macroBaseAmount": 1,
+    "macros": {
+      "calories": 0,
+      "protein": 0,
+      "carbs": 0,
+      "fat": 0
+    }
+  },
+  {
+    "id": "tomato_sauce",
+    "name": "Molho de Tomate",
+    "category": "Despensa & Temperos",
+    "macroBaseAmount": 100,
+    "macros": {
+      "calories": 40,
+      "protein": 1.5,
+      "carbs": 8,
+      "fat": 0.2
+    }
+  },
+  {
+    "id": "flour",
+    "name": "Farinha de Trigo",
+    "category": "Despensa & Temperos",
+    "macroBaseAmount": 100,
+    "macros": {
+      "calories": 360,
+      "protein": 10,
+      "carbs": 76,
+      "fat": 1.5
+    }
+  },
+  {
+    "id": "honey",
+    "name": "Mel",
+    "category": "Despensa & Temperos",
+    "macroBaseAmount": 1,
+    "macros": {
+      "calories": 64,
+      "protein": 0.1,
+      "carbs": 17,
+      "fat": 0
+    }
+  },
+  {
+    "id": "soy_sauce",
+    "name": "Molho de Soja",
+    "category": "Despensa & Temperos",
+    "macroBaseAmount": 1,
+    "macros": {
+      "calories": 10,
+      "protein": 1,
+      "carbs": 1,
+      "fat": 0
+    }
+  },
+  {
+    "id": "cocoa_powder",
+    "name": "Cacau em Pó",
+    "category": "Despensa & Temperos",
+    "macroBaseAmount": 20,
+    "macros": {
+      "calories": 50,
+      "protein": 4,
+      "carbs": 10,
+      "fat": 3
+    }
+  },
+  {
+    "id": "baking_powder",
+    "name": "Fermento em Pó Químico",
+    "category": "Despensa & Temperos",
+    "macroBaseAmount": 1,
+    "macros": {
+      "calories": 0,
+      "protein": 0,
+      "carbs": 0,
+      "fat": 0
+    }
+  },
+  {
+    "id": "cinnamon",
+    "name": "Canela",
+    "category": "Despensa & Temperos",
+    "macroBaseAmount": 1,
+    "macros": {
+      "calories": 2,
+      "protein": 0,
+      "carbs": 0.5,
+      "fat": 0
+    }
+  },
+  {
+    "id": "peanut_butter",
+    "name": "Pasta de Amendoim",
+    "category": "Despensa & Temperos",
+    "macroBaseAmount": 20,
+    "macros": {
+      "calories": 120,
+      "protein": 4.5,
+      "carbs": 4,
+      "fat": 10
+    }
+  },
+  {
+    "id": "chocolate_milk_powder",
+    "name": "Achocolatado em Pó",
+    "category": "Despensa & Temperos",
+    "macroBaseAmount": 25,
+    "macros": {
+      "calories": 100,
+      "protein": 2,
+      "carbs": 22,
+      "fat": 1
+    }
+  },
+  {
+    "id": "diet_pudding_mix",
+    "name": "Pudim Diet Royal",
+    "category": "Despensa & Temperos",
+    "macroBaseAmount": 1,
+    "macros": {
+      "calories": 30,
+      "protein": 0.5,
+      "carbs": 7,
+      "fat": 0
+    }
+  },
+  {
+    "id": "stevia",
+    "name": "Adoçante Stévia",
+    "category": "Despensa & Temperos",
+    "macroBaseAmount": 1,
+    "macros": {
+      "calories": 0,
+      "protein": 0,
+      "carbs": 0,
+      "fat": 0
+    }
+  },
+  {
+    "id": "vanilla_essence",
+    "name": "Essência de Baunilha",
+    "category": "Despensa & Temperos",
+    "macroBaseAmount": 1,
+    "macros": {
+      "calories": 0,
+      "protein": 0,
+      "carbs": 0,
+      "fat": 0
+    }
+  },
+  {
+    "id": "thyme",
+    "name": "Tomilho",
+    "category": "Despensa & Temperos",
+    "macroBaseAmount": 10,
+    "macros": {
+      "calories": 3,
+      "protein": 0.1,
+      "carbs": 0.7,
+      "fat": 0.1
+    }
+  },
+  {
+    "id": "mustard",
+    "name": "Mostarda",
+    "category": "Despensa & Temperos",
+    "macroBaseAmount": 1,
+    "macros": {
+      "calories": 5,
+      "protein": 0.2,
+      "carbs": 0.3,
+      "fat": 0.3
+    }
+  },
+  {
+    "id": "cornstarch",
+    "name": "Amido de Milho",
+    "category": "Despensa & Temperos",
+    "macroBaseAmount": 20,
+    "macros": {
+      "calories": 70,
+      "protein": 0.1,
+      "carbs": 17,
+      "fat": 0.1
+    }
+  },
+  {
+    "id": "mayonnaise",
+    "name": "Maionese",
+    "category": "Despensa & Temperos",
+    "macroBaseAmount": 25,
+    "macros": {
+      "calories": 170,
+      "protein": 0.3,
+      "carbs": 0.4,
+      "fat": 18
+    }
+  },
+  {
+    "id": "instant_coffee",
+    "name": "Café Solúvel",
+    "category": "Despensa & Temperos",
+    "macroBaseAmount": 20,
+    "macros": {
+      "calories": 2,
+      "protein": 0.2,
+      "carbs": 0.3,
+      "fat": 0
+    }
+  },
+  {
+    "id": "vegetable_broth",
+    "name": "Caldo de Legumes",
+    "category": "Despensa & Temperos",
+    "macroBaseAmount": 500,
+    "macros": {
+      "calories": 15,
+      "protein": 0.5,
+      "carbs": 2,
+      "fat": 0.5
+    }
+  },
+  {
+    "id": "dulce_de_leche",
+    "name": "Doce de Leite",
+    "category": "Despensa & Temperos",
+    "macroBaseAmount": 20,
+    "macros": {
+      "calories": 65,
+      "protein": 1.5,
+      "carbs": 12,
+      "fat": 1.5
+    }
+  },
+  {
+    "id": "peanut",
+    "name": "Amendoim",
+    "category": "Despensa & Temperos",
+    "macroBaseAmount": 40,
+    "macros": {
+      "calories": 230,
+      "protein": 10,
+      "carbs": 6,
+      "fat": 18
+    }
+  },
+  {
+    "id": "shredded_coconut",
+    "name": "Coco Ralado",
+    "category": "Despensa & Temperos",
+    "macroBaseAmount": 10,
+    "macros": {
+      "calories": 50,
+      "protein": 0.5,
+      "carbs": 2.5,
+      "fat": 4.5
+    }
+  },
+  {
+    "id": "herbs",
+    "name": "Ervas Finas",
+    "category": "Despensa & Temperos",
+    "macroBaseAmount": 1,
+    "macros": {
+      "calories": 0,
+      "protein": 0,
+      "carbs": 0,
+      "fat": 0
+    }
+  },
+  {
+    "id": "milk_cookie",
+    "name": "Bolacha ao Leite",
+    "category": "Despensa & Temperos",
+    "macroBaseAmount": 1,
+    "macros": {
+      "calories": 45,
+      "protein": 0.6,
+      "carbs": 7,
+      "fat": 1.5
+    }
+  },
+  {
+    "id": "lemon",
+    "name": "Limão",
+    "category": "Frutas",
+    "macroBaseAmount": 1,
+    "macros": {
+      "calories": 20,
+      "protein": 0.6,
+      "carbs": 6,
+      "fat": 0.2
+    }
+  },
+  {
+    "id": "banana",
+    "name": "Banana",
+    "category": "Frutas",
+    "macroBaseAmount": 1,
+    "macros": {
+      "calories": 105,
+      "protein": 1.3,
+      "carbs": 27,
+      "fat": 0.4
+    }
+  },
+  {
+    "id": "apple",
+    "name": "Maçã",
+    "category": "Frutas",
+    "macroBaseAmount": 1,
+    "macros": {
+      "calories": 95,
+      "protein": 0.5,
+      "carbs": 25,
+      "fat": 0.3
+    }
+  },
+  {
+    "id": "strawberry",
+    "name": "Morango",
+    "category": "Frutas",
+    "macroBaseAmount": 100,
+    "macros": {
+      "calories": 32,
+      "protein": 0.7,
+      "carbs": 7.7,
+      "fat": 0.3
+    }
+  },
+  {
+    "id": "avocado",
+    "name": "Abacate",
+    "category": "Frutas",
+    "macroBaseAmount": 100,
+    "macros": {
+      "calories": 160,
+      "protein": 2,
+      "carbs": 8.5,
+      "fat": 14.7
+    }
+  },
+  {
+    "id": "pineapple",
+    "name": "Abacaxi",
+    "category": "Frutas",
+    "macroBaseAmount": 100,
+    "macros": {
+      "calories": 50,
+      "protein": 0.5,
+      "carbs": 13,
+      "fat": 0.1
+    }
+  },
+  {
+    "id": "watermelon",
+    "name": "Melancia",
+    "category": "Frutas",
+    "macroBaseAmount": 1,
+    "macros": {
+      "calories": 30,
+      "protein": 0.6,
+      "carbs": 7.5,
+      "fat": 0.2
+    }
+  },
+  {
+    "id": "grape",
+    "name": "Uva",
+    "category": "Frutas",
+    "macroBaseAmount": 100,
+    "macros": {
+      "calories": 69,
+      "protein": 0.7,
+      "carbs": 18,
+      "fat": 0.2
+    }
+  },
+  {
+    "id": "passion_fruit_powder",
+    "name": "Suco de Maracujá em Pó",
+    "category": "Frutas",
+    "macroBaseAmount": 25,
+    "macros": {
+      "calories": 80,
+      "protein": 0.5,
+      "carbs": 20,
+      "fat": 0
+    }
+  },
+  {
+    "id": "coconut_milk",
+    "name": "Leite de Coco",
+    "category": "Frutas",
+    "macroBaseAmount": 100,
+    "macros": {
+      "calories": 200,
+      "protein": 2,
+      "carbs": 5,
+      "fat": 20
+    }
+  },
+  {
+    "id": "coconut_water",
+    "name": "Água de Coco",
+    "category": "Frutas",
+    "macroBaseAmount": 500,
+    "macros": {
+      "calories": 90,
+      "protein": 1,
+      "carbs": 22,
+      "fat": 0
+    }
+  },
+  {
+    "id": "dark_chocolate_50",
+    "name": "Chocolate Amargo 50% Cacau",
+    "category": "Doces & Sobremesas",
+    "macroBaseAmount": 100,
+    "macros": {
+      "calories": 500,
+      "protein": 8,
+      "carbs": 55,
+      "fat": 30
+    }
+  },
+  {
+    "id": "dark_chocolate_70",
+    "name": "Chocolate Amargo 70% Cacau",
+    "category": "Doces & Sobremesas",
+    "macroBaseAmount": 20,
+    "macros": {
+      "calories": 100,
+      "protein": 2,
+      "carbs": 7,
+      "fat": 7
+    }
+  },
+  {
+    "id": "whole_wheat_bread",
+    "name": "Pão Integral",
+    "category": "Doces & Sobremesas",
+    "macroBaseAmount": 2,
+    "macros": {
+      "calories": 140,
+      "protein": 6,
+      "carbs": 26,
+      "fat": 2
+    }
+  },
+  {
+    "id": "tortilla_wrap",
+    "name": "Rap 10 Integral",
+    "category": "Doces & Sobremesas",
+    "macroBaseAmount": 1,
+    "macros": {
+      "calories": 120,
+      "protein": 4,
+      "carbs": 20,
+      "fat": 3.5
+    }
+  },
+  {
+    "id": "bread_bun",
+    "name": "Pão de Hambúrguer",
+    "category": "Doces & Sobremesas",
+    "macroBaseAmount": 1,
+    "macros": {
+      "calories": 120,
+      "protein": 4,
+      "carbs": 22,
+      "fat": 2
+    }
+  },
+  {
+    "id": "ginger",
+    "name": "Gengibre",
+    "category": "Bebidas",
+    "macroBaseAmount": 1,
+    "macros": {
+      "calories": 2,
+      "protein": 0.1,
+      "carbs": 0.4,
+      "fat": 0
+    }
+  },
+  {
+    "id": "black_coffee",
+    "name": "Café",
+    "category": "Bebidas",
+    "macroBaseAmount": 1,
+    "macros": {
+      "calories": 0,
+      "protein": 0,
+      "carbs": 0,
+      "fat": 0
+    }
+  },
+  {
+    "id": "green_tea_leaves",
+    "name": "Folhas de Chá Verde",
+    "category": "Bebidas",
+    "macroBaseAmount": 1,
+    "macros": {
+      "calories": 0,
+      "protein": 0,
+      "carbs": 0,
+      "fat": 0
+    }
+  },
+  {
+    "id": "hibiscus_flowers",
+    "name": "Flores de Hibisco",
+    "category": "Bebidas",
+    "macroBaseAmount": 2,
+    "macros": {
+      "calories": 0,
+      "protein": 0,
+      "carbs": 0,
+      "fat": 0
+    }
+  },
+  {
+    "id": "horsetail",
+    "name": "Cavalinha",
+    "category": "Bebidas",
+    "macroBaseAmount": 1,
+    "macros": {
+      "calories": 0,
+      "protein": 0,
+      "carbs": 0,
+      "fat": 0
+    }
+  },
+  {
+    "id": "water",
+    "name": "Água",
+    "category": "Bebidas",
+    "macroBaseAmount": 1,
+    "macros": {
+      "calories": 0,
+      "protein": 0,
+      "carbs": 0,
+      "fat": 0
+    }
+  },
+  {
+    "id": "cold_water",
+    "name": "Água Gelada",
+    "category": "Bebidas",
+    "macroBaseAmount": 1,
+    "macros": {
+      "calories": 0,
+      "protein": 0,
+      "carbs": 0,
+      "fat": 0
+    }
+  },
+  {
+    "id": "vegetables",
+    "name": "Legumes Variados",
+    "category": "Legumes",
+    "macroBaseAmount": 100,
+    "macros": {
+      "calories": 50,
+      "protein": 2,
+      "carbs": 10,
+      "fat": 0.5
+    }
+  },
+  {
+    "id": "fruit",
+    "name": "Fruta Opcional",
+    "category": "Frutas",
+    "macroBaseAmount": 100,
+    "macros": {
+      "calories": 60,
+      "protein": 0.5,
+      "carbs": 15,
+      "fat": 0.2
+    }
+  }
 ]

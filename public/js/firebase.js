@@ -1,4 +1,4 @@
-// Firebase Client Initialization using dynamic environment variables from server (.env)
+// Firebase Client Initialization with Auth and Firestore
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics.js";
 import {
@@ -10,10 +10,19 @@ import {
   signOut,
   onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+import {
+  getFirestore,
+  doc,
+  setDoc,
+  getDoc,
+  collection,
+  getDocs
+} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
 let app = null;
 let analytics = null;
 let auth = null;
+let db = null;
 const googleProvider = new GoogleAuthProvider();
 
 async function initFirebase() {
@@ -24,19 +33,22 @@ async function initFirebase() {
     }
     const firebaseConfig = await response.json();
 
-    // Inicializa o Firebase com as variáveis lidas do .env
     app = initializeApp(firebaseConfig);
     analytics = getAnalytics(app);
     auth = getAuth(app);
+    db = getFirestore(app);
 
-    console.log('✅ Firebase e Autenticação inicializados com sucesso via .env!');
-    return { app, analytics, auth };
+    console.log('✅ Firebase Auth e Firestore inicializados com sucesso!');
+
+    // Trigger seeding of public catalog data to Firestore asynchronously
+    seedPublicCatalogToFirestore().catch(err => console.warn('Seed notice:', err));
+
+    return { app, analytics, auth, db };
   } catch (error) {
     console.error('❌ Erro ao inicializar o Firebase:', error);
   }
 }
 
-// Promise para garantir que o Auth está pronto antes de chamadas
 const firebaseReady = initFirebase();
 
 async function getAuthInstance() {
@@ -44,7 +56,12 @@ async function getAuthInstance() {
   return auth;
 }
 
-// Funções Auxiliares de Autenticação
+async function getDbInstance() {
+  await firebaseReady;
+  return db;
+}
+
+// Authentication Helpers
 async function loginWithEmail(email, password) {
   const authInst = await getAuthInstance();
   return signInWithEmailAndPassword(authInst, email, password);
@@ -70,14 +87,186 @@ async function onAuthChange(callback) {
   return onAuthStateChanged(authInst, callback);
 }
 
+// Firestore Public Catalog Helpers
+async function getPublicIngredientsFromFirestore() {
+  try {
+    const firestore = await getDbInstance();
+    if (!firestore) return [];
+    const colRef = collection(firestore, 'public_ingredients');
+    const snapshot = await getDocs(colRef);
+    const result = [];
+    snapshot.forEach(docSnap => result.push(docSnap.data()));
+    return result;
+  } catch (e) {
+    console.warn('Aviso leitura public_ingredients Firestore:', e);
+    return [];
+  }
+}
+
+async function getPublicRecipesFromFirestore() {
+  try {
+    const firestore = await getDbInstance();
+    if (!firestore) return [];
+    const colRef = collection(firestore, 'public_recipes');
+    const snapshot = await getDocs(colRef);
+    const result = [];
+    snapshot.forEach(docSnap => result.push(docSnap.data()));
+    return result;
+  } catch (e) {
+    console.warn('Aviso leitura public_recipes Firestore:', e);
+    return [];
+  }
+}
+
+async function seedPublicCatalogToFirestore() {
+  try {
+    const firestore = await getDbInstance();
+    if (!firestore) return;
+
+    // Check if public_ingredients needs seeding
+    const ingColRef = collection(firestore, 'public_ingredients');
+    const ingSnap = await getDocs(ingColRef);
+    if (ingSnap.empty) {
+      console.log('🌱 Populando catálogo público de ingredientes no Firestore...');
+      const res = await fetch('/data/ingredients.json');
+      if (res.ok) {
+        const items = await res.json();
+        for (const item of items) {
+          await setDoc(doc(firestore, `public_ingredients/${item.id}`), item);
+        }
+        console.log(`✅ ${items.length} ingredientes salvos no Firestore público!`);
+      }
+    }
+
+    // Check if public_recipes needs seeding
+    const recColRef = collection(firestore, 'public_recipes');
+    const recSnap = await getDocs(recColRef);
+    if (recSnap.empty) {
+      console.log('🌱 Populando catálogo público de receitas no Firestore...');
+      const res = await fetch('/data/recipes.json');
+      if (res.ok) {
+        const items = await res.json();
+        for (const item of items) {
+          await setDoc(doc(firestore, `public_recipes/${item.id}`), item);
+        }
+        console.log(`✅ ${items.length} receitas salvas no Firestore público!`);
+      }
+    }
+  } catch (e) {
+    console.warn('Aviso ao popular catálogo público no Firestore:', e);
+  }
+}
+
+// Firestore User-Scoped Data Helpers
+async function saveUserCustomIngredient(userId, ingredient) {
+  try {
+    const firestore = await getDbInstance();
+    if (!firestore || !userId) return;
+    const ingRef = doc(firestore, `users/${userId}/custom_ingredients/${ingredient.id}`);
+    await setDoc(ingRef, ingredient);
+  } catch (e) {
+    console.warn('Aviso Firestore ingrediente:', e);
+  }
+}
+
+async function getUserCustomIngredients(userId) {
+  try {
+    const firestore = await getDbInstance();
+    if (!firestore || !userId) return [];
+    const colRef = collection(firestore, `users/${userId}/custom_ingredients`);
+    const snapshot = await getDocs(colRef);
+    const result = [];
+    snapshot.forEach(docSnap => result.push(docSnap.data()));
+    return result;
+  } catch (e) {
+    console.warn('Aviso leitura ingrediente Firestore:', e);
+    return [];
+  }
+}
+
+async function saveUserCustomRecipe(userId, recipe) {
+  try {
+    const firestore = await getDbInstance();
+    if (!firestore || !userId) return;
+    const recRef = doc(firestore, `users/${userId}/custom_recipes/${recipe.id}`);
+    await setDoc(recRef, recipe);
+  } catch (e) {
+    console.warn('Aviso Firestore receita:', e);
+  }
+}
+
+async function getUserCustomRecipes(userId) {
+  try {
+    const firestore = await getDbInstance();
+    if (!firestore || !userId) return [];
+    const colRef = collection(firestore, `users/${userId}/custom_recipes`);
+    const snapshot = await getDocs(colRef);
+    const result = [];
+    snapshot.forEach(docSnap => result.push(docSnap.data()));
+    return result;
+  } catch (e) {
+    console.warn('Aviso leitura receita Firestore:', e);
+    return [];
+  }
+}
+
+async function saveUserPantry(userId, pantryArray) {
+  try {
+    const firestore = await getDbInstance();
+    if (!firestore || !userId) return;
+    const pantryRef = doc(firestore, `users/${userId}/data/pantry`);
+    await setDoc(pantryRef, { items: pantryArray, updatedAt: new Date().toISOString() });
+  } catch (e) {
+    console.warn('Aviso Firestore despensa:', e);
+  }
+}
+
+async function getUserPantry(userId) {
+  try {
+    const firestore = await getDbInstance();
+    if (!firestore || !userId) return null;
+    const pantryRef = doc(firestore, `users/${userId}/data/pantry`);
+    const docSnap = await getDoc(pantryRef);
+    if (docSnap.exists()) {
+      return docSnap.data().items || [];
+    }
+  } catch (e) {
+    console.warn('Aviso leitura despensa Firestore:', e);
+  }
+  return null;
+}
+
+// Expose Firestore helpers on window object for legacy module access
+if (typeof window !== 'undefined') {
+  window.getPublicIngredientsFromFirestore = getPublicIngredientsFromFirestore;
+  window.getPublicRecipesFromFirestore = getPublicRecipesFromFirestore;
+  window.seedPublicCatalogToFirestore = seedPublicCatalogToFirestore;
+  window.saveUserCustomIngredient = saveUserCustomIngredient;
+  window.getUserCustomIngredients = getUserCustomIngredients;
+  window.saveUserCustomRecipe = saveUserCustomRecipe;
+  window.getUserCustomRecipes = getUserCustomRecipes;
+  window.saveUserPantry = saveUserPantry;
+  window.getUserPantry = getUserPantry;
+}
+
 export {
   app,
   analytics,
   auth,
+  db,
   initFirebase,
   loginWithEmail,
   registerWithEmail,
   loginWithGoogle,
   logoutUser,
-  onAuthChange
+  onAuthChange,
+  getPublicIngredientsFromFirestore,
+  getPublicRecipesFromFirestore,
+  seedPublicCatalogToFirestore,
+  saveUserCustomIngredient,
+  getUserCustomIngredients,
+  saveUserCustomRecipe,
+  getUserCustomRecipes,
+  saveUserPantry,
+  getUserPantry
 };
