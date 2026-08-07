@@ -29,7 +29,8 @@ const dom = {
   recIsPublic: document.getElementById('rec-is-public'),
   
   // Dynamic ingredients selector in Recipe Form
-  recIngSelect: document.getElementById('rec-ing-select'),
+  recIngInput: document.getElementById('rec-ing-input'),
+  recIngDatalist: document.getElementById('ingredients-datalist'),
   recIngQty: document.getElementById('rec-ing-qty'),
   recIngUnit: document.getElementById('rec-ing-unit'),
   btnAddIng: document.getElementById('btn-add-ing'),
@@ -56,37 +57,23 @@ async function init() {
 }
 
 function updateHeaderBadge() {
-  const pantrySet = getPantry();
-  if (dom.selectedCount) {
-    dom.selectedCount.textContent = pantrySet.size;
+  if (typeof window.updateGlobalPantryBadge === 'function') {
+    window.updateGlobalPantryBadge();
   }
 }
 
-// Populate the recipe form's ingredients dropdown
+// Populate the recipe form's ingredients datalist for instant autocomplete
 function populateIngredientsDropdown() {
-  dom.recIngSelect.innerHTML = '<option value="" disabled selected>Escolha o ingrediente...</option>';
-  
-  // Group ingredients by category for visual grouping in select element
-  const categories = {};
-  ingredients.forEach(ing => {
-    if (!categories[ing.category]) {
-      categories[ing.category] = [];
-    }
-    categories[ing.category].push(ing);
-  });
+  const datalist = dom.recIngDatalist || document.getElementById('ingredients-datalist');
+  if (!datalist) return;
+  datalist.innerHTML = '';
 
-  Object.entries(categories).forEach(([catName, items]) => {
-    const optGroup = document.createElement('optgroup');
-    optGroup.label = catName;
+  const sorted = [...ingredients].sort((a, b) => a.name.localeCompare(b.name));
 
-    items.forEach(ing => {
-      const option = document.createElement('option');
-      option.value = ing.id;
-      option.textContent = ing.name;
-      optGroup.appendChild(option);
-    });
-
-    dom.recIngSelect.appendChild(optGroup);
+  sorted.forEach(ing => {
+    const option = document.createElement('option');
+    option.value = ing.name;
+    datalist.appendChild(option);
   });
 }
 
@@ -116,7 +103,7 @@ function setupEventListeners() {
     const normTarget = normalizeString(name);
     const alreadyExists = liveIngredients.some(ing => ing && ing.name && normalizeString(ing.name) === normTarget);
     if (alreadyExists) {
-      alert(`⚠️ O ingrediente "${name}" já está cadastrado no sistema! Não é permitido cadastrar ingredientes duplicados.`);
+      alert(`O ingrediente "${name}" já está cadastrado no sistema! Não é permitido cadastrar ingredientes duplicados.`);
       return;
     }
 
@@ -136,8 +123,6 @@ function setupEventListeners() {
       }
     };
 
-    const isPublic = dom.ingIsPublic ? dom.ingIsPublic.checked : false;
-
     await saveCustomIngredient(newIng, isPublic);
     
     // Alert and update state
@@ -149,15 +134,15 @@ function setupEventListeners() {
     populateIngredientsDropdown();
   });
 
-  // 2. Add Ingredient to Recipe List
+  // 2. Add Ingredient to Recipe List (Searchable Input)
   dom.btnAddIng.addEventListener('click', (e) => {
     if (e) { e.preventDefault(); e.stopPropagation(); }
-    const ingId = dom.recIngSelect.value;
+    const typedValue = dom.recIngInput ? dom.recIngInput.value.trim() : '';
     const qty = parseFloat(dom.recIngQty.value);
     const unit = dom.recIngUnit.value.trim();
 
-    if (!ingId) {
-      alert('Selecione um ingrediente da lista.');
+    if (!typedValue) {
+      alert('Digite ou selecione um ingrediente da lista.');
       return;
     }
     if (isNaN(qty) || qty <= 0) {
@@ -169,30 +154,37 @@ function setupEventListeners() {
       return;
     }
 
+    const normTyped = normalizeString(typedValue);
+    let ingObj = ingredients.find(i => normalizeString(i.name) === normTyped || i.id === typedValue);
+
+    const ingId = ingObj ? ingObj.id : generateSlug(typedValue, 'ing');
+    const ingName = ingObj ? ingObj.name : typedValue;
+
     // Check if ingredient already added
-    if (recipeIngredients.some(item => item.ingredientId === ingId)) {
-      alert('Este ingrediente já foi adicionado a esta receita.');
+    if (recipeIngredients.some(item => item.ingredientId === ingId || normalizeString(item.name) === normTyped)) {
+      alert(`O ingrediente "${ingName}" já foi adicionado a esta receita.`);
       return;
     }
 
-    const ingObj = ingredients.find(i => i.id === ingId);
     recipeIngredients.push({
       ingredientId: ingId,
-      name: ingObj ? ingObj.name : ingId,
+      name: ingName,
       amount: qty,
-      unit
+      unit,
+      macros: ingObj ? ingObj.macros : null,
+      macroBaseAmount: ingObj ? ingObj.macroBaseAmount : null
     });
 
     // Reset select inputs
-    dom.recIngSelect.value = '';
+    if (dom.recIngInput) dom.recIngInput.value = '';
     dom.recIngQty.value = '';
     dom.recIngUnit.value = 'g';
 
     renderAddedIngredientsList();
   });
 
-  // Enter key in ingredient qty or unit triggers add ingredient
-  [dom.recIngQty, dom.recIngUnit].forEach(inputEl => {
+  // Enter key in ingredient inputs triggers add ingredient
+  [dom.recIngInput, dom.recIngQty, dom.recIngUnit].forEach(inputEl => {
     if (inputEl) {
       inputEl.addEventListener('keydown', (e) => {
         if (e.key === 'Enter') {
@@ -204,19 +196,32 @@ function setupEventListeners() {
     }
   });
 
-  // 3. Add Instruction Step to Recipe List
+  // 3. Add Instruction Step to Recipe List (Supports adding multiple lines at once)
   dom.btnAddStep.addEventListener('click', (e) => {
     if (e) { e.preventDefault(); e.stopPropagation(); }
-    const text = dom.recStepText.value.trim();
-    if (!text) {
-      alert('Digite o modo de preparo para o passo.');
+    const rawText = dom.recStepText.value.trim();
+    if (!rawText) {
+      alert('Digite ou cole o modo de preparo.');
       return;
     }
 
-    recipeInstructions.push(text);
-    dom.recStepText.value = '';
+    // Split by newlines to allow adding multiple steps at once!
+    const lines = rawText.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+    
+    let addedCount = 0;
+    lines.forEach(line => {
+      // Strip leading numbers/bullets like "1. ", "2) ", "- ", "• "
+      const cleanStep = line.replace(/^(\d+[\.\)]\s*|[\-\*•]\s*)/, '').trim();
+      if (cleanStep) {
+        recipeInstructions.push(cleanStep);
+        addedCount++;
+      }
+    });
 
-    renderAddedStepsList();
+    if (addedCount > 0) {
+      dom.recStepText.value = '';
+      renderAddedStepsList();
+    }
   });
 
   // Enter key in step input triggers add step without submitting main form
@@ -284,13 +289,14 @@ function setupEventListeners() {
       image,
       ingredients: recipeIngredients.map(item => ({
         ingredientId: item.ingredientId,
+        name: item.name,
         amount: item.amount,
-        unit: item.unit
+        unit: item.unit,
+        macros: item.macros || null,
+        macroBaseAmount: item.macroBaseAmount || null
       })),
       instructions: [...recipeInstructions]
     };
-
-    const isPublic = dom.recIsPublic ? dom.recIsPublic.checked : false;
 
     await saveCustomRecipe(newRecipe, isPublic);
 

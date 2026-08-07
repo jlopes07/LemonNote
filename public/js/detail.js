@@ -51,7 +51,11 @@ function updateHeaderBadge() {
 function renderError(message) {
   dom.detailContainer.innerHTML = `
     <div class="detail-card" style="text-align: center; padding: 60px;">
-      <div style="font-size: 54px; margin-bottom: 20px;">⚠️</div>
+      <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--accent); margin-bottom: 20px;">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="12" y1="8" x2="12" y2="12"></line>
+        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+      </svg>
       <h2 style="font-family: var(--font-title); font-size: 24px; margin-bottom: 12px;">Ops! Algo deu errado</h2>
       <p style="color: var(--text-muted); margin-bottom: 24px;">${message}</p>
       <a href="recipes.html" class="btn-primary">Voltar para Receitas</a>
@@ -64,15 +68,25 @@ function renderRecipeDetails() {
   const factor = currentServings / baseServings;
   const currentUid = getCurrentUserScope();
   const isCreator = recipe && recipe.userId && recipe.userId === currentUid;
+  const favorites = getFavorites();
+  const isFav = recipe && favorites.has(recipe.id);
 
   dom.detailContainer.innerHTML = `
     <div class="detail-card">
       <div class="detail-grid">
         <!-- Header Info -->
         <div class="detail-header-info">
-          <div style="display:flex; justify-content:space-between; align-items:center; width:100%;">
-            <span class="badge-tag" style="background: var(--bg-element); color: var(--accent);">⏱️ ${recipe.prepTime} minutos de preparo</span>
-            ${isCreator ? `<button type="button" id="btn-delete-recipe-detail" style="background:rgba(239,68,68,0.9); color:white; border:none; padding:6px 14px; border-radius:12px; font-size:13px; font-weight:600; cursor:pointer; display:inline-flex; align-items:center; gap:6px;">🗑️ Excluir Receita</button>` : ''}
+          <div style="display:flex; justify-content:space-between; align-items:center; width:100%; gap:12px; flex-wrap:wrap;">
+            <div style="display:flex; gap:10px; align-items:center;">
+              <span class="badge-tag" style="background: var(--bg-element); color: var(--accent);">${recipe.prepTime} minutos de preparo</span>
+              <button type="button" id="btn-fav-recipe-detail" style="background:var(--bg-element); color:${isFav ? '#f59e0b' : 'var(--text-muted)'}; border:1px solid var(--border-color); padding:6px 14px; border-radius:12px; font-size:13px; font-weight:600; cursor:pointer; display:inline-flex; align-items:center; gap:6px;">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="${isFav ? '#f59e0b' : 'none'}" stroke="${isFav ? '#f59e0b' : 'currentColor'}" stroke-width="2">
+                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                </svg>
+                <span>${isFav ? 'Favoritada' : 'Favoritar'}</span>
+              </button>
+            </div>
+            ${isCreator ? `<button type="button" id="btn-delete-recipe-detail" style="background:rgba(239,68,68,0.9); color:white; border:none; padding:6px 14px; border-radius:12px; font-size:13px; font-weight:600; cursor:pointer; display:inline-flex; align-items:center; gap:6px;">Excluir Receita</button>` : ''}
           </div>
           <h2 class="recipe-title">${recipe.name}</h2>
           <p class="recipe-desc">${recipe.description}</p>
@@ -109,7 +123,7 @@ function renderRecipeDetails() {
     const scaledQty = ing.amount * factor;
     const hasIt = selectedIngredients.has(ing.ingredientId);
     const ingObj = ingredients.find(i => i.id === ing.ingredientId);
-    const name = ingObj ? ingObj.name : ing.ingredientId;
+    const name = ingObj ? ingObj.name : (ing.name || ing.ingredientId);
     const formattedQty = Number(scaledQty.toFixed(1)).toString().replace('.', ',');
 
     return `
@@ -229,10 +243,19 @@ function renderRecipeDetails() {
   btnDec.addEventListener('click', () => updatePortions(currentServings - 1));
   btnInc.addEventListener('click', () => updatePortions(currentServings + 1));
 
+  const favBtn = document.getElementById('btn-fav-recipe-detail');
+  if (favBtn) {
+    favBtn.addEventListener('click', () => {
+      toggleFavorite(recipe.id);
+      renderRecipeDetails();
+    });
+  }
+
   const deleteBtn = document.getElementById('btn-delete-recipe-detail');
   if (deleteBtn) {
     deleteBtn.addEventListener('click', async () => {
-      if (confirm(`Deseja realmente excluir a receita "${recipe.name}"?`)) {
+      const confirmed = await showConfirm(`Deseja realmente excluir a receita "${recipe.name}"?`, { title: 'Excluir Receita', confirmText: 'Excluir' });
+      if (confirmed) {
         await deleteRecipe(recipe);
         window.location.href = 'recipes.html';
       }

@@ -50,9 +50,82 @@ function setupEventListeners() {
     updateSelectionPanel();
   });
 
-  // Search input filtering
+  // Dynamic Search Filter
   dom.pantrySearch.addEventListener('input', (e) => {
     filterIngredients(e.target.value.trim().toLowerCase());
+  });
+
+  setupIngredientModal();
+}
+
+function setupIngredientModal() {
+  const modalOverlay = document.getElementById('modal-ing-overlay');
+  const btnOpen = document.getElementById('btn-open-ing-modal');
+  const btnClose = document.getElementById('btn-close-ing-modal');
+  const btnCancel = document.getElementById('btn-cancel-ing-modal');
+  const form = document.getElementById('modal-ing-form');
+
+  if (!modalOverlay || !btnOpen || !form) return;
+
+  const openModal = () => { modalOverlay.style.display = 'flex'; };
+  const closeModal = () => { modalOverlay.style.display = 'none'; form.reset(); };
+
+  btnOpen.addEventListener('click', openModal);
+  if (btnClose) btnClose.addEventListener('click', closeModal);
+  if (btnCancel) btnCancel.addEventListener('click', closeModal);
+
+  modalOverlay.addEventListener('click', (e) => {
+    if (e.target === modalOverlay) closeModal();
+  });
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const name = document.getElementById('modal-ing-name').value.trim();
+    const category = document.getElementById('modal-ing-category').value.trim();
+    const baseAmount = parseFloat(document.getElementById('modal-ing-base').value);
+    const calories = parseFloat(document.getElementById('modal-ing-cal').value) || 0;
+    const protein = parseFloat(document.getElementById('modal-ing-prot').value) || 0;
+    const carbs = parseFloat(document.getElementById('modal-ing-carb').value) || 0;
+    const fat = parseFloat(document.getElementById('modal-ing-fat').value) || 0;
+    const isPublic = document.getElementById('modal-ing-public').checked;
+
+    if (!name || !category || isNaN(baseAmount)) {
+      alert('Preencha os campos obrigatórios.');
+      return;
+    }
+
+    // Check duplicate
+    const currentAppData = await loadAppData();
+    const liveIngredients = (currentAppData && currentAppData.ingredients) ? currentAppData.ingredients : ingredients;
+    const normTarget = normalizeString(name);
+    const alreadyExists = liveIngredients.some(i => i && i.name && normalizeString(i.name) === normTarget);
+
+    if (alreadyExists) {
+      alert(`⚠️ O ingrediente "${name}" já existe no catálogo!`);
+      return;
+    }
+
+    const newIngId = generateSlug(name, isPublic ? 'ing' : 'custom_ing');
+    const newIng = {
+      id: newIngId,
+      name,
+      category,
+      macroBaseAmount: baseAmount,
+      macros: { calories, protein, carbs, fat }
+    };
+
+    await saveCustomIngredient(newIng, isPublic);
+
+    // Auto-select the newly created ingredient into the user's pantry
+    selectedIngredients.add(newIngId);
+    savePantry(selectedIngredients);
+
+    closeModal();
+    alert(`Ingrediente "${name}" criado com sucesso e adicionado à sua despensa!`);
+
+    // Reload pantry dynamically in place
+    await init();
   });
 }
 
@@ -116,7 +189,7 @@ function renderPantry() {
         <input type="checkbox" data-id="${ing.id}" ${isChecked ? 'checked' : ''}>
         <span class="checkbox-custom"></span>
         <span class="ingredient-name-text" style="flex:1;">${ing.name}</span>
-        ${isCreator ? `<button type="button" class="btn-delete-item" title="Excluir ingrediente" style="background:none; border:none; color:var(--danger); cursor:pointer; font-size:14px; padding:2px 6px; opacity:0.75; transition:opacity 0.2s;">🗑️</button>` : ''}
+        ${isCreator ? `<button type="button" class="btn-delete-item" title="Excluir ingrediente" style="background:none; border:none; color:var(--danger); cursor:pointer; font-size:14px; padding:2px 6px; opacity:0.75; transition:opacity 0.2s;"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></button>` : ''}
       `;
 
       const checkbox = label.querySelector('input');
@@ -138,11 +211,14 @@ function renderPantry() {
         deleteBtn.addEventListener('click', async (e) => {
           e.preventDefault();
           e.stopPropagation();
-          if (confirm(`Deseja realmente excluir o ingrediente "${ing.name}"?`)) {
-            selectedIngredients.delete(ing.id);
-            savePantry(selectedIngredients);
-            await deleteIngredient(ing);
-            await init();
+          const confirmed = await showConfirm(`Deseja realmente excluir o ingrediente "${ing.name}"?`, { title: 'Excluir Ingrediente', confirmText: 'Excluir' });
+          if (confirmed) {
+            const success = await deleteIngredient(ing);
+            if (success) {
+              selectedIngredients.delete(ing.id);
+              savePantry(selectedIngredients);
+              await init();
+            }
           }
         });
       }
@@ -198,58 +274,74 @@ function filterIngredients(query) {
 
 // Render selected ingredients tag panel on the right
 function updateSelectionPanel() {
+  const panelBadge = document.getElementById('panel-badge');
+  const emptySelection = dom.emptySelection || document.getElementById('empty-selection');
+  const tagsContainer = dom.selectedTagsContainer || document.getElementById('selected-tags-container');
+  const btnSubmit = dom.btnSubmit || document.getElementById('btn-submit') || document.getElementById('btn-see-recipes');
+
   const count = selectedIngredients.size;
+  if (panelBadge) panelBadge.textContent = `${count} item${count !== 1 ? 's' : ''}`;
 
   if (count === 0) {
-    dom.emptySelection.style.display = 'flex';
-    dom.selectedTagsContainer.style.display = 'none';
-    dom.btnSubmit.style.opacity = '0.5';
-    dom.btnSubmit.style.pointerEvents = 'none';
-    dom.selectedTagsContainer.innerHTML = '';
+    if (emptySelection) emptySelection.style.display = 'flex';
+    if (tagsContainer) {
+      tagsContainer.style.display = 'none';
+      tagsContainer.innerHTML = '';
+    }
+    if (btnSubmit) {
+      btnSubmit.style.opacity = '0.5';
+      btnSubmit.style.pointerEvents = 'none';
+    }
     return;
   }
 
-  dom.emptySelection.style.display = 'none';
-  dom.selectedTagsContainer.style.display = 'flex';
-  dom.btnSubmit.style.opacity = '1';
-  dom.btnSubmit.style.pointerEvents = 'auto';
+  if (emptySelection) emptySelection.style.display = 'none';
+  if (tagsContainer) {
+    tagsContainer.style.display = 'flex';
+    tagsContainer.innerHTML = '';
+  }
+  if (btnSubmit) {
+    btnSubmit.style.opacity = '1';
+    btnSubmit.style.pointerEvents = 'auto';
+  }
 
-  dom.selectedTagsContainer.innerHTML = '';
+  if (tagsContainer) {
+    selectedIngredients.forEach(ingId => {
+      const ingObj = ingredients.find(i => i && i.id === ingId);
+      if (!ingObj) return;
 
-  selectedIngredients.forEach(ingId => {
-    const ingObj = ingredients.find(i => i.id === ingId);
-    if (!ingObj) return;
+      const tag = document.createElement('div');
+      tag.className = 'selection-tag';
+      tag.innerHTML = `
+        <span>${ingObj.name}</span>
+        <span class="tag-remove">&times;</span>
+      `;
 
-    const tag = document.createElement('div');
-    tag.className = 'selection-tag';
-    tag.innerHTML = `
-      <span>${ingObj.name}</span>
-      <span class="tag-remove">&times;</span>
-    `;
-
-    // Clicking a tag removes it from selection
-    tag.addEventListener('click', () => {
-      selectedIngredients.delete(ingId);
-      savePantry(selectedIngredients);
-      
-      // Update DOM Checkbox
-      const checkbox = dom.ingredientsContainer.querySelector(`input[data-id="${ingId}"]`);
-      if (checkbox) {
-        checkbox.checked = false;
+      tag.addEventListener('click', () => {
+        selectedIngredients.delete(ingId);
+        savePantry(selectedIngredients);
         
-        // Update category group status
-        const groupEl = checkbox.closest('.category-group');
-        const catName = groupEl.querySelector('.category-header-title span').textContent;
-        const groupItems = ingredients.filter(i => i.category === catName);
-        updateCategoryStatus(groupEl, groupItems);
-      }
+        const checkbox = dom.ingredientsContainer ? dom.ingredientsContainer.querySelector(`input[data-id="${ingId}"]`) : null;
+        if (checkbox) {
+          checkbox.checked = false;
+          const groupEl = checkbox.closest('.category-group');
+          if (groupEl) {
+            const titleEl = groupEl.querySelector('.category-header-title span');
+            if (titleEl) {
+              const catName = titleEl.textContent;
+              const groupItems = ingredients.filter(i => i.category === catName);
+              updateCategoryStatus(groupEl, groupItems);
+            }
+          }
+        }
 
-      updateHeaderBadge();
-      updateSelectionPanel();
+        updateHeaderBadge();
+        updateSelectionPanel();
+      });
+
+      tagsContainer.appendChild(tag);
     });
-
-    dom.selectedTagsContainer.appendChild(tag);
-  });
+  }
 }
 
 window.addEventListener('userAuthReady', init);

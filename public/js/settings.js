@@ -282,7 +282,8 @@ function setupDevicesManager() {
 
   if (logoutAllBtn) {
     logoutAllBtn.addEventListener('click', async () => {
-      if (confirm('Deseja realmente desconectar sua conta de todos os outros dispositivos?')) {
+      const confirmed = await showConfirm('Deseja realmente desconectar sua conta de todos os outros dispositivos?', { title: 'Desconectar Dispositivos', confirmText: 'Desconectar' });
+      if (confirmed) {
         alert('Todas as outras sessões foram encerradas com sucesso.');
       }
     });
@@ -335,7 +336,7 @@ function setupDangerZone() {
       return;
     }
 
-    const confirmFirst = confirm('⚠️ ATENÇÃO: Esta ação é IRREVERSÍVEL!\n\nDeseja realmente excluir permanentemente sua conta e todos os dados do LemonNote?');
+    const confirmFirst = await showConfirm('⚠️ ATENÇÃO: Esta ação é IRREVERSÍVEL!\n\nDeseja realmente excluir permanentemente sua conta e todos os dados do LemonNote?', { title: 'Excluir Conta Permanetemente', confirmText: 'Excluir Minha Conta' });
     if (!confirmFirst) return;
 
     const confirmSecond = prompt('Digite "EXCLUIR" para confirmar a remoção definitiva da sua conta:');

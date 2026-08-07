@@ -88,7 +88,7 @@
             <div class="form-group checkbox-group" style="margin-top: 14px;">
               <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 13.5px; color: var(--text-heading); font-weight: 500;">
                 <input type="checkbox" id="ing-is-public" style="width: 18px; height: 18px; accent-color: var(--accent); cursor: pointer;">
-                <span>🌐 Deseja tornar este ingrediente público para todos os usuários?</span>
+                <span>Deseja tornar este ingrediente público para todos os usuários?</span>
               </label>
             </div>
 
@@ -131,22 +131,23 @@
             </div>
 
             <!-- Dynamic Ingredients Builder row -->
-            <div class="inline-add-row" style="margin-top:10px;">
-              <div class="form-group">
-                <label for="rec-ing-select">Ingredientes Necessários *</label>
-                <select id="rec-ing-select">
-                  <!-- Injected dynamically by register.js -->
-                </select>
+            <div class="inline-add-row" style="margin-top:10px; align-items:flex-start;">
+              <div class="form-group" style="flex:2;">
+                <label for="rec-ing-input">Ingredientes Necessários (digite para buscar) *</label>
+                <input type="text" id="rec-ing-input" list="ingredients-datalist" placeholder="Digite o nome (ex: Ovo, Frango, Leite)..." autocomplete="off" style="width:100%; padding:10px 14px; border-radius:var(--radius-md); border:1px solid var(--border-color); background:var(--bg-main); color:var(--text-heading); font-size:14px;">
+                <datalist id="ingredients-datalist">
+                  <!-- Populated dynamically by register.js -->
+                </datalist>
               </div>
-              <div class="form-group qty-col">
-                <label for="rec-ing-qty">Qtd.</label>
-                <input type="number" id="rec-ing-qty" placeholder="Ex: 150" min="0.1" step="any">
+              <div class="form-group qty-col" style="flex:1;">
+                <label for="rec-ing-qty">Qtd. *</label>
+                <input type="number" id="rec-ing-qty" placeholder="Ex: 150" min="0.1" step="any" style="width:100%; padding:10px 14px; border-radius:var(--radius-md); border:1px solid var(--border-color); background:var(--bg-main); color:var(--text-heading); font-size:14px;">
               </div>
-              <div class="form-group unit-col">
-                <label for="rec-ing-unit">Unidade</label>
-                <input type="text" id="rec-ing-unit" placeholder="g, ml, etc." value="g">
+              <div class="form-group unit-col" style="flex:1;">
+                <label for="rec-ing-unit">Unidade *</label>
+                <input type="text" id="rec-ing-unit" placeholder="g, ml..." value="g" style="width:100%; padding:10px 14px; border-radius:var(--radius-md); border:1px solid var(--border-color); background:var(--bg-main); color:var(--text-heading); font-size:14px;">
               </div>
-              <button type="button" id="btn-add-ing" class="btn-secondary" style="height:45px; padding:0 16px;"
+              <button type="button" id="btn-add-ing" class="btn-secondary" style="height:42px; padding:0 18px; margin-top:24px; font-weight:700;"
                 title="Adicionar ingrediente à lista">+</button>
             </div>
 
@@ -159,13 +160,13 @@
             </div>
 
             <!-- Dynamic Instructions Builder row -->
-            <div class="inline-add-row" style="margin-top:14px;">
-              <div class="form-group">
+            <div class="inline-add-row" style="margin-top:14px; align-items:flex-start;">
+              <div class="form-group" style="flex:1;">
                 <label for="rec-step-text">Modo de Preparo (Passo a Passo) *</label>
-                <input type="text" id="rec-step-text" placeholder="Ex: Cozinhe o arroz com alho e cebola...">
+                <textarea id="rec-step-text" rows="3" placeholder="Digite ou cole os passos (pode colar múltiplos passos de uma vez, um por linha)..." style="width:100%; padding:10px 14px; border-radius:var(--radius-md); border:1px solid var(--border-color); background:var(--bg-main); color:var(--text-heading); font-family:inherit; font-size:14px; resize:vertical;"></textarea>
               </div>
-              <button type="button" id="btn-add-step" class="btn-secondary" style="height:45px; padding:0 16px;"
-                title="Adicionar passo à lista">+</button>
+              <button type="button" id="btn-add-step" class="btn-secondary" style="height:45px; padding:0 16px; margin-top:24px;"
+                title="Adicionar passos à lista">+</button>
             </div>
 
             <!-- List of added steps -->
@@ -179,7 +180,7 @@
             <div class="form-group checkbox-group" style="margin-top: 14px;">
               <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 13.5px; color: var(--text-heading); font-weight: 500;">
                 <input type="checkbox" id="rec-is-public" style="width: 18px; height: 18px; accent-color: var(--accent); cursor: pointer;">
-                <span>🌐 Deseja tornar esta receita pública para todos os usuários?</span>
+                <span>Deseja tornar esta receita pública para todos os usuários?</span>
               </label>
             </div>
 

@@ -4,6 +4,50 @@
 const PANTRY_KEY = 'lemonNote_pantry_v1';
 const CUSTOM_ING_KEY = 'lemonNote_custom_ingredients_v1';
 const CUSTOM_REC_KEY = 'lemonNote_custom_recipes_v1';
+const FAVORITES_KEY = 'lemonNote_favorites_v1';
+
+// Pantry counter helper
+function updateGlobalPantryBadge() {
+  const pantry = getPantry();
+  const count = pantry ? pantry.size : 0;
+  const badgeEls = document.querySelectorAll('#selected-count, .selected-count');
+  badgeEls.forEach(el => {
+    el.textContent = count;
+  });
+}
+window.updateGlobalPantryBadge = updateGlobalPantryBadge;
+
+if (typeof document !== 'undefined') {
+  document.addEventListener('DOMContentLoaded', updateGlobalPantryBadge);
+  window.addEventListener('userAuthReady', updateGlobalPantryBadge);
+  window.addEventListener('load', updateGlobalPantryBadge);
+}
+
+// Favorites Helpers
+function getFavorites() {
+  const saved = localStorage.getItem(FAVORITES_KEY);
+  return saved ? new Set(JSON.parse(saved)) : new Set();
+}
+
+function saveFavorites(favoritesSet) {
+  const arr = Array.from(favoritesSet);
+  localStorage.setItem(FAVORITES_KEY, JSON.stringify(arr));
+}
+
+function toggleFavorite(recipeId) {
+  const favorites = getFavorites();
+  if (favorites.has(recipeId)) {
+    favorites.delete(recipeId);
+  } else {
+    favorites.add(recipeId);
+  }
+  saveFavorites(favorites);
+  return favorites.has(recipeId);
+}
+
+window.getFavorites = getFavorites;
+window.saveFavorites = saveFavorites;
+window.toggleFavorite = toggleFavorite;
 
 // String normalization helper (removes accents, special characters, and extra spaces)
 function normalizeString(str) {
@@ -181,8 +225,32 @@ async function saveCustomRecipe(rec, isPublic = false) {
 }
 
 async function deleteIngredient(ing) {
-  if (!ing || !ing.id) return;
+  if (!ing || !ing.id) return false;
   const uid = getCurrentUserScope();
+
+  // Check if ingredient is linked to any recipe created by the current user
+  let userRecipes = [];
+  try {
+    const appData = await loadAppData();
+    userRecipes = appData.recipes || [];
+  } catch (e) {
+    userRecipes = getCustomRecipes();
+  }
+
+  const linkedRecipes = userRecipes.filter(recipe => {
+    // Only check recipes owned/created by the current user
+    const isOwner = (recipe.userId === uid) || (!recipe.userId && recipe.isCustom);
+    if (!isOwner) return false;
+
+    if (!Array.isArray(recipe.ingredients)) return false;
+    return recipe.ingredients.some(reqIng => reqIng && (reqIng.ingredientId === ing.id || reqIng.id === ing.id));
+  });
+
+  if (linkedRecipes.length > 0) {
+    const recipeNames = linkedRecipes.map(r => `"${r.name}"`).join(', ');
+    alert(`Não é possível excluir o ingrediente "${ing.name}" pois ele está sendo utilizado na(s) seguinte(s) receita(s): ${recipeNames}. Remova o ingrediente da(s) receita(s) ou exclua a(s) receita(s) primeiro.`);
+    return false;
+  }
 
   // Remove from localStorage
   const localCustom = getCustomIngredients().filter(i => i.id !== ing.id);
@@ -194,6 +262,8 @@ async function deleteIngredient(ing) {
   } else if (uid && typeof window.deleteUserCustomIngredient === 'function') {
     await window.deleteUserCustomIngredient(uid, ing.id);
   }
+
+  return true;
 }
 
 async function deleteRecipe(rec) {
@@ -282,8 +352,12 @@ function calculateRecipeMacros(recipe, ingredientsList) {
   }
 
   recipe.ingredients.forEach(reqIng => {
-    if (!reqIng || !reqIng.ingredientId) return;
-    const ingInfo = ingredientsList.find(i => i && i.id === reqIng.ingredientId);
+    if (!reqIng || (!reqIng.ingredientId && !reqIng.id)) return;
+    const targetId = reqIng.ingredientId || reqIng.id;
+    let ingInfo = ingredientsList.find(i => i && i.id === targetId);
+    if (!ingInfo && reqIng.macros) {
+      ingInfo = reqIng;
+    }
     if (ingInfo && ingInfo.macros) {
       const ratio = ingInfo.macroBaseAmount ? (reqIng.amount / ingInfo.macroBaseAmount) : 1;
       
@@ -328,3 +402,122 @@ function initNavDropdowns() {
 }
 
 window.addEventListener('DOMContentLoaded', initNavDropdowns);
+
+/* ==========================================================================
+   IN-APP TOAST NOTIFICATION & CONFIRM MODAL SYSTEM
+   ========================================================================== */
+
+function showToast(message, type = 'info', duration = 3500) {
+  if (typeof document === 'undefined') return;
+
+  let container = document.getElementById('toast-container');
+  if (!container) {
+    container = document.createElement('div');
+    container.id = 'toast-container';
+    document.body.appendChild(container);
+  }
+
+  const toast = document.createElement('div');
+
+  // Detect type based on keywords if not explicitly specified
+  let toastType = type;
+  const msgLower = (message || '').toString().toLowerCase();
+  if (type === 'info') {
+    if (msgLower.includes('sucesso') || msgLower.includes('cadastrada') || msgLower.includes('salvo') || msgLower.includes('enviado')) {
+      toastType = 'success';
+    } else if (msgLower.includes('erro') || msgLower.includes('⚠️') || msgLower.includes('não é possível') || msgLower.includes('obrigatório') || msgLower.includes('já foi') || msgLower.includes('preencha')) {
+      toastType = 'error';
+    }
+  }
+
+  toast.className = `toast-notification toast-${toastType}`;
+
+  let iconSymbol = 'ℹ️';
+  if (toastType === 'success') {
+    iconSymbol = '✓';
+  } else if (toastType === 'error' || toastType === 'warning') {
+    iconSymbol = '⚠️';
+  }
+
+  toast.innerHTML = `
+    <div class="toast-icon">${iconSymbol}</div>
+    <div class="toast-content">${message}</div>
+    <button type="button" class="toast-close-btn" aria-label="Fechar">&times;</button>
+    <div class="toast-progress" style="animation-duration: ${duration}ms;"></div>
+  `;
+
+  const closeBtn = toast.querySelector('.toast-close-btn');
+  let autoCloseTimer;
+
+  const removeToast = () => {
+    if (toast.classList.contains('toast-hiding')) return;
+    toast.classList.add('toast-hiding');
+    clearTimeout(autoCloseTimer);
+    setTimeout(() => {
+      if (toast.parentNode) {
+        toast.parentNode.removeChild(toast);
+      }
+    }, 300);
+  };
+
+  closeBtn.addEventListener('click', removeToast);
+  autoCloseTimer = setTimeout(removeToast, duration);
+
+  container.appendChild(toast);
+}
+
+function showConfirm(message, options = {}) {
+  return new Promise((resolve) => {
+    if (typeof document === 'undefined') {
+      resolve(false);
+      return;
+    }
+
+    const overlay = document.createElement('div');
+    overlay.className = 'app-confirm-overlay';
+
+    const title = options.title || 'Confirmação';
+    const confirmText = options.confirmText || 'Confirmar';
+    const cancelText = options.cancelText || 'Cancelar';
+    const isDanger = options.danger !== false;
+
+    overlay.innerHTML = `
+      <div class="app-confirm-box">
+        <div class="app-confirm-header">
+          <span class="app-confirm-title">${title}</span>
+          <button type="button" class="toast-close-btn btn-close-modal" style="font-size:22px;">&times;</button>
+        </div>
+        <div class="app-confirm-body">${message}</div>
+        <div class="app-confirm-actions">
+          <button type="button" class="btn-confirm-cancel">${cancelText}</button>
+          <button type="button" class="btn-confirm-ok" style="${isDanger ? 'background:var(--danger, #ef4444);' : 'background:var(--accent);'}">${confirmText}</button>
+        </div>
+      </div>
+    `;
+
+    const closeModal = (result) => {
+      overlay.remove();
+      resolve(result);
+    };
+
+    overlay.querySelector('.btn-confirm-cancel').addEventListener('click', () => closeModal(false));
+    overlay.querySelector('.btn-close-modal').addEventListener('click', () => closeModal(false));
+    overlay.querySelector('.btn-confirm-ok').addEventListener('click', () => closeModal(true));
+    overlay.addEventListener('click', (e) => {
+      if (e.target === overlay) closeModal(false);
+    });
+
+    document.body.appendChild(overlay);
+  });
+}
+
+window.showToast = showToast;
+window.showConfirm = showConfirm;
+
+// Override native window.alert to use in-app toasts seamlessly
+if (typeof window !== 'undefined') {
+  window.alert = function(msg) {
+    showToast(msg);
+  };
+}
+

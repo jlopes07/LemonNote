@@ -12,6 +12,7 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 import {
   getFirestore,
+  initializeFirestore,
   doc,
   setDoc,
   getDoc,
@@ -35,9 +36,24 @@ async function initFirebase() {
     const firebaseConfig = await response.json();
 
     app = initializeApp(firebaseConfig);
-    analytics = getAnalytics(app);
+    
+    // Safely initialize Analytics (prevents adblocker errors)
+    try {
+      analytics = getAnalytics(app);
+    } catch (e) {
+      console.warn('Google Analytics não inicializado (bloqueado por extensão do navegador).');
+    }
+
     auth = getAuth(app);
-    db = getFirestore(app);
+
+    // Initialize Firestore with Force Long Polling to prevent AdBlocker (ERR_BLOCKED_BY_CLIENT) streaming blocks
+    try {
+      db = initializeFirestore(app, {
+        experimentalForceLongPolling: true
+      });
+    } catch (e) {
+      db = getFirestore(app);
+    }
 
     console.log('✅ Firebase Auth e Firestore inicializados com sucesso!');
     return { app, analytics, auth, db };

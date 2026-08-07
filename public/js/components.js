@@ -57,19 +57,19 @@ function renderHeaderComponent() {
         </button>
         <div class="nav-dropdown-menu">
           <a href="index.html" class="nav-dropdown-item ${activePage === 'home' ? 'active' : ''}">
-            🏠 Início / Home
+            Início / Home
           </a>
           <a href="pantry.html" class="nav-dropdown-item ${activePage === 'pantry' ? 'active' : ''}">
-            🧺 Minha Despensa
+            Minha Despensa
           </a>
           <a href="recipes.html" class="nav-dropdown-item ${activePage === 'recipes' ? 'active' : ''}">
-            📖 Receitas Sugeridas
+            Receitas Sugeridas
           </a>
           <a href="register.html" class="nav-dropdown-item ${activePage === 'register' ? 'active' : ''}">
-            ➕ Painel de Cadastro
+            Painel de Cadastro
           </a>
           <a href="settings.html" class="nav-dropdown-item ${activePage === 'settings' ? 'active' : ''}">
-            ⚙️ Configurações
+            Configurações
           </a>
         </div>
       </div>
@@ -81,6 +81,11 @@ function renderHeaderComponent() {
   if (typeof window.updateGlobalPantryBadge === 'function') {
     window.updateGlobalPantryBadge();
   }
+  setTimeout(() => {
+    if (typeof window.updateGlobalPantryBadge === 'function') {
+      window.updateGlobalPantryBadge();
+    }
+  }, 100);
   if (typeof window.renderHeaderUserArea === 'function') {
     window.renderHeaderUserArea(window._currentUser || null);
   }
