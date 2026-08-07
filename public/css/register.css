@@ -22,7 +22,6 @@
 .register-card h2 {
   font-family: var(--font-title);
   font-size: 22px;
-  font-weight: 700;
   border-bottom: 1px solid var(--border-color);
   padding-bottom: 12px;
 }

@@ -1,0 +1,37 @@
+<svg width="200" height="120" viewBox="0 0 200 120" xmlns="http://www.w3.org/2000/svg">
+
+    <!-- Folha -->
+    <path
+        d="M45 25 C25 10, 20 35, 40 40 C50 35, 55 25, 45 25"
+        fill="#4CAF50"/>
+
+    <!-- Cabo -->
+    <rect
+        x="55"
+        y="30"
+        width="5"
+        height="8"
+        rx="2"
+        fill="#6D4C41"/>
+
+    <!-- Corpo do limão -->
+    <path
+        d="M60 25
+           C110 5, 165 20, 180 60
+           C165 100, 110 115, 60 95
+           C35 80, 35 40, 60 25Z"
+        fill="#CDEB39"
+        stroke="#A5C934"
+        stroke-width="3"/>
+
+    <!-- Brilho -->
+    <ellipse
+        cx="95"
+        cy="45"
+        rx="20"
+        ry="10"
+        fill="#FFFFFF"
+        opacity="0.25"
+        transform="rotate(-20 95 45)"/>
+
+</svg>

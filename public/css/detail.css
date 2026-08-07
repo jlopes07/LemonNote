@@ -379,12 +379,34 @@
   transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.macro-bar-item.calories .macro-progress-fill { background: var(--accent); }
-.macro-bar-item.protein .macro-progress-fill { background: #38bdf8; }
-.macro-bar-item.carbs .macro-progress-fill { background: #facc15; }
-.macro-bar-item.fat .macro-progress-fill { background: #f43f5e; }
+.macro-bar-item.calories .macro-progress-fill {
+  background: var(--accent);
+}
 
-.macro-bar-item.calories .macro-bar-val { color: var(--accent-light); }
-.macro-bar-item.protein .macro-bar-val { color: #38bdf8; }
-.macro-bar-item.carbs .macro-bar-val { color: #facc15; }
-.macro-bar-item.fat .macro-bar-val { color: #f43f5e; }
+.macro-bar-item.protein .macro-progress-fill {
+  background: #38bdf8;
+}
+
+.macro-bar-item.carbs .macro-progress-fill {
+  background: #facc15;
+}
+
+.macro-bar-item.fat .macro-progress-fill {
+  background: #f43f5e;
+}
+
+.macro-bar-item.calories .macro-bar-val {
+  color: var(--accent-light);
+}
+
+.macro-bar-item.protein .macro-bar-val {
+  color: #38bdf8;
+}
+
+.macro-bar-item.carbs .macro-bar-val {
+  color: #facc15;
+}
+
+.macro-bar-item.fat .macro-bar-val {
+  color: #f43f5e;
+}

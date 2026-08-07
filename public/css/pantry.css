@@ -2,7 +2,7 @@
 
 .pantry-layout {
   display: grid;
-  grid-template-columns: 380px 1fr;
+  grid-template-columns: 1fr 310px;
   gap: 24px;
   align-items: start;
 }
@@ -24,6 +24,7 @@
   position: relative;
   display: flex;
   align-items: center;
+  margin-bottom: 12px;
 }
 
 .search-icon {
@@ -86,26 +87,26 @@
 
 .selected-tags-container {
   display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
+  flex-direction: column;
+  gap: 8px;
   flex-grow: 1;
-  align-content: flex-start;
   max-height: calc(100vh - 400px);
   overflow-y: auto;
   padding-right: 6px;
 }
 
-/* Selected item tag */
+/* Selected item tag - Stacked line item */
 .selection-tag {
-  display: inline-flex;
+  display: flex;
   align-items: center;
-  gap: 8px;
+  justify-content: space-between;
+  width: 100%;
   background: var(--bg-element);
   border: 1px solid var(--border-color);
   color: var(--text-main);
-  padding: 8px 16px;
-  border-radius: 50px;
-  font-size: 13px;
+  padding: 10px 16px;
+  border-radius: var(--radius-md);
+  font-size: 14px;
   font-weight: 500;
   transition: var(--transition-fast);
   cursor: pointer;

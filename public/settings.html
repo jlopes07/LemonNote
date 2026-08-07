@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <script src="js/head-component.js" data-title="LemonNote - Configurações"></script>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body class="dark-theme">
+  <div class="app-container">
+    <!-- Componentized Header -->
+    <header class="app-header" id="app-header-container"></header>
+
+    <!-- Main Content -->
+    <main class="main-content" style="max-width: 1100px; width: 100%; margin: 0 auto;">
+      <div class="settings-layout">
+        <!-- Sidebar Navigation -->
+        <nav class="settings-nav">
+          <button type="button" class="settings-nav-item active" data-section="sec-theme">
+            Aparência & Tema
+          </button>
+          <button type="button" class="settings-nav-item" data-section="sec-profile">
+            Dados Pessoais
+          </button>
+          <button type="button" class="settings-nav-item" data-section="sec-security">
+            Alterar Senha
+          </button>
+          <button type="button" class="settings-nav-item" data-section="sec-devices">
+            Dispositivos
+          </button>
+          <button type="button" class="settings-nav-item" data-section="sec-notifications">
+            Notificações
+          </button>
+          <button type="button" class="settings-nav-item" data-section="sec-support">
+            Reportar Problema
+          </button>
+          <button type="button" class="settings-nav-item" data-section="sec-danger" style="color: var(--danger);">
+            Excluir Conta
+          </button>
+        </nav>
+
+        <!-- Settings Cards Container -->
+        <div class="settings-content">
+
+          <!-- 1. APARÊNCIA & TEMA -->
+          <section id="sec-theme" class="settings-card">
+            <div class="settings-card-header">
+              <h2 class="settings-card-title">Aparência & Tema</h2>
+              <p class="settings-card-subtitle">Personalize a paleta de cores verde da sua interface.</p>
+            </div>
+
+            <div class="theme-picker-grid">
+              <button type="button" class="theme-card-btn" id="btn-theme-dark">
+                <div class="theme-preview-box dark-preview">
+                  <div class="theme-preview-header"></div>
+                  <div class="theme-preview-chip"></div>
+                </div>
+                <div class="theme-card-title">Escuro Verde (Dark)</div>
+                <p style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Tom verde-floresta elegante e
+                  suave para a visão.</p>
+              </button>
+
+              <button type="button" class="theme-card-btn" id="btn-theme-light">
+                <div class="theme-preview-box light-preview">
+                  <div class="theme-preview-header"></div>
+                  <div class="theme-preview-chip"></div>
+                </div>
+                <div class="theme-card-title">Claro Verde (Light)</div>
+                <p style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Tom verde-menta fresco e
+                  iluminado.</p>
+              </button>
+            </div>
+          </section>
+
+          <!-- 2. DADOS PESSOAIS -->
+          <section id="sec-profile" class="settings-card">
+            <div class="settings-card-header">
+              <h2 class="settings-card-title">Dados Pessoais</h2>
+              <p class="settings-card-subtitle">Atualize suas informações de perfil e contato.</p>
+            </div>
+
+            <form id="form-profile">
+              <div class="profile-avatar-preview-wrapper">
+                <div id="profile-avatar-display" class="profile-avatar-preview">U</div>
+                <div>
+                  <h4 id="profile-user-title" style="font-size: 16px; font-weight: 700; color: var(--text-main);">
+                    Usuário LemonNote</h4>
+                  <p id="profile-user-email-text" style="font-size: 13px; color: var(--text-muted);">Faça login para
+                    salvar suas alterações</p>
+                </div>
+              </div>
+
+              <div class="settings-form-grid">
+                <div class="auth-form-group">
+                  <label for="prof-name">Nome Completo</label>
+                  <input type="text" id="prof-name" class="auth-input" placeholder="Seu nome" />
+                </div>
+
+                <div class="auth-form-group">
+                  <label for="prof-email">E-mail</label>
+                  <input type="email" id="prof-email" class="auth-input" placeholder="seu@email.com" />
+                </div>
+
+                <div class="auth-form-group">
+                  <label for="prof-phone">Telefone / WhatsApp</label>
+                  <input type="tel" id="prof-phone" class="auth-input" placeholder="(00) 90000-0000" />
+                </div>
+
+                <div class="auth-form-group">
+                  <label for="prof-photo-file">Foto de Perfil (Upload)</label>
+                  <input type="file" id="prof-photo-file" class="auth-input" accept="image/*" style="padding: 8px;" />
+                </div>
+              </div>
+
+              <button type="submit" class="btn-primary" style="margin-top: 12px;">
+                Salvar Dados Pessoais
+              </button>
+            </form>
+          </section>
+
+          <!-- 3. ALTERAR SENHA -->
+          <section id="sec-security" class="settings-card">
+            <div class="settings-card-header">
+              <h2 class="settings-card-title">Alterar Senha</h2>
+              <p class="settings-card-subtitle">Mantenha sua conta protegida atualizando sua senha periodicamente.</p>
+            </div>
+
+            <form id="form-password" style="max-width: 480px;">
+              <div class="auth-form-group">
+                <label for="pwd-current">Senha Atual</label>
+                <input type="password" id="pwd-current" class="auth-input" placeholder="••••••••" required />
+              </div>
+
+              <div class="auth-form-group">
+                <label for="pwd-new">Nova Senha</label>
+                <input type="password" id="pwd-new" class="auth-input" placeholder="Mínimo 6 caracteres" required
+                  minlength="6" />
+              </div>
+
+              <div class="auth-form-group">
+                <label for="pwd-confirm">Confirmar Nova Senha</label>
+                <input type="password" id="pwd-confirm" class="auth-input" placeholder="Repita a nova senha" required
+                  minlength="6" />
+              </div>
+
+              <button type="submit" class="btn-primary">
+                Atualizar Senha
+              </button>
+            </form>
+          </section>
+
+          <!-- 4. DISPOSITIVOS CONECTADOS -->
+          <section id="sec-devices" class="settings-card">
+            <div class="settings-card-header">
+              <h2 class="settings-card-title">Dispositivos Conectados</h2>
+              <p class="settings-card-subtitle">Gerencie os aparelhos que possuem acesso à sua conta.</p>
+            </div>
+
+            <div class="device-list">
+              <div class="device-item">
+                <div class="device-info">
+                  <div class="device-details">
+                    <h4>Navegador Web (Windows / Chrome)</h4>
+                    <p>Brasil • <span class="badge-active-session">Sessão Atual</span></p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="device-item">
+                <div class="device-info">
+                  <div class="device-details">
+                    <h4>LemonNote App (iPhone / Safari)</h4>
+                    <p>Último acesso: Há 2 dias atrás</p>
+                  </div>
+                </div>
+                <button type="button" class="btn-secondary btn-disconnect-device"
+                  style="padding: 6px 12px; font-size: 12px;">
+                  Desconectar
+                </button>
+              </div>
+            </div>
+
+            <button type="button" id="btn-logout-all-devices" class="btn-secondary" style="margin-top: 12px;">
+              Desconectar de Todos os Outros Dispositivos
+            </button>
+          </section>
+
+          <!-- 5. GERENCIAR NOTIFICAÇÕES -->
+          <section id="sec-notifications" class="settings-card">
+            <div class="settings-card-header">
+              <h2 class="settings-card-title">Gerenciar Notificações</h2>
+              <p class="settings-card-subtitle">Escolha quais alertas e recomendações deseja receber.</p>
+            </div>
+
+            <div class="setting-toggle-row">
+              <div class="setting-toggle-info">
+                <span class="setting-toggle-title">Notificações Push na Despensa</span>
+                <span class="setting-toggle-desc">Receber alertas no navegador ao atualizar ingredientes.</span>
+              </div>
+              <label class="switch-toggle">
+                <input type="checkbox" id="notif-push" checked />
+                <span class="switch-slider"></span>
+              </label>
+            </div>
+
+            <div class="setting-toggle-row">
+              <div class="setting-toggle-info">
+                <span class="setting-toggle-title">Alertas por E-mail</span>
+                <span class="setting-toggle-desc">Resumo semanal de receitas e estatísticas nutricionais.</span>
+              </div>
+              <label class="switch-toggle">
+                <input type="checkbox" id="notif-email" checked />
+                <span class="switch-slider"></span>
+              </label>
+            </div>
+
+            <div class="setting-toggle-row">
+              <div class="setting-toggle-info">
+                <span class="setting-toggle-title">Sugestões de Receitas Diárias</span>
+                <span class="setting-toggle-desc">Recomendações automáticas com base nos itens da despensa.</span>
+              </div>
+              <label class="switch-toggle">
+                <input type="checkbox" id="notif-recipes" checked />
+                <span class="switch-slider"></span>
+              </label>
+            </div>
+
+            <div class="setting-toggle-row">
+              <div class="setting-toggle-info">
+                <span class="setting-toggle-title">Lembretes de Vencimento de Ingredientes</span>
+                <span class="setting-toggle-desc">Avisar quando um alimento cadastrado estiver perto do prazo.</span>
+              </div>
+              <label class="switch-toggle">
+                <input type="checkbox" id="notif-expiry" checked />
+                <span class="switch-slider"></span>
+              </label>
+            </div>
+          </section>
+
+          <!-- 6. REPORTAR UM PROBLEMA -->
+          <section id="sec-support" class="settings-card">
+            <div class="settings-card-header">
+              <h2 class="settings-card-title">Reportar um Problema ou Sugestão</h2>
+              <p class="settings-card-subtitle">Sua opinião é fundamental para evoluirmos o LemonNote.</p>
+            </div>
+
+            <form id="form-report">
+              <div class="settings-form-grid">
+                <div class="auth-form-group">
+                  <label for="rep-category">Categoria</label>
+                  <select id="rep-category" class="auth-input" style="cursor: pointer;" required>
+                    <option value="bug">Erro ou Erro de Sistema (Bug)</option>
+                    <option value="suggestion">Sugestão de Recurso ou Funcionalidade</option>
+                    <option value="pantry">Problema na Despensa / Ingredientes</option>
+                    <option value="other">Outro Assunto</option>
+                  </select>
+                </div>
+
+                <div class="auth-form-group">
+                  <label for="rep-subject">Assunto</label>
+                  <input type="text" id="rep-subject" class="auth-input" placeholder="Resumo do ocorrido" required />
+                </div>
+              </div>
+
+              <div class="auth-form-group">
+                <label for="rep-desc">Descrição Detalhada</label>
+                <textarea id="rep-desc" class="auth-input" rows="4"
+                  placeholder="Conte-nos o que aconteceu e como podemos te ajudar..." required
+                  style="resize: vertical;"></textarea>
+              </div>
+
+              <div class="auth-form-group">
+                <label for="rep-attachment">Anexo / Captura de Tela (Opcional - URL ou caminho)</label>
+                <input type="text" id="rep-attachment" class="auth-input"
+                  placeholder="https://exemplo.com/print-erro.png" />
+              </div>
+
+              <button type="submit" class="btn-primary">
+                Enviar Relatório
+              </button>
+            </form>
+          </section>
+
+          <!-- 7. EXCLUIR CONTA -->
+          <section id="sec-danger" class="settings-card danger-zone">
+            <div class="settings-card-header">
+              <h2 class="settings-card-title">Excluir Conta</h2>
+              <p class="settings-card-subtitle">Ações irreversíveis relacionadas à sua conta LemonNote.</p>
+            </div>
+
+            <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 20px; line-height: 1.5;">
+              Ao excluir sua conta, todos os seus ingredientes salvos, receitas personalizadas e preferências serão
+              apagados permanentemente dos nossos servidores.
+            </p>
+
+            <button type="button" id="btn-delete-account" class="btn-danger">
+              Excluir Minha Conta Definitivamente
+            </button>
+          </section>
+
+        </div>
+      </div>
+    </main>
+
+    <!-- Componentized Footer -->
+    <footer class="app-footer" id="app-footer-container"></footer>
+  </div>
+
+  <script src="js/shared.js"></script>
+  <script type="module" src="js/components.js"></script>
+  <script type="module" src="js/firebase.js"></script>
+  <script type="module" src="js/auth-ui.js"></script>
+  <script type="module" src="js/settings.js"></script>
+</body>
+
+</html>

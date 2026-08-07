@@ -4,6 +4,57 @@
 const PANTRY_KEY = 'lemonNote_pantry';
 const CUSTOM_ING_KEY = 'lemonNote_custom_ingredients';
 const CUSTOM_REC_KEY = 'lemonNote_custom_recipes';
+const THEME_KEY = 'lemonNote_theme';
+
+// Global Theme Controller (Dark Green vs Light Green)
+function getTheme() {
+  return localStorage.getItem(THEME_KEY) || 'dark';
+}
+
+function setTheme(themeName) {
+  const theme = themeName === 'light' ? 'light' : 'dark';
+  localStorage.setItem(THEME_KEY, theme);
+
+  document.documentElement.setAttribute('data-theme', theme);
+  if (theme === 'light') {
+    document.body.classList.remove('dark-theme');
+    document.body.classList.add('light-theme');
+  } else {
+    document.body.classList.remove('light-theme');
+    document.body.classList.add('dark-theme');
+  }
+}
+
+function initTheme() {
+  const currentTheme = getTheme();
+  setTheme(currentTheme);
+}
+
+// Auto-run theme initialization
+if (typeof document !== 'undefined') {
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initTheme);
+  } else {
+    initTheme();
+  }
+}
+
+function updateGlobalPantryBadge() {
+  const saved = localStorage.getItem(PANTRY_KEY);
+  let count = 0;
+  if (saved) {
+    try {
+      const arr = JSON.parse(saved);
+      count = Array.isArray(arr) ? arr.length : 0;
+    } catch (e) {
+      count = 0;
+    }
+  }
+  const badges = document.querySelectorAll('#selected-count');
+  badges.forEach(b => { b.textContent = count; });
+}
+
+window.updateGlobalPantryBadge = updateGlobalPantryBadge;
 
 function getPantry() {
   const saved = localStorage.getItem(PANTRY_KEY);
@@ -11,7 +62,7 @@ function getPantry() {
     try {
       return new Set(JSON.parse(saved));
     } catch (e) {
-      console.error('Error parsing pantry from localStorage', e);
+      console.error('Error parsing pantry', e);
       return new Set();
     }
   }
@@ -19,7 +70,9 @@ function getPantry() {
 }
 
 function savePantry(selectedSet) {
-  localStorage.setItem(PANTRY_KEY, JSON.stringify(Array.from(selectedSet)));
+  const arr = Array.from(selectedSet);
+  localStorage.setItem(PANTRY_KEY, JSON.stringify(arr));
+  updateGlobalPantryBadge();
 }
 
 // Custom items storage helpers

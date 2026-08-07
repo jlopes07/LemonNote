@@ -57,10 +57,11 @@ function setupEventListeners() {
 }
 
 function updateHeaderBadge() {
-  const count = selectedIngredients.size;
-  if (dom.selectedCount) {
-    dom.selectedCount.textContent = count;
-  }
+  const count = selectedIngredients ? selectedIngredients.size : 0;
+  const badgeElements = document.querySelectorAll('#selected-count');
+  badgeElements.forEach(badge => {
+    badge.textContent = count;
+  });
 }
 
 function renderPantry() {

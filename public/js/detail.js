@@ -15,7 +15,7 @@ async function init() {
   try {
     const params = new URLSearchParams(window.location.search);
     const recipeId = params.get('id');
-    
+
     if (!recipeId) {
       renderError('Nenhuma receita foi selecionada.');
       return;
@@ -101,13 +101,13 @@ function renderRecipeDetails() {
             <h3>Ingredientes Necessários</h3>
             <div class="ingredients-list" id="detail-ingredients-list">
               ${recipe.ingredients.map(ing => {
-                const scaledQty = ing.amount * factor;
-                const hasIt = selectedIngredients.has(ing.ingredientId);
-                const ingObj = ingredients.find(i => i.id === ing.ingredientId);
-                const name = ingObj ? ingObj.name : ing.ingredientId;
-                const formattedQty = Number(scaledQty.toFixed(1)).toString().replace('.', ',');
+    const scaledQty = ing.amount * factor;
+    const hasIt = selectedIngredients.has(ing.ingredientId);
+    const ingObj = ingredients.find(i => i.id === ing.ingredientId);
+    const name = ingObj ? ingObj.name : ing.ingredientId;
+    const formattedQty = Number(scaledQty.toFixed(1)).toString().replace('.', ',');
 
-                return `
+    return `
                   <div class="ing-item ${hasIt ? 'have-ing' : 'missing-ing'}">
                     <div class="ing-name">
                       <span class="ing-status-icon">${hasIt ? '✓' : '✕'}</span>
@@ -116,7 +116,7 @@ function renderRecipeDetails() {
                     <span class="ing-qty">${formattedQty} ${ing.unit}</span>
                   </div>
                 `;
-              }).join('')}
+  }).join('')}
             </div>
           </div>
         </div>
@@ -189,9 +189,9 @@ function renderRecipeDetails() {
     currentServings = newVal;
     slider.value = newVal;
     labelVal.textContent = newVal;
-    
+
     const currentFactor = newVal / baseServings;
-    
+
     // Scale ingredients quantities in DOM
     const ingQtyElements = dom.detailContainer.querySelectorAll('.ing-qty');
     recipe.ingredients.forEach((ing, idx) => {
