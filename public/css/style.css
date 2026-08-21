@@ -1505,3 +1505,138 @@ body.authenticated .auth-modal-overlay:not(.open) {
 .btn-confirm-ok:hover {
   opacity: 0.9;
 }
+
+/* ==========================================================================
+   RESPONSIVE SIDEBAR NAVIGATION (DESKTOP GRID & STACKED MENU)
+   ========================================================================== */
+@media (min-width: 1024px) {
+  html.authenticated .app-container,
+  body.authenticated .app-container,
+  .app-container {
+    display: grid !important;
+    grid-template-columns: 280px 1fr !important;
+    grid-template-rows: auto 1fr !important;
+    gap: 24px !important;
+    padding: 24px !important;
+    align-items: start !important;
+  }
+
+  .app-header {
+    grid-column: 1 !important;
+    grid-row: 1 / span 2 !important;
+    position: sticky !important;
+    top: 24px !important;
+    height: calc(100vh - 48px) !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    justify-content: flex-start !important;
+    padding: 32px 24px !important;
+    gap: 32px !important;
+    overflow-y: auto !important;
+  }
+
+  .logo-area {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 8px !important;
+  }
+
+  .header-stats {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 16px !important;
+    margin-top: auto !important;
+  }
+
+  .nav-dropdown {
+    width: 100% !important;
+    position: static !important;
+    display: block !important;
+  }
+
+  .nav-dropdown-btn {
+    display: none !important;
+  }
+
+  .nav-dropdown-menu {
+    display: flex !important;
+    position: static !important;
+    flex-direction: column !important;
+    box-shadow: none !important;
+    border: none !important;
+    background: transparent !important;
+    padding: 0 !important;
+    width: 100% !important;
+    gap: 8px !important;
+    animation: none !important;
+    backdrop-filter: none !important;
+  }
+
+  .nav-dropdown-item {
+    font-size: 15px !important;
+    padding: 12px 16px !important;
+    border-radius: var(--radius-md) !important;
+    width: 100% !important;
+  }
+
+  main, 
+  .main-content, 
+  .recipes-layout, 
+  .detail-layout, 
+  .pantry-layout, 
+  .settings-layout,
+  .diary-layout {
+    grid-column: 2 !important;
+    grid-row: 1 !important;
+  }
+
+  footer.app-footer {
+    grid-column: 2 !important;
+    grid-row: 2 !important;
+    margin-top: 40px !important;
+  }
+}
+
+/* ==========================================================================
+   SETTINGS PAGE RESPONSIVE OVERRIDES (MOBILE NAVIGATION & TIGHTER CARDS)
+   ========================================================================== */
+@media (max-width: 900px) {
+  .settings-layout {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+
+  .settings-nav {
+    flex-direction: row !important;
+    overflow-x: auto !important;
+    white-space: nowrap !important;
+    position: static !important;
+    padding: 6px !important;
+    gap: 8px !important;
+    -webkit-overflow-scrolling: touch !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    border-radius: var(--radius-md) !important;
+    box-shadow: none !important;
+  }
+
+  .settings-nav-item {
+    width: auto !important;
+    padding: 8px 16px !important;
+    flex-shrink: 0 !important;
+    text-align: center !important;
+  }
+}
+
+@media (max-width: 600px) {
+  .settings-card {
+    padding: 18px !important;
+  }
+  
+  .setting-toggle-row {
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 16px !important;
+  }
+}

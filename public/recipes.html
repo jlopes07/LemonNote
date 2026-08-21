@@ -32,23 +32,35 @@
             </a>
           </div>
 
-          <h2>Receitas Sugeridas</h2>
+          <h2 style="display:flex; align-items:center; gap:8px;">Receitas Sugeridas <span id="recipes-pantry-badge" class="stat-badge" style="font-size:13px; font-weight:600; padding:2px 8px; border-radius:12px; background:var(--bg-element); border:1px solid var(--border-color); color:var(--accent);"><strong id="selected-count">0</strong> na despensa</span></h2>
           <p id="recipes-sub-count">Analisando sua despensa...</p>
         </div>
 
         <!-- Filter Tabs -->
         <div class="filter-tabs">
           <button class="filter-tab active" data-filter="all">Todas</button>
+          <button class="filter-tab" data-filter="favorites">Favoritas</button>
           <button class="filter-tab" data-filter="ready">Prontas para Fazer</button>
           <button class="filter-tab" data-filter="missing-few">Quase Prontas</button>
-          <button class="filter-tab" data-filter="favorites">Favoritas</button>
           <button class="filter-tab" data-filter="my-recipes">Minhas Receitas</button>
         </div>
       </div>
 
-      <!-- Recipe Search Bar Bar -->
-      <div class="recipe-search-box" style="margin-bottom: 24px;">
-        <input type="text" id="recipe-search" placeholder="Buscar receita por nome, ingrediente ou categoria..." style="width: 100%; padding: 14px 18px; border-radius: var(--radius-md); border: 1px solid var(--border-color); background: var(--bg-card); color: var(--text-main); font-size: 0.95rem; outline: none; transition: all 0.2s ease;" />
+      <!-- Recipe Search & Sort Bar -->
+      <div style="display: flex; gap: 16px; margin-bottom: 24px; flex-wrap: wrap;">
+        <div style="flex: 2; min-width: 280px;">
+          <input type="text" id="recipe-search" placeholder="Buscar receita por nome, ingrediente ou categoria..." style="width: 100%; padding: 14px 18px; border-radius: var(--radius-md); border: 1px solid var(--border-color); background: var(--bg-card); color: var(--text-main); font-size: 0.95rem; outline: none; transition: all 0.2s ease;" />
+        </div>
+        <div style="flex: 1; min-width: 220px; display: flex; align-items: center; gap: 8px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 0 16px;">
+          <span style="font-size: 13px; color: var(--text-muted); white-space: nowrap;">Ordenar por:</span>
+          <select id="recipe-sort" style="width: 100%; background: transparent !important; border: none !important; color: var(--text-main); font-size: 0.95rem; outline: none; cursor: pointer; padding: 14px 0;">
+            <option value="match" selected>Maior Compatibilidade</option>
+            <option value="name">Ordem Alfabética (A-Z)</option>
+            <option value="time">Tempo de Preparo</option>
+            <option value="calories">Menos Calorias</option>
+            <option value="protein">Mais Proteína</option>
+          </select>
+        </div>
       </div>
 
       <!-- Recipes Grid -->

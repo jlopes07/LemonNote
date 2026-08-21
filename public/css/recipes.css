@@ -38,6 +38,17 @@
   border: 1px solid var(--border-color);
 }
 
+@media (max-width: 768px) {
+  .filter-tabs {
+    overflow-x: auto;
+    white-space: nowrap;
+    max-width: 100%;
+    -webkit-overflow-scrolling: touch;
+    padding: 6px;
+    gap: 6px;
+  }
+}
+
 .filter-tab {
   background: none;
   border: none;
@@ -49,6 +60,7 @@
   cursor: pointer;
   border-radius: 10px;
   transition: var(--transition-fast);
+  flex-shrink: 0;
 }
 
 .filter-tab:hover {
@@ -121,11 +133,23 @@
   position: absolute;
   top: 12px;
   left: 12px;
+  right: 12px;
   display: flex;
-  flex-direction: column;
-  gap: 6px;
-  align-items: flex-start;
+  justify-content: space-between;
+  align-items: center;
   z-index: 2;
+}
+
+.recipe-card-badges-left {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.recipe-card-badges-right {
+  display: flex;
+  gap: 6px;
+  align-items: center;
 }
 
 .badge-tag {

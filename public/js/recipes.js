@@ -49,6 +49,13 @@ function setupEventListeners() {
       updateRecipes();
     });
   }
+
+  const sortSelect = document.getElementById('recipe-sort');
+  if (sortSelect) {
+    sortSelect.addEventListener('change', () => {
+      updateRecipes();
+    });
+  }
 }
 
 function updateHeaderBadge() {
@@ -132,8 +139,22 @@ function updateRecipes() {
     });
   }
 
-  // Sort: highest match percentage first, then least missing items, then alphabetically
+  // Sort: dynamic choice based on selection
+  const sortVal = document.getElementById('recipe-sort') ? document.getElementById('recipe-sort').value : 'match';
   filtered.sort((a, b) => {
+    if (sortVal === 'name') {
+      return a.name.localeCompare(b.name);
+    }
+    if (sortVal === 'time') {
+      return a.prepTime - b.prepTime;
+    }
+    if (sortVal === 'calories') {
+      return a.computedMacros.calories - b.computedMacros.calories;
+    }
+    if (sortVal === 'protein') {
+      return b.computedMacros.protein - a.computedMacros.protein;
+    }
+    // Default 'match' sorting
     if (b.matchPercentage !== a.matchPercentage) {
       return b.matchPercentage - a.matchPercentage;
     }
@@ -203,15 +224,19 @@ function renderRecipesList(recipesList) {
     cardLink.innerHTML = `
       <div class="recipe-card" style="position:relative;">
         <div class="recipe-card-image">
-          <div class="recipe-card-badges" style="display:flex; gap:6px; align-items:center; flex-wrap:wrap; width:100%;">
-            ${badgeHTML}
-            <span class="badge-tag">${recipe.prepTime} min</span>
-            <button type="button" class="btn-fav-recipe" title="Favoritar receita" style="background:rgba(0,0,0,0.6); color:${isFav ? '#f59e0b' : '#9ca3af'}; border:none; padding:4px 8px; border-radius:12px; font-size:12px; cursor:pointer; margin-left:auto; display:inline-flex; align-items:center; z-index:10;">
-              <svg viewBox="0 0 24 24" width="15" height="15" fill="${isFav ? '#f59e0b' : 'none'}" stroke="${isFav ? '#f59e0b' : 'currentColor'}" stroke-width="2">
-                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
-              </svg>
-            </button>
-            ${isCreator ? `<button type="button" class="btn-delete-recipe" title="Excluir receita" style="background:rgba(239,68,68,0.9); color:white; border:none; padding:4px 10px; border-radius:12px; font-size:12px; font-weight:600; cursor:pointer; z-index:10;">Excluir</button>` : ''}
+          <div class="recipe-card-badges">
+            <div class="recipe-card-badges-left">
+              ${badgeHTML}
+            </div>
+            <div class="recipe-card-badges-right">
+              <span class="badge-tag">${recipe.prepTime} min</span>
+              <button type="button" class="btn-fav-recipe" title="Favoritar receita" style="background:rgba(0,0,0,0.6); color:${isFav ? '#f59e0b' : '#9ca3af'}; border:none; padding:4px 8px; border-radius:12px; font-size:12px; cursor:pointer; display:inline-flex; align-items:center; z-index:10;">
+                <svg viewBox="0 0 24 24" width="15" height="15" fill="${isFav ? '#f59e0b' : 'none'}" stroke="${isFav ? '#f59e0b' : 'currentColor'}" stroke-width="2">
+                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                </svg>
+              </button>
+              ${isCreator ? `<button type="button" class="btn-delete-recipe" title="Excluir receita" style="background:rgba(239,68,68,0.9); color:white; border:none; padding:4px 10px; border-radius:12px; font-size:12px; font-weight:600; cursor:pointer; z-index:10;">Excluir</button>` : ''}
+            </div>
           </div>
           <img src="${recipe.image}" alt="${recipe.name}" onerror="this.src='https://images.unsplash.com/photo-1495521821757-a1efb6729352?w=600&auto=format&fit=crop&q=80'">
         </div>

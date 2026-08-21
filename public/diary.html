@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <script src="js/head-component.js" data-title="LemonNote - Saúde & Metas"></script>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/diary.css">
+</head>
+
+<body class="dark-theme">
+  <div class="app-container">
+    <!-- Componentized Header -->
+    <header class="app-header" id="app-header-container"></header>
+
+    <!-- Main Workspace -->
+    <main class="diary-layout">
+      
+      <!-- Top Action & Date Bar -->
+      <section class="diary-header-row">
+        <div class="diary-title">
+          <h2>Saúde &amp; Metas</h2>
+          <p>Monitore sua nutrição, consumo de água e composição corporal diariamente.</p>
+        </div>
+
+        <!-- Date Navigation -->
+        <div class="date-navigator">
+          <button id="btn-prev-day" class="btn-date-nav" title="Dia Anterior">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg>
+          </button>
+          <div class="current-date-box">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--accent);"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+            <span id="date-display">Carregando data...</span>
+          </div>
+          <button id="btn-next-day" class="btn-date-nav" title="Próximo Dia">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+          </button>
+        </div>
+      </section>
+
+      <!-- Grid of Summary Cards / Progress Rings -->
+      <section class="diary-summary-grid">
+        
+        <!-- Calories Goal Card -->
+        <div class="summary-card calorie-progress-card">
+          <div class="summary-card-header">
+            <h3>Calorias Diárias</h3>
+            <span class="goal-text" id="cal-goal-label">Meta: 2000 kcal</span>
+          </div>
+          <div class="progress-ring-container">
+            <div class="linear-progress-wrapper">
+              <div class="linear-progress-bar">
+                <div class="linear-progress-fill" id="cal-progress-fill" style="width: 0%;"></div>
+              </div>
+              <div class="progress-stats">
+                <span class="progress-current" id="cal-current-label">0 kcal</span>
+                <span class="progress-percent" id="cal-percent-label">0%</span>
+              </div>
+              <span class="progress-remaining" id="cal-remaining-label">Faltam 2000 kcal</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Water Consumption Card -->
+        <div class="summary-card water-progress-card">
+          <div class="summary-card-header">
+            <h3>Consumo de Água</h3>
+            <span class="goal-text" id="water-goal-label">Meta: 2500 ml</span>
+          </div>
+          <div class="progress-ring-container">
+            <div class="linear-progress-wrapper">
+              <div class="linear-progress-bar" style="background: rgba(59, 130, 246, 0.1);">
+                <div class="linear-progress-fill" id="water-progress-fill" style="width: 0%; background: linear-gradient(135deg, #3b82f6, #60a5fa);"></div>
+              </div>
+              <div class="progress-stats">
+                <span class="progress-current" id="water-current-label" style="color: #60a5fa;">0 ml</span>
+                <span class="progress-percent" id="water-percent-label">0%</span>
+              </div>
+              <span class="progress-remaining" id="water-remaining-label">Faltam 2500 ml</span>
+            </div>
+          </div>
+          
+          <!-- Quick Water Add Row -->
+          <div class="quick-water-row">
+            <button class="btn-quick-water" data-amount="150">+150ml</button>
+            <button class="btn-quick-water" data-amount="250">+250ml</button>
+            <button class="btn-quick-water" data-amount="350">+350ml</button>
+            <button class="btn-quick-water" data-amount="500">+500ml</button>
+          </div>
+        </div>
+
+        <!-- Macronutrients Card -->
+        <div class="summary-card macros-progress-card">
+          <div class="summary-card-header">
+            <h3>Macronutrientes</h3>
+            <span>Gramas diárias</span>
+          </div>
+          <div class="macros-bars-list">
+            
+            <!-- Protein Bar -->
+            <div class="macro-bar-item">
+              <div class="macro-bar-header">
+                <span>Proteínas (P)</span>
+                <span class="macro-values" id="macro-prot-values">0g / 150g</span>
+              </div>
+              <div class="macro-bar-track">
+                <div class="macro-bar-fill" id="macro-prot-fill" style="width: 0%; background: #f43f5e;"></div>
+              </div>
+            </div>
+
+            <!-- Carbs Bar -->
+            <div class="macro-bar-item">
+              <div class="macro-bar-header">
+                <span>Carboidratos (C)</span>
+                <span class="macro-values" id="macro-carb-values">0g / 200g</span>
+              </div>
+              <div class="macro-bar-track">
+                <div class="macro-bar-fill" id="macro-carb-fill" style="width: 0%; background: #eab308;"></div>
+              </div>
+            </div>
+
+            <!-- Fat Bar -->
+            <div class="macro-bar-item">
+              <div class="macro-bar-header">
+                <span>Gorduras (G)</span>
+                <span class="macro-values" id="macro-fat-values">0g / 65g</span>
+              </div>
+              <div class="macro-bar-track">
+                <div class="macro-bar-fill" id="macro-fat-fill" style="width: 0%; background: #10b981;"></div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- Logging Form Tabs & Goals Config Panel -->
+      <section class="diary-interactive-section">
+        
+        <!-- Left: Registry Forms -->
+        <div class="registry-panel section-card">
+          <div class="tab-selectors">
+            <button class="tab-selector-btn active" data-tab="tab-food">Registrar Alimento</button>
+            <button class="tab-selector-btn" data-tab="tab-water">Registrar Água</button>
+            <button class="tab-selector-btn" data-tab="tab-body">Peso &amp; Composição</button>
+          </div>
+
+          <div class="tab-contents-container">
+            
+            <!-- Food Log Tab Form -->
+            <div class="tab-content active" id="tab-food">
+              <form id="form-log-food">
+                <div class="form-group">
+                  <label for="food-input">Selecione ou digite um Alimento *</label>
+                  <input type="text" id="food-input" list="diary-ingredients-datalist" placeholder="Ex: Peito de Frango, Arroz Integral, Ovo..." required autocomplete="off">
+                  <datalist id="diary-ingredients-datalist">
+                    <!-- Populated dynamically -->
+                  </datalist>
+                  <span class="input-helper-text">Selecione um ingrediente do catálogo para carregar as informações nutricionais automaticamente!</span>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group" style="flex: 2;">
+                    <label for="food-qty">Quantidade Consumida *</label>
+                    <input type="number" id="food-qty" placeholder="Ex: 100" min="0.1" step="any" required>
+                  </div>
+                  <div class="form-group" style="flex: 1;">
+                    <label for="food-unit">Unidade *</label>
+                    <select id="food-unit">
+                      <option value="g" selected>Gramas (g)</option>
+                      <option value="ml">Mililitros (ml)</option>
+                      <option value="colher_sopa">Colher Sopa</option>
+                      <option value="xicara">Xícara</option>
+                      <option value="unidade">Unidade</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="nutrition-fields-toggle">
+                  <span class="toggle-section-title">Valores Nutricionais (Referência da quantidade inserida)</span>
+                </div>
+
+                <div class="nutrition-fields-grid">
+                  <div class="form-group">
+                    <label for="food-calories">Calorias (kcal)</label>
+                    <input type="number" id="food-calories" placeholder="0" min="0" step="any">
+                  </div>
+                  <div class="form-group">
+                    <label for="food-protein">Proteína (g)</label>
+                    <input type="number" id="food-protein" placeholder="0" min="0" step="any">
+                  </div>
+                  <div class="form-group">
+                    <label for="food-carbs">Carboidratos (g)</label>
+                    <input type="number" id="food-carbs" placeholder="0" min="0" step="any">
+                  </div>
+                  <div class="form-group">
+                    <label for="food-fat">Gordura (g)</label>
+                    <input type="number" id="food-fat" placeholder="0" min="0" step="any">
+                  </div>
+                </div>
+
+                <div class="form-actions" style="margin-top: 16px;">
+                  <button type="submit" class="btn-primary" style="width: 100%; justify-content: center;">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                    <span>Registrar Alimentação</span>
+                  </button>
+                </div>
+              </form>
+            </div>
+
+            <!-- Water Log Tab Form -->
+            <div class="tab-content" id="tab-water">
+              <form id="form-log-water">
+                <div class="form-group">
+                  <label for="water-qty">Quantidade de Água (ml) *</label>
+                  <input type="number" id="water-qty" placeholder="Ex: 350" min="1" required>
+                </div>
+                <div class="form-actions">
+                  <button type="submit" class="btn-primary" style="width: 100%; justify-content: center; background: linear-gradient(135deg, #3b82f6, #1d4ed8); color: white;">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"></path></svg>
+                    <span>Registrar Consumo de Água</span>
+                  </button>
+                </div>
+              </form>
+            </div>
+
+            <!-- Body Metrics Log Tab Form -->
+            <div class="tab-content" id="tab-body">
+              <form id="form-log-body">
+                <div class="form-group">
+                  <label for="body-weight">Peso Corporal Atual (kg) *</label>
+                  <input type="number" id="body-weight" placeholder="Ex: 75.4" min="1" step="0.01" required>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="body-fat">% Gordura Corporal (BF - opcional)</label>
+                    <input type="number" id="body-fat" placeholder="Ex: 14.5" min="1" max="99" step="0.1">
+                  </div>
+                  <div class="form-group">
+                    <label for="body-muscle">% Massa Muscular (opcional)</label>
+                    <input type="number" id="body-muscle" placeholder="Ex: 42.1" min="1" max="99" step="0.1">
+                  </div>
+                </div>
+
+                <div class="form-actions">
+                  <button type="submit" class="btn-primary" style="width: 100%; justify-content: center;">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+                    <span>Salvar Métricas Corporais</span>
+                  </button>
+                </div>
+              </form>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Right: Nutritional Goals Config -->
+        <div class="goals-panel section-card">
+          <div class="section-header">
+            <h2>Metas Nutricionais</h2>
+            <span class="subtext">Configure suas necessidades diárias.</span>
+          </div>
+
+          <form id="form-health-goals">
+            <div class="form-group">
+              <label for="goal-calories">Calorias Recomendadas (kcal) *</label>
+              <input type="number" id="goal-calories" placeholder="Ex: 2200" min="500" required>
+            </div>
+            
+            <div class="form-group">
+              <label for="goal-water">Meta de Água Diária (ml) *</label>
+              <input type="number" id="goal-water" placeholder="Ex: 3000" min="500" required>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="goal-protein">Meta Proteína (g)</label>
+                <input type="number" id="goal-protein" placeholder="130" min="0">
+              </div>
+              <div class="form-group">
+                <label for="goal-carbs">Meta Carboidratos (g)</label>
+                <input type="number" id="goal-carbs" placeholder="250" min="0">
+              </div>
+              <div class="form-group">
+                <label for="goal-fat">Meta Gorduras (g)</label>
+                <input type="number" id="goal-fat" placeholder="70" min="0">
+              </div>
+            </div>
+
+            <div class="form-actions" style="margin-top: 10px;">
+              <button type="submit" class="btn-secondary" style="width: 100%; justify-content: center;">
+                Salvar Configuração de Metas
+              </button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <!-- Today's History Logs -->
+      <section class="diary-history-section section-card">
+        <div class="section-header" style="flex-wrap: wrap; gap: 12px;">
+          <div>
+            <h2>Histórico de Registros do Dia</h2>
+            <p class="subtext" id="history-summary-text">0 logs cadastrados hoje.</p>
+          </div>
+          
+          <div id="latest-weight-badge" class="stat-badge" style="display:none; font-size:12px; padding: 6px 12px; background: rgba(132, 204, 22, 0.1); border: 1px solid var(--border-accent);">
+            <span>Peso recente: <strong id="weight-badge-val">--</strong></span>
+          </div>
+        </div>
+
+        <div class="history-list-wrapper" id="history-logs-container">
+          <div class="empty-state">
+            <svg class="empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width: 44px; height: 44px; color: var(--text-muted); margin-bottom: 12px;">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="8" x2="12" y2="12"></line>
+              <line x1="12" y1="16" x2="12.01" y2="16"></line>
+            </svg>
+            <h3>Nenhum registro encontrado para esta data</h3>
+            <p>Selecione uma data acima ou utilize os formulários para registrar alimentação, água ou peso corporal.</p>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Componentized Footer -->
+    <footer class="app-footer" id="app-footer-container"></footer>
+  </div>
+
+  <script src="js/unit-converter.js"></script>
+  <script src="js/shared.js"></script>
+  <script src="js/diary.js"></script>
+  <script type="module" src="js/components.js"></script>
+  <script type="module" src="js/firebase.js"></script>
+  <script type="module" src="js/auth-ui.js"></script>
+</body>
+
+</html>

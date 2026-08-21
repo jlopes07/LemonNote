@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <script src="js/head-component.js" data-title="LemonNote - Relatórios &amp; Estatísticas"></script>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/reports.css">
+</head>
+
+<body class="dark-theme">
+  <div class="app-container">
+    <!-- Componentized Header -->
+    <header class="app-header" id="app-header-container"></header>
+
+    <!-- Main Workspace -->
+    <main class="reports-layout">
+      
+      <!-- Top Action & Title Bar -->
+      <section class="reports-header-row">
+        <div class="reports-title">
+          <h2>Relatórios &amp; Estatísticas</h2>
+          <p>Acompanhe seu progresso de saúde, calorias, hidratação e peso nos últimos 7 dias.</p>
+        </div>
+      </section>
+
+      <!-- Grid of Stats Highlights -->
+      <section class="reports-highlights-grid">
+        <div class="highlight-card">
+          <span class="highlight-title">Calorias (Média Diária)</span>
+          <span class="highlight-value" id="avg-calories">0 kcal</span>
+          <span class="highlight-subtext" id="avg-calories-goal">Meta: 2000 kcal</span>
+        </div>
+        <div class="highlight-card" style="border-color: rgba(59, 130, 246, 0.3);">
+          <span class="highlight-title" style="color: #60a5fa;">Água (Total Semanal)</span>
+          <span class="highlight-value" id="total-water" style="color: #60a5fa;">0 ml</span>
+          <span class="highlight-subtext" id="avg-water">Média: 0 ml/dia</span>
+        </div>
+        <div class="highlight-card" style="border-color: rgba(245, 158, 11, 0.3);">
+          <span class="highlight-title" style="color: #f59e0b;">Último Peso Registrado</span>
+          <span class="highlight-value" id="latest-weight" style="color: #f59e0b;">-- kg</span>
+          <span class="highlight-subtext" id="weight-trend">Sem histórico recente</span>
+        </div>
+      </section>
+
+      <!-- SVG Charts Grid -->
+      <section class="charts-grid">
+        
+        <!-- 1. Calorie History Chart Card -->
+        <div class="chart-card">
+          <div class="chart-header">
+            <h3>Consumo de Calorias (Últimos 7 dias)</h3>
+          </div>
+          <div class="chart-container" id="calories-chart-container">
+            <!-- Rendered dynamically as SVG/HTML -->
+          </div>
+        </div>
+
+        <!-- 2. Water History Chart Card -->
+        <div class="chart-card">
+          <div class="chart-header">
+            <h3>Consumo de Água (Últimos 7 dias)</h3>
+          </div>
+          <div class="chart-container" id="water-chart-container">
+            <!-- Rendered dynamically as SVG/HTML -->
+          </div>
+        </div>
+
+      </section>
+
+      <!-- Weight & Body Composition History Table -->
+      <section class="evolution-table-section section-card">
+        <div class="section-header">
+          <h2>Histórico de Evolução de Peso &amp; Corpo</h2>
+          <p class="subtext">Lista cronológica dos seus registros físicos.</p>
+        </div>
+        
+        <div class="table-wrapper">
+          <table class="evolution-table">
+            <thead>
+              <tr>
+                <th>Data</th>
+                <th>Peso (kg)</th>
+                <th>Gordura corporal (% BF)</th>
+                <th>Massa muscular (%)</th>
+                <th>Tendência</th>
+              </tr>
+            </thead>
+            <tbody id="evolution-table-body">
+              <tr>
+                <td colspan="5" style="text-align: center; color: var(--text-muted); padding: 32px 0;">
+                  Nenhum registro físico encontrado. Adicione seu peso no diário para acompanhar!
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Componentized Footer -->
+    <footer class="app-footer" id="app-footer-container"></footer>
+  </div>
+
+  <script src="js/shared.js"></script>
+  <script src="js/reports.js"></script>
+  <script type="module" src="js/components.js"></script>
+  <script type="module" src="js/firebase.js"></script>
+  <script type="module" src="js/auth-ui.js"></script>
+</body>
+
+</html>

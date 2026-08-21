@@ -2,289 +2,293 @@
 <html lang="pt-BR">
 
 <head>
-  <script src="js/head-component.js"></script>
+  <script src="js/head-component.js" data-title="LemonNote - Painel de Controle"></script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>LemonNote - Início | Gerenciador Inteligente de Despensa e Receitas</title>
-  <meta name="description" content="Descubra receitas incríveis com os ingredientes que você já tem em casa. O LemonNote gerencia sua despensa e calcula macronutrientes automaticamente." />
-
-  <!-- Fonts & Styles -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
-
   <link rel="stylesheet" href="css/style.css" />
-  <link rel="stylesheet" href="css/pantry.css" />
-
+  <link rel="stylesheet" href="css/diary.css" />
+  
   <style>
-    /* Premium Landing Home Styles */
-    .home-hero {
-      background: radial-gradient(circle at 10% 20%, rgba(245, 158, 11, 0.12) 0%, rgba(249, 115, 22, 0.05) 50%, transparent 100%),
+    /* Premium Dashboard Home Page Styles */
+    .dashboard-layout {
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+      width: 100%;
+    }
+
+    .welcome-banner {
+      background: radial-gradient(circle at 10% 20%, rgba(132, 204, 22, 0.12) 0%, rgba(16, 185, 129, 0.05) 50%, transparent 100%),
                   linear-gradient(135deg, var(--bg-card) 0%, var(--bg-element) 100%);
       border: 1px solid var(--border-color);
       border-radius: var(--radius-lg);
-      padding: 48px 36px;
-      text-align: center;
-      margin-bottom: 32px;
-      box-shadow: var(--shadow-lg);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .home-hero::before {
-      content: '';
-      position: absolute;
-      top: -50px;
-      right: -50px;
-      width: 200px;
-      height: 200px;
-      background: var(--accent);
-      filter: blur(90px);
-      opacity: 0.15;
-      border-radius: 50%;
-    }
-
-    .home-hero-badge {
-      display: inline-flex;
+      padding: 32px 28px !important;
+      display: flex;
+      justify-content: space-between;
       align-items: center;
-      gap: 8px;
-      background: rgba(245, 158, 11, 0.15);
-      color: var(--accent-light);
-      padding: 6px 16px;
-      border-radius: var(--radius-full);
-      font-size: 13px;
-      font-weight: 600;
-      margin-bottom: 20px;
-      border: 1px solid rgba(245, 158, 11, 0.25);
+      box-shadow: var(--shadow-md);
+      flex-wrap: wrap;
+      gap: 20px;
     }
 
-    .home-hero h1 {
-      font-size: 2.6rem;
+    .welcome-text {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .welcome-text h1 {
+      font-size: 2.2rem;
       font-weight: 700;
       color: var(--text-heading);
-      line-height: 1.25;
-      margin-bottom: 16px;
+      line-height: 1.2;
+      overflow-wrap: anywhere;
+      word-break: break-word;
     }
 
-    .home-hero h1 span {
+    .welcome-text h1 span {
       background: linear-gradient(135deg, var(--accent-yellow), var(--accent));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
 
-    .home-hero p {
-      font-size: 1.15rem;
+    .welcome-text p {
+      font-size: 0.95rem;
       color: var(--text-muted);
-      max-width: 680px;
-      margin: 0 auto 32px auto;
-      line-height: 1.6;
+      margin-top: 6px;
     }
 
-    .home-hero-actions {
-      display: flex;
-      gap: 16px;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-
-    .home-hero-actions .btn-lg {
-      padding: 14px 28px;
-      font-size: 1rem;
-      font-weight: 600;
-      border-radius: var(--radius-md);
+    .today-summary-badge {
       display: inline-flex;
       align-items: center;
-      gap: 10px;
-      text-decoration: none;
-      transition: all 0.25s ease;
-      cursor: pointer;
-    }
-
-    .btn-hero-primary {
-      background: linear-gradient(135deg, var(--accent-yellow), var(--accent));
-      color: #1c1917;
-      box-shadow: 0 4px 14px rgba(245, 158, 11, 0.35);
-    }
-
-    .btn-hero-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(245, 158, 11, 0.5);
-    }
-
-    .btn-hero-secondary {
-      background: var(--bg-card);
-      color: var(--text-main);
+      gap: 8px;
+      background: var(--bg-element);
       border: 1px solid var(--border-color);
+      padding: 8px 16px;
+      border-radius: var(--radius-full);
+      font-size: 13px;
+      font-weight: 600;
     }
 
-    .btn-hero-secondary:hover {
-      background: var(--bg-card-hover);
-      transform: translateY(-2px);
-    }
-
-    .features-grid {
+    /* Shortcut Grid */
+    .shortcuts-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 24px;
-      margin-bottom: 36px;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
     }
 
-    .feature-card {
+    .shortcut-card {
       background: var(--bg-card);
       border: 1px solid var(--border-color);
       border-radius: var(--radius-lg);
-      padding: 28px 24px;
-      transition: all 0.25s ease;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      text-decoration: none;
+      color: inherit;
+      transition: var(--transition-fast);
       box-shadow: var(--shadow-sm);
     }
 
-    .feature-card:hover {
+    .shortcut-card:hover {
       transform: translateY(-4px);
       border-color: var(--accent);
       box-shadow: var(--shadow-md);
     }
 
-    .feature-icon {
-      width: 52px;
-      height: 52px;
+    .shortcut-icon {
+      width: 44px;
+      height: 44px;
       border-radius: var(--radius-md);
-      background: rgba(245, 158, 11, 0.12);
+      background: rgba(132, 204, 22, 0.1);
       color: var(--accent-light);
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-bottom: 20px;
     }
 
-    .feature-card h3 {
-      font-size: 1.25rem;
-      font-weight: 600;
-      color: var(--text-heading);
-      margin-bottom: 10px;
+    .shortcut-card h3 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--text-main);
     }
 
-    .feature-card p {
-      font-size: 0.95rem;
+    .shortcut-card p {
+      font-size: 0.85rem;
       color: var(--text-muted);
-      line-height: 1.55;
+      line-height: 1.4;
     }
 
-    .cta-banner {
-      background: linear-gradient(135deg, rgba(245, 158, 11, 0.15) 0%, rgba(249, 115, 22, 0.08) 100%);
-      border: 1px solid rgba(245, 158, 11, 0.25);
-      border-radius: var(--radius-lg);
-      padding: 32px 28px;
+    .shortcut-header {
       display: flex;
       align-items: center;
-      justify-content: space-between;
+      gap: 12px;
+    }
+
+    /* Double Column Content */
+    .dashboard-details-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
       gap: 24px;
-      flex-wrap: wrap;
     }
 
-    .cta-banner-text h3 {
-      font-size: 1.4rem;
-      font-weight: 700;
-      color: var(--text-heading);
-      margin-bottom: 6px;
+    @media (max-width: 900px) {
+      .dashboard-details-row {
+        grid-template-columns: 1fr;
+      }
     }
 
-    .cta-banner-text p {
-      font-size: 0.95rem;
-      color: var(--text-muted);
+    @media (max-width: 480px) {
+      .welcome-banner {
+        padding: 20px 16px !important;
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 12px !important;
+      }
+      .welcome-text h1 {
+        font-size: 1.6rem !important;
+      }
+      .today-summary-badge {
+        width: 100% !important;
+        justify-content: center !important;
+      }
     }
   </style>
 </head>
 
-<body>
+<body class="dark-theme">
   <div class="app-container">
     <!-- Componentized Header -->
     <header class="app-header" id="app-header-container"></header>
 
-    <!-- Main Content: Home Page -->
+    <!-- Main Content: Home Page Dashboard -->
     <main class="main-content">
-      
-      <!-- Hero Banner -->
-      <section class="home-hero">
-        <div class="home-hero-badge">
-          Culinária Prática & Nutrição Inteligente
-        </div>
-        <h1>Cozinhe com o que você <span>já tem em casa</span></h1>
-        <p>
-          O LemonNote analisa os ingredientes disponíveis na sua despensa, calcula o rendimento e macronutrientes automaticamente e recomenda as melhores receitas para sua rotina.
-        </p>
-
-        <div class="home-hero-actions">
-          <a href="pantry.html" class="btn-lg btn-hero-primary">
-            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
-            <span>Ir para Minha Despensa</span>
-          </a>
-          <a href="recipes.html" class="btn-lg btn-hero-secondary">
-            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-            <span>Explorar Receitas</span>
-          </a>
-          <a href="register.html" class="btn-lg btn-hero-secondary">
-            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-            <span>Cadastrar Nova Receita</span>
-          </a>
-        </div>
-      </section>
-
-      <!-- Key Features Grid -->
-      <section class="features-grid">
-        <div class="feature-card">
-          <div class="feature-icon">
-            <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+      <div class="dashboard-layout">
+        
+        <!-- Welcome Banner -->
+        <section class="welcome-banner">
+          <div class="welcome-text">
+            <h1>Olá, <span id="user-greeting-name">Usuário</span>!</h1>
+            <p>Seja bem-vindo de volta ao seu LemonNote. Como está sua alimentação hoje?</p>
           </div>
-          <h3>Despensa em Tempo Real</h3>
-          <p>
-            Selecione facilmente os alimentos que possui na geladeira e no armário. O sistema calcula a quantidade de itens automaticamente.
-          </p>
-        </div>
-
-        <div class="feature-card">
-          <div class="feature-icon">
-            <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+          <div class="today-summary-badge">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" style="color: var(--accent);"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+            <span id="dashboard-date">Hoje</span>
           </div>
-          <h3>Combinação Inteligente</h3>
-          <p>
-            Descubra a porcentagem exata de compatibilidade de cada receita com base nos ingredientes selecionados na sua despensa.
-          </p>
-        </div>
+        </section>
 
-        <div class="feature-card">
-          <div class="feature-icon">
-            <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+        <!-- Quick Progress Summary (Water and Calories Progress) -->
+        <section class="diary-summary-grid">
+          
+          <!-- Calories Progress -->
+          <div class="summary-card">
+            <div class="summary-card-header">
+              <h3>Calorias Consumidas</h3>
+              <span class="goal-text" id="cal-goal-label">Meta: 2000 kcal</span>
+            </div>
+            <div class="linear-progress-wrapper">
+              <div class="linear-progress-bar">
+                <div class="linear-progress-fill" id="cal-progress-fill" style="width: 0%;"></div>
+              </div>
+              <div class="progress-stats">
+                <span class="progress-current" id="cal-current-label">0 kcal</span>
+                <span class="progress-percent" id="cal-percent-label">0%</span>
+              </div>
+              <span class="progress-remaining" id="cal-remaining-label">Faltam 2000 kcal</span>
+            </div>
           </div>
-          <h3>Macros Automáticos</h3>
-          <p>
-            Acompanhe calorias, proteínas, carboidratos e gorduras de cada porção calculados dinamicamente com base nas tabelas nutricionais.
-          </p>
-        </div>
 
-        <div class="feature-card">
-          <div class="feature-icon">
-            <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"></path></svg>
+          <!-- Water Progress -->
+          <div class="summary-card">
+            <div class="summary-card-header">
+              <h3>Consumo de Água</h3>
+              <span class="goal-text" id="water-goal-label">Meta: 2000 ml</span>
+            </div>
+            <div class="linear-progress-wrapper">
+              <div class="linear-progress-bar" style="background: rgba(59, 130, 246, 0.1);">
+                <div class="linear-progress-fill" id="water-progress-fill" style="width: 0%; background: linear-gradient(135deg, #3b82f6, #60a5fa);"></div>
+              </div>
+              <div class="progress-stats">
+                <span class="progress-current" id="water-current-label" style="color: #60a5fa;">0 ml</span>
+                <span class="progress-percent" id="water-percent-label">0%</span>
+              </div>
+              <span class="progress-remaining" id="water-remaining-label">Faltam 2000 ml</span>
+            </div>
           </div>
-          <h3>Catálogo em Nuvem</h3>
-          <p>
-            Acesse dezenas de receitas públicas ou cadastre suas próprias receitas privadas e públicas sincronizadas com o Firebase.
-          </p>
-        </div>
-      </section>
 
-      <!-- Bottom CTA Banner -->
-      <section class="cta-banner">
-        <div class="cta-banner-text">
-          <h3>Pronto para montar sua refeição perfeita?</h3>
-          <p>Selecione seus ingredientes agora e veja quais receitas você pode preparar em minutos!</p>
-        </div>
-        <div>
-          <a href="pantry.html" class="btn-primary" style="padding: 12px 24px; font-size: 1rem; text-decoration: none; display: inline-block;">
-            Começar Agora
+          <!-- Quick Matching Recipes Badge info -->
+          <div class="summary-card" style="justify-content: center; gap: 12px;">
+            <div class="summary-card-header">
+              <h3>Compatibilidade de Receitas</h3>
+            </div>
+            <div style="display:flex; align-items:center; gap:16px; margin: 8px 0;">
+              <div class="shortcut-icon" style="width:54px; height:54px; background: rgba(234, 179, 8, 0.15); color: var(--accent-yellow);">
+                <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+              </div>
+              <div>
+                <h4 style="font-size: 20px; font-weight:800; color: var(--text-heading);" id="recipes-match-text">Analisando...</h4>
+                <p style="font-size:12px; color: var(--text-muted);" id="recipes-match-subtext">Selecione itens na despensa</p>
+              </div>
+            </div>
+            <a href="recipes.html" class="btn-secondary" style="font-size:12px; padding: 6px 12px; width: fit-content; text-decoration:none;">
+              Ver Receitas Sugeridas
+            </a>
+          </div>
+
+        </section>
+
+        <!-- Quick Access Navigation Shortcut Cards -->
+        <section class="shortcuts-grid">
+          
+          <a href="pantry.html" class="shortcut-card">
+            <div class="shortcut-header">
+              <div class="shortcut-icon">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+              </div>
+              <h3>Minha Despensa</h3>
+            </div>
+            <p>Selecione e gerencie os ingredientes disponíveis em sua casa.</p>
           </a>
-        </div>
-      </section>
 
+          <a href="diary.html" class="shortcut-card">
+            <div class="shortcut-header">
+              <div class="shortcut-icon" style="background: rgba(16, 185, 129, 0.1); color: var(--success);">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+              </div>
+              <h3>Diário Alimentar</h3>
+            </div>
+            <p>Registre suas refeições, água consumida e controle sua ingestão calórica.</p>
+          </a>
+
+          <a href="reports.html" class="shortcut-card">
+            <div class="shortcut-header">
+              <div class="shortcut-icon" style="background: rgba(245, 158, 11, 0.1); color: var(--warning);">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+              </div>
+              <h3>Relatórios &amp; Estatísticas</h3>
+            </div>
+            <p>Veja gráficos detalhados do seu consumo e sua evolução física.</p>
+          </a>
+
+          <a href="register.html" class="shortcut-card">
+            <div class="shortcut-header">
+              <div class="shortcut-icon" style="background: rgba(147, 51, 234, 0.1); color: #a855f7;">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="9" x2="15" y2="9"></line><line x1="9" y1="13" x2="15" y2="13"></line><line x1="9" y1="17" x2="13" y2="17"></line></svg>
+              </div>
+              <h3>Cadastrar Receitas</h3>
+            </div>
+            <p>Adicione novos alimentos e suas receitas favoritas no banco de dados.</p>
+          </a>
+
+        </section>
+
+        <!-- Informative Panel & Inspirational quote -->
+        <section class="welcome-banner" style="background: var(--bg-card); padding: 24px; align-items: flex-start; flex-direction: column; gap: 8px;">
+          <h4 style="font-weight: 700; color: var(--accent-light);">Dica Saudável do Dia</h4>
+          <p style="font-size:14px; line-height: 1.5; color: var(--text-secondary);" id="quote-display">"Uma alimentação saudável é a base para uma mente sã e um corpo produtivo. Beba água regularmente!"</p>
+        </section>
+
+      </div>
     </main>
 
     <!-- Componentized Footer -->
@@ -294,6 +298,7 @@
   <!-- Scripts -->
   <script src="js/unit-converter.js"></script>
   <script src="js/shared.js"></script>
+  <script src="js/dashboard.js"></script>
   <script type="module" src="js/components.js"></script>
   <script type="module" src="js/firebase.js"></script>
   <script type="module" src="js/auth-ui.js"></script>

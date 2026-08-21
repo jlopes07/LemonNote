@@ -272,6 +272,144 @@ async function getUserPantry(userId) {
   return null;
 }
 
+// Health Goals Sync
+async function saveUserHealthGoals(userId, goals) {
+  try {
+    const firestore = await getDbInstance();
+    if (!firestore || !userId) return;
+    const docRef = doc(firestore, `users/${userId}/data/health_goals`);
+    await setDoc(docRef, { ...goals, updatedAt: new Date().toISOString() });
+  } catch (e) {
+    console.warn('Aviso Firestore health goals:', e);
+  }
+}
+
+async function getUserHealthGoals(userId) {
+  try {
+    const firestore = await getDbInstance();
+    if (!firestore || !userId) return null;
+    const docRef = doc(firestore, `users/${userId}/data/health_goals`);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      return docSnap.data();
+    }
+  } catch (e) {
+    console.warn('Aviso leitura health goals Firestore:', e);
+  }
+  return null;
+}
+
+// Food Logs Sync
+async function saveUserFoodLog(userId, foodLog) {
+  try {
+    const firestore = await getDbInstance();
+    if (!firestore || !userId) return;
+    const docRef = doc(firestore, `users/${userId}/food_logs/${foodLog.id}`);
+    await setDoc(docRef, foodLog);
+  } catch (e) {
+    console.warn('Aviso Firestore food log:', e);
+  }
+}
+
+async function getUserFoodLogs(userId) {
+  try {
+    const firestore = await getDbInstance();
+    if (!firestore || !userId) return [];
+    const colRef = collection(firestore, `users/${userId}/food_logs`);
+    const snapshot = await getDocs(colRef);
+    const result = [];
+    snapshot.forEach(docSnap => result.push(docSnap.data()));
+    return result;
+  } catch (e) {
+    console.warn('Aviso leitura food logs Firestore:', e);
+    return [];
+  }
+}
+
+async function deleteUserFoodLog(userId, logId) {
+  try {
+    const firestore = await getDbInstance();
+    if (!firestore || !userId || !logId) return;
+    await deleteDoc(doc(firestore, `users/${userId}/food_logs/${logId}`));
+  } catch (e) {
+    console.warn('Aviso exclusão food log:', e);
+  }
+}
+
+// Water Logs Sync
+async function saveUserWaterLog(userId, waterLog) {
+  try {
+    const firestore = await getDbInstance();
+    if (!firestore || !userId) return;
+    const docRef = doc(firestore, `users/${userId}/water_logs/${waterLog.id}`);
+    await setDoc(docRef, waterLog);
+  } catch (e) {
+    console.warn('Aviso Firestore water log:', e);
+  }
+}
+
+async function getUserWaterLogs(userId) {
+  try {
+    const firestore = await getDbInstance();
+    if (!firestore || !userId) return [];
+    const colRef = collection(firestore, `users/${userId}/water_logs`);
+    const snapshot = await getDocs(colRef);
+    const result = [];
+    snapshot.forEach(docSnap => result.push(docSnap.data()));
+    return result;
+  } catch (e) {
+    console.warn('Aviso leitura water logs Firestore:', e);
+    return [];
+  }
+}
+
+async function deleteUserWaterLog(userId, logId) {
+  try {
+    const firestore = await getDbInstance();
+    if (!firestore || !userId || !logId) return;
+    await deleteDoc(doc(firestore, `users/${userId}/water_logs/${logId}`));
+  } catch (e) {
+    console.warn('Aviso exclusão water log:', e);
+  }
+}
+
+// Weight Metrics Sync
+async function saveUserWeightLog(userId, weightLog) {
+  try {
+    const firestore = await getDbInstance();
+    if (!firestore || !userId) return;
+    const docRef = doc(firestore, `users/${userId}/health_metrics/${weightLog.id}`);
+    await setDoc(docRef, weightLog);
+  } catch (e) {
+    console.warn('Aviso Firestore weight log:', e);
+  }
+}
+
+async function getUserWeightLogs(userId) {
+  try {
+    const firestore = await getDbInstance();
+    if (!firestore || !userId) return [];
+    const colRef = collection(firestore, `users/${userId}/health_metrics`);
+    const snapshot = await getDocs(colRef);
+    const result = [];
+    snapshot.forEach(docSnap => result.push(docSnap.data()));
+    return result;
+  } catch (e) {
+    console.warn('Aviso leitura weight logs Firestore:', e);
+    return [];
+  }
+}
+
+async function deleteUserWeightLog(userId, logId) {
+  try {
+    const firestore = await getDbInstance();
+    if (!firestore || !userId || !logId) return;
+    await deleteDoc(doc(firestore, `users/${userId}/health_metrics/${logId}`));
+  } catch (e) {
+    console.warn('Aviso exclusão weight log:', e);
+  }
+}
+
 // Expose Firestore helpers on window object for legacy module access
 if (typeof window !== 'undefined') {
   window.getPublicIngredientsFromFirestore = getPublicIngredientsFromFirestore;
@@ -288,6 +426,18 @@ if (typeof window !== 'undefined') {
   window.deleteUserCustomRecipe = deleteUserCustomRecipe;
   window.saveUserPantry = saveUserPantry;
   window.getUserPantry = getUserPantry;
+  // Health sync helpers
+  window.saveUserHealthGoals = saveUserHealthGoals;
+  window.getUserHealthGoals = getUserHealthGoals;
+  window.saveUserFoodLog = saveUserFoodLog;
+  window.getUserFoodLogs = getUserFoodLogs;
+  window.deleteUserFoodLog = deleteUserFoodLog;
+  window.saveUserWaterLog = saveUserWaterLog;
+  window.getUserWaterLogs = getUserWaterLogs;
+  window.deleteUserWaterLog = deleteUserWaterLog;
+  window.saveUserWeightLog = saveUserWeightLog;
+  window.getUserWeightLogs = getUserWeightLogs;
+  window.deleteUserWeightLog = deleteUserWeightLog;
 }
 
 export {
@@ -314,5 +464,17 @@ export {
   getUserCustomRecipes,
   deleteUserCustomRecipe,
   saveUserPantry,
-  getUserPantry
+  getUserPantry,
+  // Health sync exports
+  saveUserHealthGoals,
+  getUserHealthGoals,
+  saveUserFoodLog,
+  getUserFoodLogs,
+  deleteUserFoodLog,
+  saveUserWaterLog,
+  getUserWaterLogs,
+  deleteUserWaterLog,
+  saveUserWeightLog,
+  getUserWeightLogs,
+  deleteUserWeightLog
 };

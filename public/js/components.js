@@ -7,6 +7,8 @@ function getActivePageKey() {
   if (path.includes('recipe-detail.html')) return 'recipes';
   if (path.includes('register.html')) return 'register';
   if (path.includes('settings.html')) return 'settings';
+  if (path.includes('diary.html')) return 'diary';
+  if (path.includes('reports.html')) return 'reports';
   return 'home';
 }
 
@@ -31,10 +33,6 @@ function renderHeaderComponent() {
     
     <div class="header-stats" style="display: flex; gap: 12px; align-items: center;">
       <div id="user-auth-area" class="user-auth-area"></div>
-
-      <div class="stat-badge" id="header-stat-badge">
-        <span class="stat-text"><strong id="selected-count">0</strong> na despensa</span>
-      </div>
       
       <!-- Navigation Dropdown Menu -->
       <div class="nav-dropdown" id="global-nav-dropdown">
@@ -64,6 +62,12 @@ function renderHeaderComponent() {
           </a>
           <a href="recipes.html" class="nav-dropdown-item ${activePage === 'recipes' ? 'active' : ''}">
             Receitas Sugeridas
+          </a>
+          <a href="diary.html" class="nav-dropdown-item ${activePage === 'diary' ? 'active' : ''}">
+            Saúde & Metas
+          </a>
+          <a href="reports.html" class="nav-dropdown-item ${activePage === 'reports' ? 'active' : ''}">
+            Relatórios
           </a>
           <a href="register.html" class="nav-dropdown-item ${activePage === 'register' ? 'active' : ''}">
             Painel de Cadastro
